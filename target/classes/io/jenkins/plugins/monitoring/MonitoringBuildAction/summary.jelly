@@ -1,0 +1,8 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:t="/lib/hudson">
+
+    <t:summary icon="/plugin/pull-request-monitoring/icons/pull-request-monitoring-48x48.png">
+        <a href="pull-request-monitoring">Show Build Monitoring</a>
+    </t:summary>
+
+</j:jelly>
