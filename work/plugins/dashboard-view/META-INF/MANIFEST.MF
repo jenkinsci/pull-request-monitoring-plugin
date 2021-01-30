@@ -1,0 +1,24 @@
+Manifest-Version: 1.0
+Archiver-Version: Plexus Archiver
+Created-By: Apache Maven
+Built-By: tobias
+Build-Jdk: 1.8.0_272
+Extension-Name: dashboard-view
+Specification-Title: Jenkins view that shows various cuts of build inf
+ ormation via configured portlets.
+Implementation-Title: dashboard-view
+Implementation-Version: 2.14
+Group-Id: org.jenkins-ci.plugins
+Short-Name: dashboard-view
+Long-Name: Dashboard View
+Url: https://github.com/jenkinsci/dashboard-view-plugin
+Minimum-Java-Version: 1.8
+Plugin-Version: 2.14
+Hudson-Version: 2.164.3
+Jenkins-Version: 2.164.3
+Plugin-Dependencies: junit:1.21,matrix-project:1.14;resolution:=optional
+Plugin-Developers: Tobias Gruetzmacher:TobiX:tobias-git@23.gs
+Plugin-License-Name: MIT License
+Plugin-License-Url: https://opensource.org/licenses/MIT
+Plugin-ScmUrl: https://github.com/jenkinsci/dashboard-view-plugin
+

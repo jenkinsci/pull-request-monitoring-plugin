@@ -1,0 +1,6 @@
+META-INF/annotations/hudson.Extension.txt
+io/jenkins/plugins/monitoring/MonitoringProjectActionFactory.class
+io/jenkins/plugins/monitoring/MonitoringBuildActionFactory.class
+io/jenkins/plugins/monitoring/MonitoringBuildAction.class
+io/jenkins/plugins/monitoring/MonitoringProjectAction.class
+META-INF/annotations/hudson.Extension

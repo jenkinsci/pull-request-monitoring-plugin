@@ -1,0 +1,22 @@
+Manifest-Version: 1.0
+Archiver-Version: Plexus Archiver
+Created-By: Apache Maven
+Built-By: hafner
+Build-Jdk: 1.8.0_265
+Extension-Name: jquery3-api
+Specification-Title: Provides jQuery 3.x for Jenkins plugins.
+Implementation-Title: jquery3-api
+Implementation-Version: 3.5.1-2
+Group-Id: io.jenkins.plugins
+Short-Name: jquery3-api
+Long-Name: JQuery3 API Plugin
+Url: https://github.com/jenkinsci/jquery3-api-plugin
+Minimum-Java-Version: 1.8
+Plugin-Version: 3.5.1-2
+Hudson-Version: 2.204.6
+Jenkins-Version: 2.204.6
+Plugin-Developers: Ullrich Hafner:uhafner:ullrich.hafner@gmail.com
+Support-Dynamic-Loading: true
+Plugin-License-Name: MIT license
+Plugin-ScmUrl: https://github.com/jenkinsci/jquery3-api-plugin
+
