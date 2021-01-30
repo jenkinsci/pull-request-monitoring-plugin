@@ -16,8 +16,16 @@
         <changelist>-SNAPSHOT</changelist>
         <jenkins.version>2.235.1</jenkins.version>
         <java.level>8</java.level>
-        <gitHubRepo>jenkinsci/${project.artifactId}-plugin</gitHubRepo>    </properties>
-    <name>TODO Plugin</name>
+        <gitHubRepo>jenkinsci/${project.artifactId}-plugin</gitHubRepo>
+        <commons.lang.version>3.11</commons.lang.version>
+        <font-awesome-api.version>5.15.1-1</font-awesome-api.version>
+        <jquery3-api.version>3.5.1-2</jquery3-api.version>
+        <bootstrap4-api.version>4.5.3-2</bootstrap4-api.version>
+        <data-tables-api.version>1.10.21-3</data-tables-api.version>
+        <echarts-api.version>4.9.0-2</echarts-api.version>
+        <plugin-util-api.version>1.6.1</plugin-util-api.version>
+    </properties>
+    <name>Pull Request Monitoring</name>
     <url>https://github.com/jenkinsci/${project.artifactId}-plugin</url>
 
     <dependencyManagement>
@@ -45,6 +53,45 @@
         <url>https://github.com/${gitHubRepo}</url>
         <tag>${scmTag}</tag>
     </scm>
+
+    <dependencies>
+        <dependency>
+            <groupId>io.jenkins.plugins</groupId>
+            <artifactId>plugin-util-api</artifactId>
+            <version>${plugin-util-api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${commons.lang.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jenkins.plugins</groupId>
+            <artifactId>font-awesome-api</artifactId>
+            <version>${font-awesome-api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jenkins.plugins</groupId>
+            <artifactId>bootstrap4-api</artifactId>
+            <version>${bootstrap4-api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jenkins.plugins</groupId>
+            <artifactId>jquery3-api</artifactId>
+            <version>${jquery3-api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jenkins.plugins</groupId>
+            <artifactId>echarts-api</artifactId>
+            <version>${echarts-api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jenkins.plugins</groupId>
+            <artifactId>data-tables-api</artifactId>
+            <version>${data-tables-api.version}</version>
+        </dependency>
+    </dependencies>
+
 
     <repositories>
         <repository>
