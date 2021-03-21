@@ -23,7 +23,7 @@
         <bootstrap4-api.version>4.6.0-2</bootstrap4-api.version>
         <data-tables-api.version>1.10.23-3</data-tables-api.version>
         <echarts-api.version>5.0.1-1</echarts-api.version>
-        <plugin-util-api.version>1.6.1</plugin-util-api.version>
+        <plugin-util-api.version>2.0.0</plugin-util-api.version>
     </properties>
     <name>Pull Request Monitoring</name>
     <url>https://github.com/jenkinsci/${project.artifactId}-plugin</url>
