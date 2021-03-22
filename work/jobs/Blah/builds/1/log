@@ -1,7 +1,0 @@
-Gestartet durch Benutzer unknown or anonymous
-Running as SYSTEM
-Baue in Arbeitsbereich /Users/simonsymhoven/Desktop/Uni/Bachelor/pull-request-monitoring/work/workspace/Blah
-[Blah] $ /bin/sh -xe /var/folders/__/y562y_cn5t57k7nmg_vfsp2h0000gn/T/jenkins6802391209020068660.sh
-+ echo 'Moin!'
-Moin!
-Finished: SUCCESS
