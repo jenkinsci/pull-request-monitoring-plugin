@@ -1,9 +1,7 @@
 package io.jenkins.plugins.monitoring;
 
-import hudson.model.AbstractProject;
-import hudson.model.Project;
 import hudson.model.ProminentProjectAction;
-import hudson.util.RunList;
+import jenkins.branch.MultiBranchProject;
 
 public class MonitoringProjectAction implements ProminentProjectAction {
     static final String URI = "pull-request-monitoring";
@@ -12,10 +10,10 @@ public class MonitoringProjectAction implements ProminentProjectAction {
     static final String ICON_SMALL = ICONS_PREFIX + "pull-request-monitoring-24x24.png";
     static final String ICON_BIG = ICONS_PREFIX + "pull-request-monitoring-48x48.png";
 
-    private transient final Project<?, ?> project;
+    private transient final MultiBranchProject<?, ?> multiBranchProject;
 
-    public MonitoringProjectAction(Project<?, ?> project) {
-        this.project = project;
+    public MonitoringProjectAction(MultiBranchProject<?, ?> multiBranchProject) {
+        this.multiBranchProject = multiBranchProject;
     }
 
     @Override
@@ -33,13 +31,8 @@ public class MonitoringProjectAction implements ProminentProjectAction {
         return URI;
     }
 
-    public Project<?, ?> getProject() {
-        return project;
+    public MultiBranchProject<?, ?> getProject() {
+        return multiBranchProject;
     }
-
-    public RunList<?> getBuilds() {
-        return project.getBuilds();
-    }
-
 
 }

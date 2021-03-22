@@ -1,0 +1,72 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<flow-definition plugin="workflow-job@2.40">
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <org.jenkinsci.plugins.workflow.multibranch.BranchJobProperty plugin="workflow-multibranch@2.22">
+      <branch plugin="branch-api@2.6.2">
+        <sourceId>fc4fbdd0-5e65-48a5-9c8b-53b50c3688aa</sourceId>
+        <head class="org.jenkinsci.plugins.github_branch_source.PullRequestSCMHead" plugin="github-branch-source@2.9.7">
+          <name>PR-23</name>
+          <merge>true</merge>
+          <number>23</number>
+          <target>
+            <name>master</name>
+          </target>
+          <sourceOwner>simonsymhoven</sourceOwner>
+          <sourceRepo>pull-request-monitoring-plugin</sourceRepo>
+          <sourceBranch>pr-test</sourceBranch>
+          <origin class="jenkins.scm.api.SCMHeadOrigin$Default" plugin="scm-api@2.6.4"/>
+        </head>
+        <scm class="hudson.plugins.git.GitSCM" plugin="git@4.6.0">
+          <configVersion>2</configVersion>
+          <userRemoteConfigs>
+            <hudson.plugins.git.UserRemoteConfig>
+              <name>origin</name>
+              <refspec>+refs/pull/23/head:refs/remotes/origin/PR-23 +refs/heads/master:refs/remotes/origin/master</refspec>
+              <url>https://github.com/simonsymhoven/pull-request-monitoring-plugin.git</url>
+            </hudson.plugins.git.UserRemoteConfig>
+          </userRemoteConfigs>
+          <branches class="singleton-list">
+            <hudson.plugins.git.BranchSpec>
+              <name>PR-23</name>
+            </hudson.plugins.git.BranchSpec>
+          </branches>
+          <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
+          <browser class="hudson.plugins.git.browser.GithubWeb">
+            <url>https://github.com/simonsymhoven/pull-request-monitoring-plugin</url>
+          </browser>
+          <submoduleCfg class="empty-list"/>
+          <extensions>
+            <jenkins.plugins.git.MergeWithGitSCMExtension>
+              <baseName>remotes/origin/master</baseName>
+            </jenkins.plugins.git.MergeWithGitSCMExtension>
+            <jenkins.plugins.git.GitSCMSourceDefaults>
+              <includeTags>false</includeTags>
+            </jenkins.plugins.git.GitSCMSourceDefaults>
+          </extensions>
+        </scm>
+        <properties/>
+        <actions>
+          <jenkins.scm.api.metadata.ContributorMetadataAction plugin="scm-api@2.6.4">
+            <contributor>simonsymhoven</contributor>
+            <contributorDisplayName>Simon Symhoven</contributorDisplayName>
+          </jenkins.scm.api.metadata.ContributorMetadataAction>
+          <org.jenkinsci.plugins.github__branch__source.GitHubLink plugin="github-branch-source@2.9.7">
+            <iconClassName>icon-github-branch</iconClassName>
+            <url>https://github.com/simonsymhoven/pull-request-monitoring-plugin/pull/23</url>
+          </org.jenkinsci.plugins.github__branch__source.GitHubLink>
+          <jenkins.scm.api.metadata.ObjectMetadataAction plugin="scm-api@2.6.4">
+            <objectDisplayName>Update README.md</objectDisplayName>
+            <objectDescription></objectDescription>
+            <objectUrl>https://github.com/simonsymhoven/pull-request-monitoring-plugin/pull/23</objectUrl>
+          </jenkins.scm.api.metadata.ObjectMetadataAction>
+        </actions>
+      </branch>
+    </org.jenkinsci.plugins.workflow.multibranch.BranchJobProperty>
+  </properties>
+  <definition class="org.jenkinsci.plugins.workflow.multibranch.SCMBinder" plugin="workflow-multibranch@2.22">
+    <scriptPath>Jenkinsfile</scriptPath>
+  </definition>
+  <triggers/>
+  <disabled>false</disabled>
+</flow-definition>

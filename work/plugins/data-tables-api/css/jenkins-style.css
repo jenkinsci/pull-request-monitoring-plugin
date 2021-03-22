@@ -1,0 +1,73 @@
+/* ------------------------------------------------------------------------------------------------------------------- */
+/* DataTables Material Design                                                                                          */
+/* ------------------------------------------------------------------------------------------------------------------- */
+
+table.dataTable {
+    border-collapse: collapse !important;
+}
+
+tfoot {
+    font-weight: bold;
+}
+
+/* Change color of active pagination, to fit to the material blue grey css */
+.pagination > .active > a, .pagination > .active > a:focus, .pagination > .active > a:hover, .pagination > .active > span, .pagination > .active > span:focus, .pagination > .active > span:hover {
+    background-color: #b4b4b4;
+    border-color: #b4b4b4;
+}
+
+/* Change color of inactive pagination, to fit to the material blue grey css */
+.pagination > li > a, .pagination > li > span {
+    color: #b4b4b4;
+}
+
+/* Change color of active pagination, to fit to the material blue grey css */
+.page-item.active .page-link {
+    background-color: #b4b4b4;
+    border-color: #b4b4b4;
+}
+
+/* Add padding-top for more space */
+.tab-content > .active {
+    display: block;
+    padding-top: 20px;
+}
+
+/* ------------------------------------------------------------------------------------------------------------------- */
+/* DataTables Details                                                                                                  */
+/* ------------------------------------------------------------------------------------------------------------------- */
+
+div.details-control {
+    position: relative;
+    cursor: pointer;
+}
+
+.details-icon {
+    height: 24px;
+    width: 24px;
+    margin-left: 12px;
+    fill: #b4b4b4;
+}
+
+/* ------------------------------------------------------------------------------------------------------------------- */
+/* Custom column widths for property tables                                                                            */
+/* ------------------------------------------------------------------------------------------------------------------- */
+.col-width-0 {
+    width: 0%;
+}
+.col-width-1 {
+    width: 8.333333%;
+}
+.col-width-2 {
+    width: 16.666667%;
+}
+.col-width-3 {
+    width: 25%;
+}
+.col-width-5 {
+    width: 41.66667%;
+}
+.col-width-6 {
+    width: 50%;
+}
+

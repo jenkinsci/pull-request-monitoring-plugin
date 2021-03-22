@@ -1,0 +1,2 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<l:dependencies xmlns:l='licenses' groupId='io.jenkins.plugins' artifactId='data-tables-api' version='1.10.23-3'><l:dependency name='DataTables.net API Plugin' groupId='io.jenkins.plugins' artifactId='data-tables-api' version='1.10.23-3' url='https://github.com/jenkinsci/data-tables-api-plugin'><l:description>Provides jQuery DataTables for Jenkins plugins.</l:description><l:license name='MIT license' url=''/></l:dependency></l:dependencies>

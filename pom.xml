@@ -14,7 +14,7 @@
     <properties>
         <revision>1.0</revision>
         <changelist>-SNAPSHOT</changelist>
-        <jenkins.version>2.235.1</jenkins.version>
+        <jenkins.version>2.277.1</jenkins.version>
         <java.level>8</java.level>
         <gitHubRepo>jenkinsci/${project.artifactId}-plugin</gitHubRepo>
         <commons.lang.version>3.12.0</commons.lang.version>
@@ -24,6 +24,7 @@
         <data-tables-api.version>1.10.23-3</data-tables-api.version>
         <echarts-api.version>5.0.1-1</echarts-api.version>
         <plugin-util-api.version>2.0.0</plugin-util-api.version>
+        <popper-api.version>1.16.1-2</popper-api.version>
     </properties>
     <name>Pull Request Monitoring</name>
     <url>https://github.com/jenkinsci/${project.artifactId}-plugin</url>
@@ -42,10 +43,18 @@
 
     <licenses>
         <license>
-            <name>MIT License</name>
-            <url>https://opensource.org/licenses/MIT</url>
+            <name>MIT license</name>
+            <comments>All source code is under the MIT license.</comments>
         </license>
     </licenses>
+
+    <developers>
+        <developer>
+            <name>Simon Symhoven</name>
+            <id>simonsymhoven</id>
+            <email>post@simon-symhoven.de</email>
+        </developer>
+    </developers>
 
     <scm>
         <connection>scm:git:git://github.com/${gitHubRepo}.git</connection>
@@ -89,6 +98,15 @@
             <groupId>io.jenkins.plugins</groupId>
             <artifactId>data-tables-api</artifactId>
             <version>${data-tables-api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jenkins.plugins</groupId>
+            <artifactId>popper-api</artifactId>
+            <version>${popper-api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jenkins-ci.plugins</groupId>
+            <artifactId>branch-api</artifactId>
         </dependency>
     </dependencies>
 

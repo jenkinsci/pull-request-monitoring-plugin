@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: org.jenkins-ci.main:jenkins-test-harness:1498.v53acb0fd4634">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/jenkins-ci/main/jenkins-test-harness/1498.v53acb0fd4634/jenkins-test-harness-1498.v53acb0fd4634.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/org/jenkins-ci/main/jenkins-test-harness/1498.v53acb0fd4634/jenkins-test-harness-1498.v53acb0fd4634-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/jenkins-ci/main/jenkins-test-harness/1498.v53acb0fd4634/jenkins-test-harness-1498.v53acb0fd4634-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

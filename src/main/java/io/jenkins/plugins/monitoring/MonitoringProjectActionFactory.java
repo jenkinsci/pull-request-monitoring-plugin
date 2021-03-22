@@ -3,22 +3,27 @@ package io.jenkins.plugins.monitoring;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import hudson.Extension;
 import hudson.model.*;
+import jenkins.branch.MultiBranchProject;
 import jenkins.model.TransientActionFactory;
 
+import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Collections;
 
 @Extension
-public class MonitoringProjectActionFactory extends TransientActionFactory<Project> {
+public class MonitoringProjectActionFactory extends TransientActionFactory<MultiBranchProject> {
 
     @Override
-    public Class<Project> type() {
-        return Project.class;
+    public Class<MultiBranchProject> type() {
+        return MultiBranchProject.class;
     }
 
-    @NonNull
+    /**
+     * {@inheritDoc}
+     */
+    @Nonnull
     @Override
-    public Collection<? extends Action> createFor(@NonNull Project project) {
-        return Collections.singletonList(new MonitoringProjectAction(project));
+    public Collection<? extends Action> createFor(@Nonnull MultiBranchProject multiBranchProject) {
+        return Collections.singletonList(new MonitoringProjectAction(multiBranchProject));
     }
 }

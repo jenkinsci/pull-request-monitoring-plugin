@@ -8,11 +8,6 @@
             <h1>
                 Pull Request Monitoring
             </h1>
-            <ul>
-                <j:forEach var="build" items="${it.builds}">
-                    <li><a href="../../../${build.getUrl()}/pull-request-monitoring">${build.getDisplayName()}</a></li>
-                </j:forEach>
-            </ul>
         </l:main-panel>
     </l:layout>
 </j:jelly>

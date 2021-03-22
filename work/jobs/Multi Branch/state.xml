@@ -1,0 +1,23 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<jenkins.branch.MultiBranchProject_-State plugin="branch-api@2.6.2">
+  <sourceActions>
+    <entry>
+      <string>fc4fbdd0-5e65-48a5-9c8b-53b50c3688aa</string>
+      <list>
+        <org.jenkinsci.plugins.github__branch__source.GitHubRepoMetadataAction plugin="github-branch-source@2.9.7"/>
+        <jenkins.scm.api.metadata.ObjectMetadataAction plugin="scm-api@2.6.4">
+          <objectDescription>Jenkins plugin to use Pull Requests as &quot;first-class citizen&quot;</objectDescription>
+        </jenkins.scm.api.metadata.ObjectMetadataAction>
+        <org.jenkinsci.plugins.github__branch__source.GitHubLink plugin="github-branch-source@2.9.7">
+          <iconClassName>icon-github-repo</iconClassName>
+          <url>https://github.com/simonsymhoven/pull-request-monitoring-plugin</url>
+        </org.jenkinsci.plugins.github__branch__source.GitHubLink>
+        <org.jenkinsci.plugins.github__branch__source.GitHubDefaultBranch plugin="github-branch-source@2.9.7">
+          <repoOwner>simonsymhoven</repoOwner>
+          <repository>pull-request-monitoring-plugin</repository>
+          <defaultBranch>master</defaultBranch>
+        </org.jenkinsci.plugins.github__branch__source.GitHubDefaultBranch>
+      </list>
+    </entry>
+  </sourceActions>
+</jenkins.branch.MultiBranchProject_-State>

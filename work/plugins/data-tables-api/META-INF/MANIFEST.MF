@@ -1,0 +1,24 @@
+Manifest-Version: 1.0
+Archiver-Version: Plexus Archiver
+Created-By: Apache Maven
+Built-By: hafner
+Build-Jdk: 11.0.10
+Extension-Name: data-tables-api
+Specification-Title: Provides jQuery DataTables for Jenkins plugins.
+Implementation-Title: data-tables-api
+Implementation-Version: 1.10.23-3
+Group-Id: io.jenkins.plugins
+Short-Name: data-tables-api
+Long-Name: DataTables.net API Plugin
+Url: https://github.com/jenkinsci/data-tables-api-plugin
+Minimum-Java-Version: 1.8
+Plugin-Version: 1.10.23-3
+Hudson-Version: 2.249.1
+Jenkins-Version: 2.249.1
+Plugin-Dependencies: bootstrap4-api:4.5.3-1,font-awesome-api:5.15.1-1,
+ jquery3-api:3.5.1-2,plugin-util-api:2.0.0,jackson2-api:2.11.3
+Plugin-Developers: Ullrich Hafner:uhafner:ullrich.hafner@gmail.com
+Support-Dynamic-Loading: true
+Plugin-License-Name: MIT license
+Plugin-ScmUrl: https://github.com/jenkinsci/data-tables-api-plugin
+

@@ -1,2 +1,3 @@
 # pull-request-monitoring-plugin
-Jenkins plugin to use Pull Requests as "first-class citizen"
+
+![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/simonsymhoven/pull-request-monitoring-plugin/GitHub%20CI/master?style=flat-square)
