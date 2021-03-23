@@ -1,6 +1,5 @@
 package io.jenkins.plugins.monitoring;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
 import hudson.Extension;
 import hudson.model.*;
 import jenkins.branch.MultiBranchProject;

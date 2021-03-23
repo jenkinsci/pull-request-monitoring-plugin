@@ -16,16 +16,25 @@ public class MonitoringProjectAction implements ProminentProjectAction {
         this.multiBranchProject = multiBranchProject;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getIconFileName() {
         return ICON_BIG;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getDisplayName() {
         return DISPLAY_NAME;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getUrlName() {
         return URI;
