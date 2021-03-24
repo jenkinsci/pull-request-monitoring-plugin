@@ -1,13 +1,94 @@
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout" xmlns:st="jelly:stapler">
+
+<j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout" xmlns:st="jelly:stapler" xmlns:bs="/bootstrap">
+
     <l:layout title="Pull Request Monitoring">
+
         <l:side-panel>
+
             <st:include page="sidepanel.jelly" it="${it.project}" optional="true" />
+
         </l:side-panel>
+
         <l:main-panel>
-            <h1>
-                Pull Request Monitoring
-            </h1>
+
+            <st:adjunct includes="io.jenkins.plugins.bootstrap4"/>
+
+            <div class="fluid-container">
+
+                <h1>
+                    Pull Request Monitoring (Project View)
+                </h1>
+
+                <h3>
+                    Pull Requests <span class="badge bg-success">${it.pullRequests.size()}</span>
+                </h3>
+
+                <div class="row">
+
+                        <j:forEach var="job" items="${it.pullRequests}">
+
+                            <div class="col-4">
+
+                                <bs:card title="${job.getDisplayName()}"  fontAwesomeIcon="shield-alt">
+
+                                    <h6 class="card-subtitle mb-2 text-muted">${it.getObjectMetaData(job).getObjectDisplayName()}</h6>
+                                    <div class="row">
+
+                                        <div class="col">
+
+                                            <p>${it.getBranch(job).getHead().getSourceBranch()} &#8594;
+                                                ${it.getTarget().getHead().getName()}</p>
+
+                                        </div>
+
+                                    </div>
+
+                                    <div class="row border-top"/>
+
+                                    <div class="row">
+
+                                        <div class="col">
+
+                                            <button onclick="location.href='../../../${job.getLastBuild().getUrl()}/pull-request-monitoring'"
+                                                    type="button" class="btn btn-outline-primary">Details</button>
+
+
+                                            <button onclick="location.href='${it.getObjectMetaData(job).getObjectUrl()}'"
+                                                    type="button" class="btn btn-outline-success">View Pull Request</button>
+
+                                        </div>
+
+                                    </div>
+
+                                </bs:card>
+
+                            </div>
+
+                        </j:forEach>
+
+                </div>
+
+            </div>
+
         </l:main-panel>
+
     </l:layout>
+
+    <style type="text/css">
+
+        .badge {
+            color: #fff;
+            height: 25px;
+            width: 25px;
+            border-radius: 50%;
+        }
+
+        .border-top {
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+    </style>
+
 </j:jelly>
