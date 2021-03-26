@@ -10,7 +10,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 @Extension
-public class MonitoringProjectActionFactory extends TransientActionFactory<MultiBranchProject> {
+public class MonitoringMultibranchProjectActionFactory extends TransientActionFactory<MultiBranchProject> {
 
     @Override
     public Class<MultiBranchProject> type() {
@@ -23,6 +23,6 @@ public class MonitoringProjectActionFactory extends TransientActionFactory<Multi
     @Nonnull
     @Override
     public Collection<? extends Action> createFor(@Nonnull MultiBranchProject multiBranchProject) {
-        return Collections.singletonList(new MonitoringProjectAction(multiBranchProject));
+        return Collections.singletonList(new MonitoringMultibranchProjectAction(multiBranchProject));
     }
 }

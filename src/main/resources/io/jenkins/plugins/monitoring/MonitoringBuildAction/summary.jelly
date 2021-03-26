@@ -1,0 +1,14 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:t="/lib/hudson">
+
+    <j:if test="${it.isPullRequest()}">
+
+        <t:summary icon="/plugin/pull-request-monitoring/icons/pull-request-monitoring-48x48.png">
+
+            Build ${it.run.getDisplayName()} is part of <a href="${it.getUrlName()}">${it.run.getParent().getDisplayName()}</a>
+
+        </t:summary>
+
+    </j:if>
+
+</j:jelly>

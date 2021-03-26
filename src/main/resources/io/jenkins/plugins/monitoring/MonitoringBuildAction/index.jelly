@@ -1,13 +1,72 @@
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout" xmlns:st="jelly:stapler">
+
+<j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout" xmlns:st="jelly:stapler" xmlns:fa="/font-awesome" xmlns:bs="/bootstrap">
+
     <l:layout title="Pull Request Monitoring ${it.run.getDisplayName()}">
+
+        <link href="${resURL}/plugin/pull-request-monitoring/css/pull-request.css" rel="stylesheet"/>
+        <script src="${resURL}/plugin/pull-request-monitoring/js/custom-script.js"/>
+
         <l:side-panel>
+
             <st:include page="sidepanel.jelly" it="${it.run}" optional="true" />
+
         </l:side-panel>
+
         <l:main-panel>
-            <h1>
-                Pull Request Monitoring (Build View)
-            </h1>
+
+            <st:adjunct includes="io.jenkins.plugins.bootstrap4"/>
+
+            <div class="container">
+
+                <div class="row">
+
+                    <h1 class="col-8">
+
+                        Pull Request Monitoring ${it.run.getDisplayName()}
+
+                    </h1>
+
+                    <button id="edit" onclick="editLayout()"
+                            type="button" class="btn btn-outline-danger">Edit Layout</button>
+
+                    <button id="save" onclick="saveLayout()"
+                            type="button" class="btn btn-success disabled">Save Layout</button>
+
+                </div>
+
+                <h6>Available Plugins</h6>
+
+                <div id="div0" class="row" ondragleave="cancelShake(event)" ondrop="drop(event)" ondragover="allowDrop(event)">
+
+                    <img id="plugin1" src="${resURL}/plugin/pull-request-monitoring/tools/cs.png" draggable="false" ondragstart="drag(event)"/>
+
+                    <img id="plugin2" src="${resURL}/plugin/pull-request-monitoring/tools/spotbugs.png" draggable="false" ondragstart="drag(event)"/>
+
+                </div>
+
+                <div class="row">
+
+                    <div id="div1" class="col col-4" ondragleave="cancelShake(event)" ondrop="drop(event)" ondragover="allowDrop(event)">Slot 1</div>
+
+                    <div id="div2" class="col col-4" ondragleave="cancelShake(event)" ondrop="drop(event)" ondragover="allowDrop(event)">Slot 2</div>
+
+                    <div id="div3" class="col col-4" ondragleave="cancelShake(event)" ondrop="drop(event)" ondragover="allowDrop(event)">Slot 3</div>
+
+                </div>
+
+                <div class="row">
+
+                    <div id="div4" class="col col-7" ondragleave="cancelShake(event)" ondrop="drop(event)" ondragover="allowDrop(event)">Slot 4</div>
+
+                    <div id="div5" class="col col-5" ondragleave="cancelShake(event)" ondrop="drop(event)" ondragover="allowDrop(event)">Slot 5</div>
+
+                </div>
+
+            </div>
+
         </l:main-panel>
+
     </l:layout>
+
 </j:jelly>

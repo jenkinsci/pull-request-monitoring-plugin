@@ -13,7 +13,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
-public class MonitoringProjectAction implements ProminentProjectAction {
+public class MonitoringMultibranchProjectAction implements ProminentProjectAction, Action {
     static final String URI = "pull-request-monitoring";
     static final String DISPLAY_NAME = "Pull Request Monitoring";
     static final String ICONS_PREFIX = "/plugin/pull-request-monitoring/icons/";
@@ -24,7 +24,7 @@ public class MonitoringProjectAction implements ProminentProjectAction {
 
     private transient final MultiBranchProject<?, ?> multiBranchProject;
 
-    public MonitoringProjectAction(MultiBranchProject<?, ?> multiBranchProject) {
+    public MonitoringMultibranchProjectAction(MultiBranchProject<?, ?> multiBranchProject) {
         this.multiBranchProject = multiBranchProject;
     }
 
@@ -129,8 +129,7 @@ public class MonitoringProjectAction implements ProminentProjectAction {
         return getJobs().stream().filter(job -> {
             BranchJobProperty branchJobProperty = job.getProperty(BranchJobProperty.class);
             String pronoun = branchJobProperty.getBranch().getHead().getPronoun();
-            SCMDescriptor<?> desc = branchJobProperty.getBranch().getScm().getDescriptor();
-            desc.getBrowserDescriptors();
+
             if (pronoun == null) {
                 return false;
             }

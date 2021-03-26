@@ -1,12 +1,10 @@
 package io.jenkins.plugins.monitoring;
 
 import hudson.model.Action;
-import hudson.model.ItemGroup;
-import hudson.model.Job;
 import hudson.model.Run;
-import jenkins.branch.MultiBranchProject;
+import org.jenkinsci.plugins.workflow.multibranch.BranchJobProperty;
 
-import java.util.Optional;
+import java.util.Objects;
 
 public class MonitoringBuildAction implements Action {
     private final transient Run<?, ?> run;
@@ -17,20 +15,24 @@ public class MonitoringBuildAction implements Action {
 
     @Override
     public String getIconFileName() {
-        return MonitoringProjectAction.ICON_SMALL;
+        return MonitoringMultibranchProjectAction.ICON_SMALL;
     }
 
     @Override
     public String getDisplayName() {
-        return MonitoringProjectAction.DISPLAY_NAME;
+        return String.format("%s '%s'", MonitoringMultibranchProjectAction.DISPLAY_NAME, run.getDisplayName());
     }
 
     @Override
     public String getUrlName() {
-        return MonitoringProjectAction.URI;
+        return MonitoringMultibranchProjectAction.URI;
     }
 
     public Run<?, ?> getRun() {
         return run;
+    }
+
+    public boolean isPullRequest() {
+        return run.getParent().getPronoun().equals("Pull Request");
     }
 }

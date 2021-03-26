@@ -23,6 +23,10 @@ public class MonitoringBuildActionFactory extends TransientActionFactory<Run> {
     @Nonnull
     @Override
     public Collection<? extends Action> createFor(@Nonnull Run run) {
-        return Collections.singletonList(new MonitoringBuildAction(run));
+        if (run.getParent().getPronoun().equals("Pull Request")) {
+            return Collections.singletonList(new MonitoringBuildAction(run));
+        }
+
+        return Collections.emptyList();
     }
 }
