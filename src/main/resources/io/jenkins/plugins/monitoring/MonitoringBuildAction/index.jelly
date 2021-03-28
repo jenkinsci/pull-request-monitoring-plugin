@@ -4,8 +4,9 @@
 
     <l:layout title="Pull Request Monitoring ${it.run.getDisplayName()}">
 
-        <link href="${resURL}/plugin/pull-request-monitoring/css/pull-request.css" rel="stylesheet"/>
-        <script src="${resURL}/plugin/pull-request-monitoring/js/custom-script.js"/>
+        <link href="${resURL}/plugin/pull-request-monitoring/css/pull-request-monitoring.css" rel="stylesheet"/>
+        <script src="${resURL}/plugin/pull-request-monitoring/js/muuri.min.js"/>
+        <script src="${resURL}/plugin/pull-request-monitoring/js/muuri-grid.js"/>
 
         <l:side-panel>
 
@@ -27,39 +28,169 @@
 
                     </h1>
 
-                    <button id="edit" onclick="editLayout()"
-                            type="button" class="btn btn-outline-danger">Edit Layout</button>
-
-                    <button id="save" onclick="saveLayout()"
-                            type="button" class="btn btn-success disabled">Save Layout</button>
-
-                </div>
-
-                <h6>Available Plugins</h6>
-
-                <div id="div0" class="row" ondragleave="cancelShake(event)" ondrop="drop(event)" ondragover="allowDrop(event)">
-
-                    <img id="plugin1" src="${resURL}/plugin/pull-request-monitoring/tools/cs.png" draggable="false" ondragstart="drag(event)"/>
-
-                    <img id="plugin2" src="${resURL}/plugin/pull-request-monitoring/tools/spotbugs.png" draggable="false" ondragstart="drag(event)"/>
+                    <button class="btn btn-primary"
+                            type="button"
+                            data-toggle="modal" data-target="#exampleModal">
+                        <i class="material-icons">&#xE145;</i>
+                        Add item
+                    </button>
 
                 </div>
 
-                <div class="row">
+                <section class="grid-demo">
 
-                    <div id="div1" class="col col-4" ondragleave="cancelShake(event)" ondrop="drop(event)" ondragover="allowDrop(event)">Slot 1</div>
+                    <div class="grid"></div>
 
-                    <div id="div2" class="col col-4" ondragleave="cancelShake(event)" ondrop="drop(event)" ondragover="allowDrop(event)">Slot 2</div>
+                </section>
 
-                    <div id="div3" class="col col-4" ondragleave="cancelShake(event)" ondrop="drop(event)" ondragover="allowDrop(event)">Slot 3</div>
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 
-                </div>
+                    <div class="modal-dialog modal-lg modal-dialog-centered">
 
-                <div class="row">
+                        <div class="modal-content">
 
-                    <div id="div4" class="col col-7" ondragleave="cancelShake(event)" ondrop="drop(event)" ondragover="allowDrop(event)">Slot 4</div>
+                            <div class="modal-header">
 
-                    <div id="div5" class="col col-5" ondragleave="cancelShake(event)" ondrop="drop(event)" ondragover="allowDrop(event)">Slot 5</div>
+                                <h5 class="modal-title" id="exampleModalLabel">Add an item to your dashboard</h5>
+
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <i class="material-icons close">&#xe5cd;</i>
+                                </button>
+
+                            </div>
+
+                            <div class="modal-body">
+
+                                <div class="container-fluid">
+
+                                    <div class="row">
+
+                                        <div class="col-sm-12">
+
+                                            1. Select your slot size:
+
+                                        </div>
+
+                                    </div>
+
+                                    <div class="row">
+
+                                        <div class="col-sm-12">
+
+                                            <form>
+
+                                                <div class="cc-selector-brick">
+
+                                                    <input checked="checked" id="brick2x2" type="radio" name="brick" value="2,2" />
+                                                    <label class="brick" style="background-image:url(${resURL}/plugin/pull-request-monitoring/icons/bricks/brick-2x2.png);" for="brick2x2"/>
+
+                                                    <input id="brick4x4" type="radio" name="brick" value="4,4" />
+                                                    <label class="brick" style="background-image:url(${resURL}/plugin/pull-request-monitoring/icons/bricks/brick-4x4.png);" for="brick4x4"/>
+
+                                                    <input id="brick4x2" type="radio" name="brick" value="4,2" />
+                                                    <label class="brick" style="background-image:url(${resURL}/plugin/pull-request-monitoring/icons/bricks/brick-4x2.png);" for="brick4x2"/>
+
+                                                    <input id="brick2x4" type="radio" name="brick" value="2,4" />
+                                                    <label class="brick" style="background-image:url(${resURL}/plugin/pull-request-monitoring/icons/bricks/brick-2x4.png);" for="brick2x4"/>
+
+                                                </div>
+
+                                            </form>
+
+                                        </div>
+
+                                    </div>
+
+                                    <div class="row">
+
+                                        <div class="col-sm-12">
+
+                                            2. Choose a color:
+
+                                        </div>
+
+                                    </div>
+
+                                    <div class="row">
+
+                                        <div class="col-sm-12">
+
+                                            <form>
+
+                                                <div class="cc-selector-color">
+
+                                                    <input checked="checked" id="black" type="radio" name="color" value="black" />
+                                                    <label class="color color-black" for="black"/>
+
+                                                    <input id="blue" type="radio" name="color" value="blue" />
+                                                    <label class="color color-blue" for="blue"/>
+
+                                                    <input id="green" type="radio" name="color" value="green" />
+                                                    <label class="color color-green" for="green"/>
+
+                                                    <input id="red" type="radio" name="color" value="red" />
+                                                    <label class="color color-red" for="red"/>
+
+                                                </div>
+
+                                            </form>
+
+                                        </div>
+
+                                    </div>
+
+                                    <div class="row">
+
+                                        <div class="col-sm-12">
+
+                                            3. Choose a plugin to display:
+
+                                        </div>
+
+                                    </div>
+
+                                    <div class="row">
+
+                                        <div class="col-sm-12">
+
+                                            <form>
+
+                                                <div class="cc-selector-plugin">
+
+                                                    <input checked="checked" id="1" type="radio" name="plugin" value="${resURL}/plugin/pull-request-monitoring/tools/checkstyle.png" />
+                                                    <label class="plugin" style="background-image:url(${resURL}/plugin/pull-request-monitoring/tools/checkstyle.png);" for="1"/>
+
+                                                    <input id="2" type="radio" name="plugin" value="${resURL}/plugin/pull-request-monitoring/tools/spotbugs.png" />
+                                                    <label class="plugin" style="background-image:url(${resURL}/plugin/pull-request-monitoring/tools/spotbugs.png);" for="2"/>
+
+                                                    <input id="3" type="radio" name="plugin" value="${resURL}/plugin/pull-request-monitoring/tools/codecov.png" />
+                                                    <label class="plugin" style="background-image:url(${resURL}/plugin/pull-request-monitoring/tools/codecov.png);" for="3"/>
+
+                                                </div>
+
+                                            </form>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+                            </div>
+
+                            <div class="modal-footer">
+
+                                <button id="modalClose" type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+
+                                <button type="button" class="btn btn-primary add-more-items">Add item</button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
 
                 </div>
 
@@ -70,3 +201,4 @@
     </l:layout>
 
 </j:jelly>
+
