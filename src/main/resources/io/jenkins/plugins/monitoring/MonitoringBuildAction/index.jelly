@@ -1,6 +1,6 @@
 <?jelly escape-by-default='true'?>
 
-<j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout" xmlns:st="jelly:stapler" xmlns:fa="/font-awesome" xmlns:bs="/bootstrap">
+<j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout" xmlns:st="jelly:stapler">
 
     <l:layout title="Pull Request Monitoring ${it.run.getDisplayName()}">
 

@@ -2,11 +2,19 @@ package io.jenkins.plugins.monitoring;
 
 import hudson.model.Action;
 import hudson.model.Run;
-import org.jenkinsci.plugins.workflow.multibranch.BranchJobProperty;
 
-import java.util.Objects;
 
+/**
+ * This action displays a link on the side panel of a {@link Run}. The action is only displayed if the parent job
+ * is a pull request, which is described in the associated {@link MonitoringBuildActionFactory}.
+ * The action is responsible to render the summary via its associated 'summary.jelly' view and render the
+ * main plugin page, where the user can configure the dashboard with all supported plugins via its associated
+ * 'index.jelly view.
+ *
+ * @author Simon Symhoven
+ */
 public class MonitoringBuildAction implements Action {
+
     private final transient Run<?, ?> run;
 
     public MonitoringBuildAction(Run<?, ?> run) {
@@ -32,7 +40,4 @@ public class MonitoringBuildAction implements Action {
         return run;
     }
 
-    public boolean isPullRequest() {
-        return run.getParent().getPronoun().equals("Pull Request");
-    }
 }

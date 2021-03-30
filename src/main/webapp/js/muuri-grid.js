@@ -17,11 +17,11 @@ document.addEventListener('DOMContentLoaded', function () {
     // Grid helper functions
     //
 
-    function initDemo() {
+    function init() {
 
         initGrid();
 
-        addItemsElement.addEventListener('click', addItems);
+        addItemsElement.addEventListener('click', addItem);
         gridElement.addEventListener('click', function (e) {
             if (elementMatches(e.target, '.card-remove, .card-remove i')) {
                 removeItem(e);
@@ -33,8 +33,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function initGrid() {
-
-        let dragCounter = 0;
 
         grid = new Muuri(gridElement, {
             layoutDuration: 400,
@@ -51,13 +49,10 @@ document.addEventListener('DOMContentLoaded', function () {
             dragReleaseEasing: 'ease'
         })
             .on('dragStart', function () {
-                ++dragCounter;
                 docElem.classList.add('dragging');
             })
             .on('dragEnd', function () {
-                if (--dragCounter < 1) {
-                    docElem.classList.remove('dragging');
-                }
+                docElem.classList.remove('dragging');
             })
             .on('layoutEnd', function (items) {
                 // todo: Save config
@@ -65,7 +60,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     }
 
-    function addItems() {
+    function addItem() {
         const bricks = document.querySelectorAll('input[name="brick"]');
 
         let selectedBrick;
@@ -169,7 +164,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     if (!domLoaded) {
-        initDemo();
+        init();
     }
 
 });

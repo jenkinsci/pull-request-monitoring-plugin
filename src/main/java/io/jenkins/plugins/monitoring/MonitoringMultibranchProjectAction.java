@@ -1,18 +1,25 @@
 package io.jenkins.plugins.monitoring;
 
-import groovy.util.logging.Slf4j;
-import hudson.model.*;
-import hudson.scm.SCMDescriptor;
+import hudson.model.Action;
+import hudson.model.Job;
+import hudson.model.ProminentProjectAction;
 import jenkins.branch.Branch;
 import jenkins.branch.MultiBranchProject;
 import jenkins.scm.api.metadata.ObjectMetadataAction;
 import org.apache.commons.lang3.StringUtils;
 import org.jenkinsci.plugins.workflow.multibranch.BranchJobProperty;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Slf4j
+/**
+ * This action displays a link on the side panel of a {@link MultiBranchProject}.
+ * The action is responsible to render the basic overview of all open pull requests
+ * via its associated 'index.jelly' view.
+ *
+ * @author Simon Symhoven
+ */
 public class MonitoringMultibranchProjectAction implements ProminentProjectAction, Action {
     static final String URI = "pull-request-monitoring";
     static final String DISPLAY_NAME = "Pull Request Monitoring";
