@@ -13,11 +13,11 @@ import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 
 import javax.annotation.Nonnull;
-import javax.xml.bind.SchemaOutputResolver;
+import java.io.Serializable;
 import java.util.Set;
 
-public class Monitor extends Step {
-
+public class Monitor extends Step implements Serializable {
+    private static final long serialVersionUID = -1329798203887148860L;
     private String configuration;
 
     /**
@@ -51,8 +51,8 @@ public class Monitor extends Step {
     }
 
     static class Execution extends SynchronousStepExecution {
-
         private static final transient Logger LOGGER = LoggerFactory.getLogger( Execution.class.getName());
+        private static final long serialVersionUID = 1300005476208035751L;
         private final Monitor monitor;
 
         public Execution(StepContext stepContext, Monitor monitor)
