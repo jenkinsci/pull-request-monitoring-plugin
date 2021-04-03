@@ -51,7 +51,7 @@ public class Monitor extends Step implements Serializable {
     static class Execution extends StepExecution {
         private static final long serialVersionUID = 1300005476208035751L;
         private static final transient Logger LOGGER = Logger.getLogger(Execution.class.getName());
-        private final transient TaskListener listener;
+        private final TaskListener listener;
         private final Monitor monitor;
 
         public Execution(StepContext stepContext, Monitor monitor) throws IOException, InterruptedException {
@@ -63,15 +63,9 @@ public class Monitor extends Step implements Serializable {
         @Override
         public boolean start() throws Exception {
             Run<?, ?> build = getContext().get(Run.class);
-            PrintStream console = listener.getLogger();
-            MonitoringBuildAction action = new MonitoringBuildAction(build);
-
+            MonitoringBuildAction action = build.getAction(MonitoringBuildAction.class);
             action.setConfig("Test");
-            build.addAction(action);
 
-
-            LOGGER.log(Level.INFO, "Execution initialized.");
-            console.println("Execution initialized.");
             return true;
         }
     }
