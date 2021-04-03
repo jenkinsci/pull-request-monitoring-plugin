@@ -5,10 +5,8 @@
 buildPlugin(useAci: true)
 */
 
-pipeline {
-    stages {
-         stage ('Monitoring') {
-             monitor ('{"width":2,"height":2,"plugin":"checkstyle"}')
-         }
-    }
+node {
+     stage ('Monitoring') {
+         monitor ('{"width":2,"height":2,"plugin":"checkstyle"}')
+     }
 }
