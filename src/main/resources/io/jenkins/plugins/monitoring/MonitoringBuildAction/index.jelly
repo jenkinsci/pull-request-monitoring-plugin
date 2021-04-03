@@ -39,6 +39,8 @@
 
                 <section class="grid-demo">
 
+                    <p>Config: ${it.run.getConfig()}</p>
+
                     <div class="grid"></div>
 
                 </section>

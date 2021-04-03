@@ -2,19 +2,19 @@ package io.jenkins.plugins.monitoring;
 
 import com.google.common.collect.ImmutableSet;
 import hudson.Extension;
-import hudson.FilePath;
-import hudson.Launcher;
+import hudson.model.Run;
 import hudson.model.TaskListener;
-import io.jenkins.cli.shaded.org.slf4j.Logger;
-import io.jenkins.cli.shaded.org.slf4j.LoggerFactory;
 import org.jenkinsci.Symbol;
 import org.jenkinsci.plugins.workflow.steps.*;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
-
 import javax.annotation.Nonnull;
+import java.io.IOException;
+import java.io.PrintStream;
 import java.io.Serializable;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Monitor extends Step implements Serializable {
     private static final long serialVersionUID = -1329798203887148860L;
@@ -26,7 +26,6 @@ public class Monitor extends Step implements Serializable {
     @DataBoundConstructor
     public Monitor() {
         super();
-        System.out.println("Init Monitor");
     }
 
     /**
@@ -37,7 +36,6 @@ public class Monitor extends Step implements Serializable {
      */
     @DataBoundSetter
     public void setConfiguration(final String configuration) {
-        System.out.println("Set config");
         this.configuration = configuration;
     }
 
@@ -50,22 +48,31 @@ public class Monitor extends Step implements Serializable {
         return new Execution(stepContext, this);
     }
 
-    static class Execution extends SynchronousStepExecution {
-        private static final transient Logger LOGGER = LoggerFactory.getLogger( Execution.class.getName());
+    static class Execution extends StepExecution {
         private static final long serialVersionUID = 1300005476208035751L;
+        private static final transient Logger LOGGER = Logger.getLogger(Execution.class.getName());
+        private final transient TaskListener listener;
         private final Monitor monitor;
 
-        public Execution(StepContext stepContext, Monitor monitor)
-        {
+        public Execution(StepContext stepContext, Monitor monitor) throws IOException, InterruptedException {
             super(stepContext);
             this.monitor = monitor;
+            this.listener = stepContext.get(TaskListener.class);
         }
 
         @Override
-        protected Object run() throws Exception {
-            LOGGER.info( "Run Monitor" );
-            LOGGER.info("Config: " + monitor.getConfiguration());
-            return null;
+        public boolean start() throws Exception {
+            Run<?, ?> build = getContext().get(Run.class);
+            PrintStream console = listener.getLogger();
+            MonitoringBuildAction action = new MonitoringBuildAction(build);
+
+            action.setConfig("Test");
+            build.addAction(action);
+
+
+            LOGGER.log(Level.INFO, "Execution initialized.");
+            console.println("Execution initialized.");
+            return true;
         }
     }
 
@@ -75,7 +82,7 @@ public class Monitor extends Step implements Serializable {
 
         @Override
         public Set<? extends Class<?>> getRequiredContext() {
-            return ImmutableSet.of( FilePath.class, TaskListener.class, Launcher.class);
+            return ImmutableSet.of(TaskListener.class, Run.class);
         }
 
         @Override
