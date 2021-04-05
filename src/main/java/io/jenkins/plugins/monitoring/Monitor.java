@@ -11,6 +11,12 @@ import javax.annotation.Nonnull;
 import java.io.Serializable;
 import java.util.Set;
 
+/**
+ * This {@link Step} is responsible for the configuration of the monitoring dashboard
+ * via the corresponding Jenkinsfile.
+ *
+ * @author Simon Symhoven
+ */
 public class Monitor extends Step implements Serializable {
     private static final long serialVersionUID = -1329798203887148860L;
     private String configuration;
@@ -43,7 +49,11 @@ public class Monitor extends Step implements Serializable {
         return new Execution(stepContext, this);
     }
 
-    static class Execution extends StepExecution {
+    /**
+     *  The {@link Execution} routine for the monitoring step.
+     */
+    static class Execution extends SynchronousStepExecution<Void> {
+
         private static final long serialVersionUID = 1300005476208035751L;
         private final Monitor monitor;
 
@@ -53,16 +63,20 @@ public class Monitor extends Step implements Serializable {
         }
 
         @Override
-        public boolean start() throws Exception {
+        public Void run() throws Exception {
             final Run<?, ?> run = getContext().get(Run.class);
             if (run.getParent().getPronoun().equals("Pull Request")) {
                 run.addAction(new MonitoringBuildAction(run, monitor.getConfiguration()));
             }
 
-            return false;
+            return null;
         }
+
     }
 
+    /**
+     * A {@link Descriptor} for the monitoring step.
+     */
     @Extension
     public static class Descriptor extends StepDescriptor {
 

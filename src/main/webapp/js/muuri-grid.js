@@ -1,20 +1,30 @@
+/**
+ * @author Simon Symhoven
+ */
+
 let domLoaded;
 let grid;
-let uuid;
 
 
+/**
+ *
+ * @param configuration
+ */
 function initDashboard(configuration) {
 
     const config = JSON.parse(configuration);
+
     Object.keys(config.plugins).forEach(function(key) {
         const plugin = config.plugins[key];
-        console.log(plugin)
-        const item = generateElement([plugin.width, plugin.height], plugin.color, key);
+        const item = generateItem([plugin.width, plugin.height], plugin.color, key);
         grid.add(item);
     });
 
 }
 
+/**
+ *
+ */
 document.addEventListener('DOMContentLoaded', function () {
 
     let docElem = document.documentElement;
@@ -22,8 +32,10 @@ document.addEventListener('DOMContentLoaded', function () {
     let gridElement = demo.querySelector('.grid');
     let addItemsElement = document.querySelector('.add-more-items');
 
+    /**
+     *
+     */
     function initGrid() {
-        this.uuid = 0;
 
         grid = new Muuri(gridElement, {
             layoutDuration: 400,
@@ -66,41 +78,38 @@ document.addEventListener('DOMContentLoaded', function () {
 
 });
 
+/**
+ *
+ * @param values
+ * @returns {*}
+ */
+function getCheckedValue(values) {
+
+    let checked;
+    for (const v of values) {
+        if (v.checked) {
+            checked = v.value;
+            break;
+        }
+    }
+    return checked;
+
+}
+
+/**
+ *
+ */
 function addItem() {
+
     const bricks = document.querySelectorAll('input[name="brick"]');
-
-    let selectedBrick;
-    for (const b of bricks) {
-        if (b.checked) {
-            selectedBrick = b.value;
-            break;
-        }
-    }
-    const size = selectedBrick.split(",")
-
     const colors = document.querySelectorAll('input[name="color"]');
-
-    let selectedColor;
-    for (const c of colors) {
-        if (c.checked) {
-            selectedColor = c.value;
-            break;
-        }
-    }
-    const color = selectedColor;
-
     const plugins = document.querySelectorAll('input[name="plugin"]');
 
-    let selectedPlugin;
-    for (const p of plugins) {
-        if (p.checked) {
-            selectedPlugin = p.value;
-            break;
-        }
-    }
-    const plugin = selectedPlugin;
+    const size = getCheckedValue(bricks).split(",");
+    const color = getCheckedValue(colors);
+    const plugin = getCheckedValue(plugins);
 
-    const newElem = generateElement(size, color, plugin);
+    const newElem = generateItem(size, color, plugin);
 
     grid.add(newElem);
     const modal = document.getElementById('modalClose');
@@ -108,7 +117,12 @@ function addItem() {
 
 }
 
+/**
+ *
+ * @param e
+ */
 function removeItem(e) {
+
     const items = grid.getItems();
     const elem = elementClosest(e.target, '.muuri-item');
     const index = items.findIndex(e => e._element === elem);
@@ -117,29 +131,43 @@ function removeItem(e) {
     grid.hide(elemToRemove, {onFinish: function (items) {
             grid.remove(items, {removeElements: true});
         }});
+
 }
 
-function generateElement(size, color, plugin) {
+/**
+ *
+ * @param size
+ * @param color
+ * @param plugin
+ * @returns {ChildNode}
+ */
+function generateItem(size, color, plugin) {
 
-    const id = ++this.uuid;
-    const title = 'Title'
+    const id = plugin;
+    const title = plugin;
     const width = size[0];
     const height = size[1];
     const itemElem = document.createElement('div');
-    itemElem.innerHTML = '' +
+    itemElem.innerHTML =
         '<div class="muuri-item h' + height + ' w' + width + ' ' + color + '" data-id="' + id + '" data-color="' + color + '" data-title="' + title + '">' +
-        '<div class="muuri-item-content">' +
-        '<div class="card">' +
-        '<div class="plugin-card-title">' + plugin + '</div>' +
-        '<div class="card-remove"><i class="material-icons">&#xE5CD;</i></div>' +
-        '</div>' +
-        '</div>' +
+            '<div class="muuri-item-content">' +
+                '<div class="card">' +
+                    '<div class="plugin-card-title">' + plugin + '</div>' +
+                    '<div class="card-remove"><i class="material-icons">&#xE5CD;</i></div>' +
+                '</div>' +
+            '</div>' +
         '</div>';
 
     return itemElem.firstChild;
 
 }
 
+/**
+ *
+ * @param element
+ * @param selector
+ * @returns {boolean}
+ */
 function elementMatches(element, selector) {
 
     const p = Element.prototype;
@@ -147,6 +175,12 @@ function elementMatches(element, selector) {
 
 }
 
+/**
+ *
+ * @param element
+ * @param selector
+ * @returns {*|null}
+ */
 function elementClosest(element, selector) {
 
     if (window.Element && !Element.prototype.closest) {
