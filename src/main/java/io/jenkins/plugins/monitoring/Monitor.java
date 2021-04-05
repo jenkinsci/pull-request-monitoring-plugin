@@ -2,6 +2,7 @@ package io.jenkins.plugins.monitoring;
 
 import com.google.common.collect.ImmutableSet;
 import hudson.Extension;
+import hudson.model.Queue;
 import hudson.model.Run;
 import hudson.model.TaskListener;
 import org.jenkinsci.Symbol;
@@ -50,23 +51,22 @@ public class Monitor extends Step implements Serializable {
 
     static class Execution extends StepExecution {
         private static final long serialVersionUID = 1300005476208035751L;
-        private static final transient Logger LOGGER = Logger.getLogger(Execution.class.getName());
-        private final TaskListener listener;
         private final Monitor monitor;
 
-        public Execution(StepContext stepContext, Monitor monitor) throws IOException, InterruptedException {
+        public Execution(StepContext stepContext, Monitor monitor) {
             super(stepContext);
             this.monitor = monitor;
-            this.listener = stepContext.get(TaskListener.class);
         }
 
         @Override
         public boolean start() throws Exception {
             Run<?, ?> build = getContext().get(Run.class);
-            MonitoringBuildAction action = build.getAction(MonitoringBuildAction.class);
-            action.setConfig("Test");
 
-            return true;
+            if (build.getParent().getPronoun().equals("Pull Request")) {
+                build.addAction(new MonitoringBuildAction(build, monitor.getConfiguration()));
+            }
+
+            return false;
         }
     }
 

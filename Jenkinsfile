@@ -7,6 +7,6 @@ buildPlugin(useAci: true)
 
 node {
      stage ('Monitoring') {
-         monitor ('{"width":2,"height":2,"plugin":"checkstyle"}')
+         monitor ([configuration:'{"width":2,"height":2,"plugin":"checkstyle"}'])
      }
 }

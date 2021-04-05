@@ -14,19 +14,16 @@ import hudson.model.Run;
  * @author Simon Symhoven
  */
 public class MonitoringBuildAction implements Action {
-    private String config;
+    private final transient String configuration;
     private final transient Run<?, ?> run;
 
-    public MonitoringBuildAction(Run<?, ?> run) {
+    public MonitoringBuildAction(Run<?, ?> run, String configuration) {
         this.run = run;
+        this.configuration = configuration;
     }
 
-    public void setConfig(String config) {
-        this.config = config;
-    }
-
-    public String getConfig() {
-        return config;
+    public String getConfiguration() {
+        return configuration;
     }
 
     @Override

@@ -39,7 +39,7 @@
 
                 <section class="grid-demo">
 
-                    <p>Config: ${it.run.getConfig()}</p>
+                    <p>Config: ${it.run.getConfiguration()}</p>
 
                     <div class="grid"></div>
 
