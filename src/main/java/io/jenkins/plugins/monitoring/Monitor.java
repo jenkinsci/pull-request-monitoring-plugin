@@ -66,7 +66,7 @@ public class Monitor extends Step implements Serializable {
         public Void run() throws Exception {
             final Run<?, ?> run = getContext().get(Run.class);
             if (run.getParent().getPronoun().equals("Pull Request")) {
-                run.addAction(new MonitoringBuildAction(run, monitor.getConfiguration()));
+                run.addAction(new MonitoringBuildAction(run, monitor));
             }
 
             return null;

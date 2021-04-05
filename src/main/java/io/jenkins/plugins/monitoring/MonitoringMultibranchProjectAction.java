@@ -5,8 +5,8 @@ import hudson.model.Job;
 import hudson.model.ProminentProjectAction;
 import jenkins.branch.Branch;
 import jenkins.branch.MultiBranchProject;
+import jenkins.scm.api.metadata.ContributorMetadataAction;
 import jenkins.scm.api.metadata.ObjectMetadataAction;
-import org.apache.commons.lang3.StringUtils;
 import org.jenkinsci.plugins.workflow.multibranch.BranchJobProperty;
 
 import java.util.List;
@@ -26,8 +26,6 @@ public class MonitoringMultibranchProjectAction implements ProminentProjectActio
     static final String ICONS_PREFIX = "/plugin/pull-request-monitoring/icons/";
     static final String ICON_SMALL = ICONS_PREFIX + "pull-request-monitoring-24x24.png";
     static final String ICON_BIG = ICONS_PREFIX + "pull-request-monitoring-48x48.png";
-    private static final String DEFAULT_BRANCH = "master";
-    private String defaultBranch = DEFAULT_BRANCH;
 
     private transient final MultiBranchProject<?, ?> multiBranchProject;
 
@@ -88,32 +86,6 @@ public class MonitoringMultibranchProjectAction implements ProminentProjectActio
     }
 
     /**
-     * Get the {@link BranchJobProperty} for the reference branch.
-     *
-     * @return
-     *          the reference {@link Branch}.
-     */
-    public Branch getTarget() {
-        Job<?, ?> target = multiBranchProject.getItemByBranchName(getReferenceBranch());
-
-        if (target == null) {
-            return null;
-        }
-
-        return target.getProperty(BranchJobProperty.class).getBranch();
-    }
-
-    /**
-     * Get the name of reference branch.
-     *
-     * @return
-     *          the name of reference branch (default: master).
-     */
-    private String getReferenceBranch() {
-        return StringUtils.defaultIfBlank(StringUtils.strip(defaultBranch), DEFAULT_BRANCH);
-    }
-
-    /**
      * Fetch all jobs (items) of current {@link MultiBranchProject}.
      *
      * @return
@@ -158,6 +130,20 @@ public class MonitoringMultibranchProjectAction implements ProminentProjectActio
                 .stream().filter(action -> action instanceof ObjectMetadataAction).findFirst();
 
         return (ObjectMetadataAction) objectMetadataAction.orElse(null);
+    }
+
+    /**
+     *
+     * @param job
+     *          the job to get {@link ContributorMetadataAction} for.
+     * @return
+     *          the {@link ContributorMetadataAction} for the given job.
+     */
+    public ContributorMetadataAction getContributorMetaData(Job<?, ?> job) {
+        Optional<Action> contributorMetadataAction = job.getProperty(BranchJobProperty.class).getBranch().getActions()
+                .stream().filter(action -> action instanceof ContributorMetadataAction).findFirst();
+
+        return (ContributorMetadataAction) contributorMetadataAction.orElse(null);
     }
 
 }

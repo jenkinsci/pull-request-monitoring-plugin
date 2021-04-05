@@ -2,6 +2,7 @@ package io.jenkins.plugins.monitoring;
 
 import hudson.model.Action;
 import hudson.model.Run;
+import jenkins.model.RunAction2;
 import org.kohsuke.stapler.bind.JavaScriptMethod;
 
 
@@ -14,18 +15,18 @@ import org.kohsuke.stapler.bind.JavaScriptMethod;
  *
  * @author Simon Symhoven
  */
-public class MonitoringBuildAction implements Action {
-    private final transient String configuration;
-    private final transient Run<?, ?> run;
+public class MonitoringBuildAction implements RunAction2 {
+    private final Monitor monitor;
+    private transient Run<?, ?> run;
 
-    public MonitoringBuildAction(Run<?, ?> run, String configuration) {
+    public MonitoringBuildAction(Run<?, ?> run, Monitor monitor) {
         this.run = run;
-        this.configuration = configuration;
+        this.monitor = monitor;
     }
 
     @JavaScriptMethod
     public String getConfiguration() {
-        return configuration;
+        return monitor.getConfiguration();
     }
 
     @Override
@@ -47,4 +48,13 @@ public class MonitoringBuildAction implements Action {
         return run;
     }
 
+    @Override
+    public void onAttached(Run<?, ?> run) {
+        this.run = run;
+    }
+
+    @Override
+    public void onLoad(Run<?, ?> run) {
+        this.run = run;
+    }
 }

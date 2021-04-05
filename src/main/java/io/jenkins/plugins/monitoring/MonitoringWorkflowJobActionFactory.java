@@ -40,7 +40,8 @@ public class MonitoringWorkflowJobActionFactory extends TransientActionFactory<W
     @Nonnull
     @Override
     public Collection<? extends Action> createFor(@Nonnull WorkflowJob workflowJob) {
-        if (workflowJob.getPronoun().equals("Pull Request")) {
+
+        if (workflowJob.getPronoun().equals("Pull Request") ) {
             return Collections.singletonList(new MonitoringWorkflowJobAction(workflowJob));
         }
 

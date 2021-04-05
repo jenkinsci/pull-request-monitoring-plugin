@@ -1,8 +1,10 @@
 <?jelly escape-by-default='true'?>
 
-<j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout" xmlns:st="jelly:stapler" xmlns:bs="/bootstrap">
+<j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout" xmlns:st="jelly:stapler" xmlns:bs="/bootstrap" xmlns:fa="/font-awesome">
 
     <l:layout title="Pull Request Monitoring">
+
+        <link href="${resURL}/plugin/pull-request-monitoring/css/pull-request-monitoring.css" rel="stylesheet"/>
 
         <l:side-panel>
 
@@ -17,55 +19,68 @@
             <div class="fluid-container">
 
                 <h1>
-                    Pull Request Monitoring
+                    Pull Request Monitoring: Overview
                 </h1>
-
-                <h3>
-                    Pull Requests <span class="badge bg-success">${it.pullRequests.size()}</span>
-                </h3>
 
                 <div class="row">
 
-                        <j:forEach var="job" items="${it.pullRequests}">
+                    <j:forEach var="job" items="${it.pullRequests}">
 
-                            <div class="col-4">
+                        <div class="col-6">
 
-                                <bs:card title="${job.getDisplayName()}"  fontAwesomeIcon="shield-alt">
+                            <div class="card text-center">
 
-                                    <h6 class="card-subtitle mb-2 text-muted">${it.getObjectMetaData(job).getObjectDisplayName()}</h6>
-                                    <div class="row">
+                                <div class="card-header">
 
-                                        <div class="col">
+                                    ${it.getObjectMetaData(job).getObjectDisplayName()}
 
-                                            <p>${it.getBranch(job).getHead().getSourceBranch()} &#8594;
-                                                ${it.getTarget().getHead().getName()}</p>
+                                </div>
 
-                                        </div>
+                                <div class="card-body">
 
-                                    </div>
+                                    <h5 class="card-title">${job.getDisplayName()}</h5>
+
+                                    <p class="card-text">
+
+                                        <strong>Contributor:</strong> ${it.getContributorMetaData(job).getContributor()} <br/>
+
+                                        <strong>Source:</strong> ${it.getBranch(job).getHead().getSourceBranch()} <br/>
+
+                                        <strong>Target:</strong> ${it.getBranch(job).getHead().getTarget().getName()}
+
+                                    </p>
 
                                     <div class="row border-top"/>
 
-                                    <div class="row">
+                                    <button onclick="location.href='../../../${job.getLastBuild().getUrl()}/pull-request-monitoring'"
+                                            type="button" class="btn btn-outline-primary">Details</button>
 
-                                        <div class="col">
+                                    <button onclick="location.href='${it.getObjectMetaData(job).getObjectUrl()}'"
+                                            type="button" class="btn btn-outline-success">View Pull Request</button>
 
-                                            <button onclick="location.href='../../../${job.getLastBuild().getUrl()}/pull-request-monitoring'"
-                                                    type="button" class="btn btn-outline-primary">Details</button>
+                                </div>
 
+                                <div class="card-footer text-muted">
 
-                                            <button onclick="location.href='${it.getObjectMetaData(job).getObjectUrl()}'"
-                                                    type="button" class="btn btn-outline-success">View Pull Request</button>
+                                    <j:if test="${it.getBranch(job).getHead().merge}">
 
-                                        </div>
+                                        <i class="material-icons">&#xe5ca;</i>
 
-                                    </div>
+                                    </j:if>
 
-                                </bs:card>
+                                    <j:if test="${!it.getBranch(job).getHead().merge}">
+
+                                        <i class="material-icons">&#xe14c;</i>
+
+                                    </j:if>
+
+                                </div>
 
                             </div>
 
-                        </j:forEach>
+                        </div>
+
+                    </j:forEach>
 
                 </div>
 
@@ -74,21 +89,5 @@
         </l:main-panel>
 
     </l:layout>
-
-    <style type="text/css">
-
-        .badge {
-            color: #fff;
-            height: 25px;
-            width: 25px;
-            border-radius: 50%;
-        }
-
-        .border-top {
-            margin-top: 10px;
-            margin-bottom: 10px;
-        }
-
-    </style>
 
 </j:jelly>
