@@ -2,6 +2,7 @@ package io.jenkins.plugins.monitoring;
 
 import hudson.model.Action;
 import hudson.model.Run;
+import org.kohsuke.stapler.bind.JavaScriptMethod;
 
 
 /**
@@ -22,6 +23,7 @@ public class MonitoringBuildAction implements Action {
         this.configuration = configuration;
     }
 
+    @JavaScriptMethod
     public String getConfiguration() {
         return configuration;
     }

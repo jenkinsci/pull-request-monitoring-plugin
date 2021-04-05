@@ -39,8 +39,6 @@
 
                 <section class="grid-demo">
 
-                    <p>Config: ${it.run.getConfiguration()}</p>
-
                     <div class="grid"></div>
 
                 </section>
@@ -160,13 +158,13 @@
 
                                                 <div class="cc-selector-plugin">
 
-                                                    <input checked="checked" id="1" type="radio" name="plugin" value="${resURL}/plugin/pull-request-monitoring/tools/checkstyle.png" />
+                                                    <input checked="checked" id="1" type="radio" name="plugin" value="checkstyle" />
                                                     <label class="plugin" style="background-image:url(${resURL}/plugin/pull-request-monitoring/tools/checkstyle.png);" for="1"/>
 
-                                                    <input id="2" type="radio" name="plugin" value="${resURL}/plugin/pull-request-monitoring/tools/spotbugs.png" />
+                                                    <input id="2" type="radio" name="plugin" value="spotbugs" />
                                                     <label class="plugin" style="background-image:url(${resURL}/plugin/pull-request-monitoring/tools/spotbugs.png);" for="2"/>
 
-                                                    <input id="3" type="radio" name="plugin" value="${resURL}/plugin/pull-request-monitoring/tools/codecov.png" />
+                                                    <input id="3" type="radio" name="plugin" value="codecov" />
                                                     <label class="plugin" style="background-image:url(${resURL}/plugin/pull-request-monitoring/tools/codecov.png);" for="3"/>
 
                                                 </div>
@@ -201,6 +199,15 @@
         </l:main-panel>
 
     </l:layout>
+
+    <script type="module">
+        var run = <st:bind value="${it}"/>;
+
+        run.getConfiguration(function(result) {
+            initDashboard(result.responseObject());
+        })
+    </script>
+
 
 </j:jelly>
 

@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableSet;
 import hudson.Extension;
 import hudson.model.Run;
 import hudson.model.TaskListener;
-import org.jenkinsci.Symbol;
 import org.jenkinsci.plugins.workflow.steps.*;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
@@ -56,10 +55,6 @@ public class Monitor extends Step implements Serializable {
         @Override
         public boolean start() throws Exception {
             final Run<?, ?> run = getContext().get(Run.class);
-            final TaskListener listener = getContext().get(TaskListener.class);
-            listener.getLogger().println("Execution started");
-            listener.getLogger().println("Build: " + (run == null));
-
             if (run.getParent().getPronoun().equals("Pull Request")) {
                 run.addAction(new MonitoringBuildAction(run, monitor.getConfiguration()));
             }
