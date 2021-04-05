@@ -6,7 +6,7 @@ import hudson.model.Run;
 
 /**
  * This action displays a link on the side panel of a {@link Run}. The action is only displayed if the parent job
- * is a pull request, which is described in the associated {@link MonitoringBuildActionFactory}.
+ * is a pull request.
  * The action is responsible to render the summary via its associated 'summary.jelly' view and render the
  * main plugin page, where the user can configure the dashboard with all supported plugins via its associated
  * 'index.jelly view.

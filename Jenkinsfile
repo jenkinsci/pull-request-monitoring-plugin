@@ -6,7 +6,9 @@ buildPlugin(useAci: true)
 */
 
 node {
-     stage ('Monitoring') {
-         monitor ([configuration:'{"width":2,"height":2,"plugin":"checkstyle"}'])
+     stage ('Pull Request Monitoring - Dashboard Configuration') {
+         monitoring (
+                configuration: '{"width":2,"height":2,"plugin":"checkstyle"}'
+         )
      }
 }
