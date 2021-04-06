@@ -4,4 +4,4 @@
 ![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/simonsymhoven/pull-request-monitoring-plugin/GitHub%20CI/master)
 ![GitHub](https://img.shields.io/github/license/simonsymhoven/pull-request-monitoring-plugin)
 ![GitHub pull requests](https://img.shields.io/github/issues-pr/simonsymhoven/pull-request-monitoring-plugin)
-![GitHub issues](https://img.shields.io/github/issues/simonsymhoven/pull-request-monitoring-plugin)
+![Open GitHub issues](https://img.shields.io/github/issues/simonsymhoven/pull-request-monitoring-plugin)
