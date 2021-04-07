@@ -5,20 +5,16 @@
 let domLoaded;
 let grid;
 
-
 /**
  *
  * @param configuration
  */
 function initDashboard(configuration) {
 
-    const config = JSON.parse(configuration);
+    const defaultConfig = JSON.parse(configuration);
 
-    Object.keys(config.plugins).forEach(function(key) {
-        const plugin = config.plugins[key];
-        const item = generateItem([plugin.width, plugin.height], plugin.color, key);
-        grid.add(item);
-    });
+    loadGrid(defaultConfig);
+    sortGrid();
 
 }
 
@@ -57,8 +53,9 @@ document.addEventListener('DOMContentLoaded', function () {
             .on('dragEnd', function () {
                 docElem.classList.remove('dragging');
             })
-            .on('layoutEnd', function (items) {
-                // todo: Save config
+            .on('move', function () {
+                const gridOrder = grid.getItems().map(item => item.getElement().getAttribute('data-id'));
+                localStorage.setItem(getLocalStorageId(), JSON.stringify(gridOrder));
             });
 
         addItemsElement.addEventListener('click', addItem);
@@ -194,5 +191,56 @@ function elementClosest(element, selector) {
     else {
         return element.closest(selector);
     }
+
+}
+
+/**
+ *
+ * @param defaultConfig
+ */
+function loadGrid(defaultConfig) {
+
+    Object.keys(defaultConfig.plugins).forEach(function(key) {
+        const plugin = defaultConfig.plugins[key];
+        const item = generateItem([plugin.width, plugin.height], plugin.color, key);
+        grid.add(item, { active: false });
+    });
+
+}
+
+/**
+ *
+ */
+function sortGrid() {
+
+    const hasConfigStored = localStorage.getItem(getLocalStorageId()) !== null;
+
+    if (hasConfigStored) {
+        const currentItems = grid.getItems();
+        const currentItemIds = JSON.parse(JSON.parse(localStorage.getItem(getLocalStorageId())));
+        const sortedItems = [];
+
+        currentItemIds.forEach(function (currentItemIdsKey, index) {
+            let element = currentItems.find(item => {
+                return item.getElement().getAttribute('data-id') === currentItemIdsKey;
+            });
+
+            sortedItems.push(element);
+        });
+
+        grid.sort(sortedItems);
+    }
+
+    grid.show(grid.getItems());
+
+}
+
+/**
+ *
+ * @returns {string}
+ */
+function getLocalStorageId() {
+
+    return window.location.pathname.split('/').slice(3, -2).join('.') + '.monitoring-grid-order';
 
 }
