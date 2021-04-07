@@ -2,7 +2,6 @@
  * @author Simon Symhoven
  */
 
-let domLoaded;
 let grid;
 
 /**
@@ -13,6 +12,7 @@ function initDashboard(configuration) {
 
     const defaultConfig = JSON.parse(configuration);
 
+    initGrid();
     loadGrid(defaultConfig);
     sortGrid();
 
@@ -21,59 +21,47 @@ function initDashboard(configuration) {
 /**
  *
  */
-document.addEventListener('DOMContentLoaded', function () {
+function initGrid() {
 
     let docElem = document.documentElement;
     let demo = document.querySelector('.grid-demo');
     let gridElement = demo.querySelector('.grid');
     let addItemsElement = document.querySelector('.add-more-items');
 
-    /**
-     *
-     */
-    function initGrid() {
-
-        grid = new Muuri(gridElement, {
-            layoutDuration: 400,
-            layoutEasing: 'ease',
-            dragEnabled: true,
-            dragSortInterval: 50,
-            dragContainer: document.body,
-            dragStartPredicate: function (item, event) {
-                const isDraggable = true;
-                const isRemoveAction = elementMatches(event.target, '.card-remove, .card-remove i');
-                return isDraggable && !isRemoveAction ? Muuri.ItemDrag.defaultStartPredicate(item, event) : false;
-            },
-            dragReleaseDuration: 400,
-            dragReleaseEasing: 'ease'
+    grid = new Muuri(gridElement, {
+        layoutDuration: 400,
+        layoutEasing: 'ease',
+        dragEnabled: true,
+        dragSortInterval: 50,
+        dragContainer: document.body,
+        dragStartPredicate: function (item, event) {
+            const isDraggable = true;
+            const isRemoveAction = elementMatches(event.target, '.card-remove, .card-remove i');
+            return isDraggable && !isRemoveAction ? Muuri.ItemDrag.defaultStartPredicate(item, event) : false;
+        },
+        dragReleaseDuration: 400,
+        dragReleaseEasing: 'ease'
+    })
+        .on('dragStart', function () {
+            docElem.classList.add('dragging');
         })
-            .on('dragStart', function () {
-                docElem.classList.add('dragging');
-            })
-            .on('dragEnd', function () {
-                docElem.classList.remove('dragging');
-            })
-            .on('move', function () {
-                const gridOrder = grid.getItems().map(item => item.getElement().getAttribute('data-id'));
-                localStorage.setItem(getLocalStorageId(), JSON.stringify(gridOrder));
-            });
-
-        addItemsElement.addEventListener('click', addItem);
-        gridElement.addEventListener('click', function (e) {
-            if (elementMatches(e.target, '.card-remove, .card-remove i')) {
-                removeItem(e);
-            }
+        .on('dragEnd', function () {
+            docElem.classList.remove('dragging');
+        })
+        .on('move', function () {
+            const gridOrder = grid.getItems().map(item => item.getElement().getAttribute('data-id'));
+            localStorage.setItem(getLocalStorageId(), JSON.stringify(gridOrder));
         });
 
-        domLoaded = true;
+    addItemsElement.addEventListener('click', addItem);
+    gridElement.addEventListener('click', function (e) {
+        if (elementMatches(e.target, '.card-remove, .card-remove i')) {
+            removeItem(e);
+        }
+    });
 
-    }
+}
 
-    if (!domLoaded) {
-        initGrid();
-    }
-
-});
 
 /**
  *
