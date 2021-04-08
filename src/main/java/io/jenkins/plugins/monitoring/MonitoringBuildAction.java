@@ -2,7 +2,6 @@ package io.jenkins.plugins.monitoring;
 
 import hudson.model.Run;
 import jenkins.model.RunAction2;
-import org.json.JSONObject;
 import org.kohsuke.stapler.bind.JavaScriptMethod;
 
 
