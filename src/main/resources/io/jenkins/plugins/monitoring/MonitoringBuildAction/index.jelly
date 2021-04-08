@@ -66,16 +66,13 @@
                             <div class="modal-body">
                                 <h4><span class="badge badge-pill badge-primary">Jenkinsfile</span></h4>
 
-                                Your current Jenkinsfile configuration is up date with local changes!
-                                <br/>
+                                Your current Jenkinsfile configuration is up to date with local changes!
 
-                                <code>
-                                    monitoring (
-                                        configuration: '${it.getConfiguration()}'
-                                    )
-
-                                </code>
-
+                                <pre><code>monitoring(</code></pre>
+                                <pre><code>     configuration:'''</code></pre>
+                                <pre><code>${it.getConfiguration()}</code></pre>
+                                <pre><code>     '''</code></pre>
+                                <pre><code>)</code></pre>
 
 
                             </div>
@@ -248,6 +245,7 @@
     </l:layout>
 
     <script type="module">
+
         var run = <st:bind value="${it}"/>;
 
         run.getConfiguration(function(result) {
