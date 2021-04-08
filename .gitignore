@@ -24,6 +24,7 @@ hs_err_pid*
 
 # IDEA Files
 *.iml
+.idea
 
 target
 work

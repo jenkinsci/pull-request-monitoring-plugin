@@ -3,18 +3,22 @@
  */
 
 let grid;
+let configuration;
 
 /**
  *
  * @param configuration
  */
 function initDashboard(configuration) {
-
-    const defaultConfig = JSON.parse(configuration);
+    this.configuration = JSON.parse(configuration);
 
     initGrid();
-    loadGrid(defaultConfig);
+    loadGrid(this.configuration);
     sortGrid();
+
+    if (isLocalConfigEqualsJenkinsfile()) {
+        localStorage.removeItem(getLocalStorageId());
+    }
 
 }
 
@@ -51,6 +55,10 @@ function initGrid() {
         .on('move', function () {
             const gridOrder = grid.getItems().map(item => item.getElement().getAttribute('data-id'));
             localStorage.setItem(getLocalStorageId(), JSON.stringify(gridOrder));
+
+            if (isLocalConfigEqualsJenkinsfile()) {
+                localStorage.removeItem(getLocalStorageId());
+            }
         });
 
     addItemsElement.addEventListener('click', addItem);
@@ -228,7 +236,39 @@ function sortGrid() {
  * @returns {string}
  */
 function getLocalStorageId() {
+    const project = `${window.location.pathname.split('/').slice(3, 4)}.monitoring-grid-order`
+        .toLowerCase();
+    return decodeURI(project).replaceAll(" ", "-");
+}
 
-    return window.location.pathname.split('/').slice(3, -2).join('.') + '.monitoring-grid-order';
+function getCurrentConfig() {
+
+    let config = '{"plugins": {'
+
+    grid.getItems().forEach(function(item, index) {
+        const id = item.getElement().getAttribute('data-id');
+        const width = Math.round(item.getWidth() / 120);
+        const height = Math.round(item.getHeight() / 120);
+        const color = item.getElement().getAttribute('data-color')
+
+        config += `"${id}": {"width":${width},"height":${height},"color":"${color}"}`
+
+        if (index !== grid.getItems().length - 1) {
+            config += ', ';
+        }
+    });
+
+    config += '}}';
+
+    return JSON.parse(config);
 
 }
+
+/**
+ *
+ * @returns {boolean}
+ */
+function isLocalConfigEqualsJenkinsfile() {
+    return JSON.stringify(this.configuration) === JSON.stringify(getCurrentConfig());
+}
+

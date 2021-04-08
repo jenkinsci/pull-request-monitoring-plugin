@@ -30,11 +30,58 @@
 
                     <button class="btn btn-primary"
                             type="button"
-                            data-toggle="modal" data-target="#exampleModal">
+                            data-toggle="modal" data-target="#itemsModal">
                         <i class="material-icons">&#xE145;</i>
                         Add item
                     </button>
 
+                </div>
+
+                <button type="button" id="config-button" class="btn btn-danger" data-toggle="modal" data-target="#configModal">
+
+                    <i class="material-icons spin">&#xE8B8;</i>
+
+                </button>
+
+                <!-- Config Modal -->
+                <div class="modal right fade" id="configModal" tabindex="-1" aria-labelledby="configModalLabel">
+
+                    <div class="modal-dialog">
+
+                        <div class="modal-content">
+
+                            <div class="modal-header">
+
+                                <h5 class="modal-title" id="configModalLabel">
+                                    <img src="${resURL}/plugin/pull-request-monitoring/icons/washington.png" width="15%" height="15%"/>
+                                    Jenkinsfile Configuration
+                                </h5>
+
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <i class="material-icons">&#xe5cd;</i>
+                                </button>
+
+                            </div>
+
+                            <div class="modal-body">
+                                <h4><span class="badge badge-pill badge-primary">Jenkinsfile</span></h4>
+
+                                Your current Jenkinsfile configuration is up date with local changes!
+                                <br/>
+
+                                <code>
+                                    monitoring (
+                                        configuration: '${it.getConfiguration()}'
+                                    )
+
+                                </code>
+
+
+
+                            </div>
+
+                        </div>
+                    </div>
                 </div>
 
                 <section class="grid-demo">
@@ -43,8 +90,8 @@
 
                 </section>
 
-                <!-- Modal -->
-                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <!--  Add Item Modal -->
+                <div class="modal fade" id="itemsModal" tabindex="-1" aria-labelledby="itemsModalLabel" aria-hidden="true">
 
                     <div class="modal-dialog modal-lg modal-dialog-centered">
 
@@ -52,10 +99,10 @@
 
                             <div class="modal-header">
 
-                                <h5 class="modal-title" id="exampleModalLabel">Add an item to your dashboard</h5>
+                                <h5 class="modal-title" id="itemsModalLabel">Add an item to your dashboard</h5>
 
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <i class="material-icons close">&#xe5cd;</i>
+                                    <i class="material-icons">&#xe5cd;</i>
                                 </button>
 
                             </div>
