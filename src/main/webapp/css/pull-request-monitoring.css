@@ -1,5 +1,12 @@
 /* Config Button */
 
+/* Syntax Highlighting for Code block */
+.string { color: green; }
+.number { color: darkorange; }
+.boolean { color: blue; }
+.null { color: magenta; }
+.key { color: red; }
+
 #config-button {
     position: fixed;
     top: 320px;
@@ -27,7 +34,7 @@
 .modal.right .modal-dialog {
     position: fixed;
     margin: auto;
-    width: 500px;
+    width: 320px;
     height: 100%;
     -webkit-transform: translate3d(0%, 0, 0);
     -ms-transform: translate3d(0%, 0, 0);

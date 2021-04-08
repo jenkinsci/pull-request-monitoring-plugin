@@ -10,15 +10,14 @@ let configuration;
  * @param configuration
  */
 function initDashboard(configuration) {
+
     this.configuration = JSON.parse(configuration);
 
     initGrid();
-    loadGrid(this.configuration);
-    sortGrid();
 
-    if (isLocalConfigEqualsJenkinsfile()) {
-        localStorage.removeItem(getLocalStorageId());
-    }
+    loadGrid();
+
+    updateConfigPanel();
 
 }
 
@@ -53,12 +52,13 @@ function initGrid() {
             docElem.classList.remove('dragging');
         })
         .on('move', function () {
-            const gridOrder = grid.getItems().map(item => item.getElement().getAttribute('data-id'));
-            localStorage.setItem(getLocalStorageId(), JSON.stringify(gridOrder));
-
-            if (isLocalConfigEqualsJenkinsfile()) {
-                localStorage.removeItem(getLocalStorageId());
-            }
+            updateLocalStorage();
+        })
+        .on('add', function () {
+            updateLocalStorage();
+        })
+        .on('remove', function () {
+            updateLocalStorage();
         });
 
     addItemsElement.addEventListener('click', addItem);
@@ -70,6 +70,62 @@ function initGrid() {
 
 }
 
+/**
+ *
+ */
+function updateLocalStorage() {
+    localStorage.setItem(getLocalStorageId(), JSON.stringify(getCurrentConfig()));
+    updateConfigPanel();
+}
+
+/**
+ *
+ */
+function updateConfigPanel() {
+    let badge = document.getElementById('badge-config');
+    let description = document.getElementById('config-text');
+    let config = document.getElementById('config');
+
+    if (isLocalConfigEqualsJenkinsfile()) {
+        localStorage.removeItem(getLocalStorageId());
+        badge.innerHTML = 'Jenkinsfile';
+        badge.classList.remove('badge-danger');
+        badge.classList.add('badge-success');
+        description.innerHTML = 'The configuration setting in your Jenkinsfile is up to date with local changes!';
+        config.innerHTML = syntaxHighlight(JSON.stringify(this.configuration, null, 3));
+    } else {
+        badge.innerHTML = 'Local Storage';
+        badge.classList.remove('badge-success');
+        badge.classList.add('badge-danger');
+        description.innerHTML = 'The configuration setting in your Jenkinsfile will be overwritten by your local changes.' +
+            'To save this permanently, copy the json below and replace the <code>configuration</code> in the Jenkinsfile with it.';
+        config.innerHTML = syntaxHighlight(JSON.stringify(getCurrentConfig(), null, 3));
+    }
+}
+
+/**
+ *
+ * @param json
+ * @returns {*}
+ */
+function syntaxHighlight(json) {
+    json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+        let cls = 'number';
+        if (/^"/.test(match)) {
+            if (/:$/.test(match)) {
+                cls = 'key';
+            } else {
+                cls = 'string';
+            }
+        } else if (/true|false/.test(match)) {
+            cls = 'boolean';
+        } else if (/null/.test(match)) {
+            cls = 'null';
+        }
+        return '<span class="' + cls + '">' + match + '</span>';
+    });
+}
 
 /**
  *
@@ -192,40 +248,18 @@ function elementClosest(element, selector) {
 
 /**
  *
- * @param defaultConfig
  */
-function loadGrid(defaultConfig) {
+function loadGrid() {
 
-    Object.keys(defaultConfig.plugins).forEach(function(key) {
-        const plugin = defaultConfig.plugins[key];
+    const hasConfigStored = localStorage.getItem(getLocalStorageId()) !== null;
+    let items = hasConfigStored ? JSON.parse(localStorage.getItem(getLocalStorageId())).plugins : this.configuration.plugins;
+    console.log(items);
+
+    Object.keys(items).forEach(function(key) {
+        const plugin = items[key];
         const item = generateItem([plugin.width, plugin.height], plugin.color, key);
         grid.add(item, { active: false });
     });
-
-}
-
-/**
- *
- */
-function sortGrid() {
-
-    const hasConfigStored = localStorage.getItem(getLocalStorageId()) !== null;
-
-    if (hasConfigStored) {
-        const currentItems = grid.getItems();
-        const currentItemIds = JSON.parse(JSON.parse(localStorage.getItem(getLocalStorageId())));
-        const sortedItems = [];
-
-        currentItemIds.forEach(function (currentItemIdsKey, index) {
-            let element = currentItems.find(item => {
-                return item.getElement().getAttribute('data-id') === currentItemIdsKey;
-            });
-
-            sortedItems.push(element);
-        });
-
-        grid.sort(sortedItems);
-    }
 
     grid.show(grid.getItems());
 
@@ -241,6 +275,10 @@ function getLocalStorageId() {
     return decodeURI(project).replaceAll(" ", "-");
 }
 
+/**
+ *
+ * @returns {any}
+ */
 function getCurrentConfig() {
 
     let config = '{"plugins": {'
@@ -269,6 +307,18 @@ function getCurrentConfig() {
  * @returns {boolean}
  */
 function isLocalConfigEqualsJenkinsfile() {
+
     return JSON.stringify(this.configuration) === JSON.stringify(getCurrentConfig());
+
+}
+
+
+/**
+ *
+ */
+function copyConfig() {
+
+    navigator.clipboard.writeText(document.getElementById('config').innerText);
+
 }
 

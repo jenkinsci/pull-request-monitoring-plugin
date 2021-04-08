@@ -64,26 +64,41 @@
                             </div>
 
                             <div class="modal-body">
-                                <h4><span class="badge badge-pill badge-primary">Jenkinsfile</span></h4>
+                                <h4>
+                                    <span class="badge badge-pill" id="badge-config"/>
+                                </h4>
 
-                                Your current Jenkinsfile configuration is up to date with local changes!
+                                <p id="config-text"/>
 
-                                <pre><code>monitoring(</code></pre>
-                                <pre><code>     configuration:'''</code></pre>
-                                <pre><code>${it.getConfiguration()}</code></pre>
-                                <pre><code>     '''</code></pre>
-                                <pre><code>)</code></pre>
+                                <div class="row">
 
+                                    <div class="col-9">
+
+                                        <pre id="config"/>
+
+                                    </div>
+
+                                    <div class="col-3">
+
+                                        <button id="copy" type="button" class="btn btn-light float-right" onclick="copyConfig()" data-toggle="tooltip" data-placement="bottom" title="Copy to clipboard">
+                                            <i class="material-icons">&#xe14d;</i>
+                                        </button>
+
+                                    </div>
+
+                                </div>
 
                             </div>
 
                         </div>
+
                     </div>
+
                 </div>
 
                 <section class="grid-demo">
 
-                    <div class="grid"></div>
+                    <div class="grid"/>
 
                 </section>
 
