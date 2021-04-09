@@ -51,13 +51,7 @@ function initGrid() {
         .on('dragEnd', function () {
             docElem.classList.remove('dragging');
         })
-        .on('move', function () {
-            updateLocalStorage();
-        })
-        .on('add', function () {
-            updateLocalStorage();
-        })
-        .on('remove', function () {
+        .on('layoutEnd', function () {
             updateLocalStorage();
         });
 
@@ -85,6 +79,7 @@ function updateConfigPanel() {
     let badge = document.getElementById('badge-config');
     let description = document.getElementById('config-text');
     let config = document.getElementById('config');
+    let configButton = document.getElementById('config-button');
 
     if (isLocalConfigEqualsJenkinsfile()) {
         localStorage.removeItem(getLocalStorageId());
@@ -93,6 +88,8 @@ function updateConfigPanel() {
         badge.classList.add('badge-success');
         description.innerHTML = 'The configuration setting in your Jenkinsfile is up to date with local changes!';
         config.innerHTML = syntaxHighlight(JSON.stringify(this.configuration, null, 3));
+        configButton.classList.remove('btn-danger');
+        configButton.classList.add('btn-success');
     } else {
         badge.innerHTML = 'Local Storage';
         badge.classList.remove('badge-success');
@@ -100,6 +97,9 @@ function updateConfigPanel() {
         description.innerHTML = 'The configuration setting in your Jenkinsfile will be overwritten by your local changes.' +
             'To save this permanently, copy the json below and replace the <code>configuration</code> in the Jenkinsfile with it.';
         config.innerHTML = syntaxHighlight(JSON.stringify(getCurrentConfig(), null, 3));
+        configButton.classList.add('btn-success');
+        configButton.classList.remove('btn-success');
+        configButton.classList.add('btn-danger');
     }
 }
 
@@ -253,11 +253,10 @@ function loadGrid() {
 
     const hasConfigStored = localStorage.getItem(getLocalStorageId()) !== null;
     let items = hasConfigStored ? JSON.parse(localStorage.getItem(getLocalStorageId())).plugins : this.configuration.plugins;
-    console.log(items);
 
     Object.keys(items).forEach(function(key) {
         const plugin = items[key];
-        const item = generateItem([plugin.width, plugin.height], plugin.color, key);
+        const item = generateItem([plugin['width'], plugin['height']], plugin['color'], key);
         grid.add(item, { active: false });
     });
 
