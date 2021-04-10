@@ -1,394 +1,409 @@
+/* Syntax Highlighting for Code block */
+.string {
+  color: green;
+}
+
+.number {
+  color: darkorange;
+}
+
+.boolean {
+  color: blue;
+}
+
+.null {
+  color: magenta;
+}
+
+.key {
+  color: red;
+}
+
 /* Config Button */
 
-/* Syntax Highlighting for Code block */
-.string { color: green; }
-.number { color: darkorange; }
-.boolean { color: blue; }
-.null { color: magenta; }
-.key { color: red; }
-
 #config-button {
-    position: fixed;
-    top: 320px;
-    right: 0;
+  position: fixed;
+  top: 320px;
+  right: 0;
 }
 
 .spin {
-    animation-name: spin;
-    animation-duration: 5000ms;
-    animation-iteration-count: infinite;
-    animation-timing-function: linear;
+  animation-name: spin;
+  animation-duration: 5000ms;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
 }
 
 @keyframes spin {
-    from {
-        transform:rotate(0deg);
-    }
-    to {
-        transform:rotate(360deg);
-    }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Config Modal */
 
 .modal.right .modal-dialog {
-    position: fixed;
-    margin: auto;
-    width: 320px;
-    height: 100%;
-    -webkit-transform: translate3d(0%, 0, 0);
-    -ms-transform: translate3d(0%, 0, 0);
-    -o-transform: translate3d(0%, 0, 0);
-    transform: translate3d(0%, 0, 0);
+  position: fixed;
+  margin: auto;
+  width: 320px;
+  height: 100%;
+  -webkit-transform: translate3d(0%, 0, 0);
+  -ms-transform: translate3d(0%, 0, 0);
+  -o-transform: translate3d(0%, 0, 0);
+  transform: translate3d(0%, 0, 0);
 }
 
 .modal.right .modal-content {
-    height: 100%;
-    overflow-y: auto;
+  height: 100%;
+  overflow-y: auto;
 }
 
 .modal.right .modal-body {
-    padding: 15px 15px 80px;
+  padding: 15px 15px 80px;
 }
 
 .modal.right.fade .modal-dialog {
-    right: 0;
-    -webkit-transition: opacity 0.3s linear, right 0.3s ease-out;
-    -moz-transition: opacity 0.3s linear, right 0.3s ease-out;
-    -o-transition: opacity 0.3s linear, right 0.3s ease-out;
-    transition: opacity 0.3s linear, right 0.3s ease-out;
+  right: 0;
+  -webkit-transition: opacity 0.3s linear, right 0.3s ease-out;
+  -moz-transition: opacity 0.3s linear, right 0.3s ease-out;
+  -o-transition: opacity 0.3s linear, right 0.3s ease-out;
+  transition: opacity 0.3s linear, right 0.3s ease-out;
 }
 
 .modal.right.fade.in .modal-dialog {
-    right: 0;
+  right: 0;
 }
 
 .modal-content {
-    border-radius: 0;
-    border: none;
+  border-radius: 0;
+  border: none;
 }
 
 /* Overview Cards */
 .border-top {
-    margin-top: 10px;
-    margin-bottom: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 /* Grid */
 
 .grid {
-    position: relative;
-    margin: 0 -10px;
-    -moz-box-sizing: content-box;
-    -webkit-box-sizing: content-box;
-    box-sizing: content-box;
+  position: relative;
+  margin: 0 -10px;
+  -moz-box-sizing: content-box;
+  -webkit-box-sizing: content-box;
+  box-sizing: content-box;
 }
 
 .muuri-item {
-    position: absolute;
-    width: 100px;
-    height: 100px;
-    line-height: 100px;
-    margin: 10px;
-    z-index: 1;
-    will-change: transform;
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  line-height: 100px;
+  margin: 10px;
+  z-index: 1;
+  will-change: transform;
 }
 
 .muuri-item.muuri-item-positioning {
-    z-index: 2;
+  z-index: 2;
 }
 
 .muuri-item.muuri-item-dragging,
 .muuri-item.muuri-item-releasing {
-    z-index: 9999;
+  z-index: 9999;
 }
 
 .muuri-item.muuri-item-dragging {
-    cursor: move;
+  cursor: move;
 }
 
 .muuri-item.muuri-item-hidden {
-    z-index: 0;
+  z-index: 0;
 }
 
 .muuri-item.h2 {
-    height: 240px;
-    line-height: 240px;
+  height: 240px;
+  line-height: 240px;
 }
 
 .muuri-item.w2 {
-    width: 240px;
+  width: 240px;
 }
 
 .muuri-item.h4 {
-    height: 500px;
-    line-height: 500px;
+  height: 500px;
+  line-height: 500px;
 }
 
 .muuri-item.w4 {
-    width: 500px;
+  width: 500px;
 }
 
 .muuri-item-content {
-    position: relative;
-    width: 100%;
-    height: 100%;
+  position: relative;
+  width: 100%;
+  height: 100%;
 }
 
 .card {
-    position: absolute;
-    left: 0;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    text-align: center;
-    font-size: 24px;
-    font-weight: 300;
-    background-color: rgba(255,255,255,0.9);
-    border: 2px solid;
-    color: #333;
-    border-radius: 4px;
-    -webkit-transition: all 0.2s ease-out;
-    -moz-transition: all 0.2s ease-out;
-    -ms-transition: all 0.2s ease-out;
-    -o-transition: all 0.2s ease-out;
-    transition: all 0.2s ease-out;
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  text-align: center;
+  font-size: 24px;
+  font-weight: 300;
+  background-color: rgba(255, 255, 255, 0.9);
+  border: 2px solid;
+  color: #333;
+  border-radius: 4px;
+  -webkit-transition: all 0.2s ease-out;
+  -moz-transition: all 0.2s ease-out;
+  -ms-transition: all 0.2s ease-out;
+  -o-transition: all 0.2s ease-out;
+  transition: all 0.2s ease-out;
 }
 
 .muuri-item.red .card {
-    color: #f94a7a;
+  color: #f94a7a;
 }
 
 .muuri-item.green .card {
-    color: #2ac06d;
+  color: #2ac06d;
 }
 
 .muuri-item.blue .card {
-    color: #4A9FF9;
+  color: #4A9FF9;
 }
 
 .card-id {
-    position: absolute;
-    left: 7px;
-    top: 0;
-    height: 30px;
-    line-height: 30px;
-    text-align: left;
-    font-size: 16px;
-    font-weight: 400;
+  position: absolute;
+  left: 7px;
+  top: 0;
+  height: 30px;
+  line-height: 30px;
+  text-align: left;
+  font-size: 16px;
+  font-weight: 400;
 }
 
 .card-remove {
-    position: absolute;
-    right: 0;
-    top: 0;
-    width: 30px;
-    height: 30px;
-    line-height: 30px;
-    text-align: center;
-    font-size: 20px;
-    font-weight: 400;
-    cursor: pointer;
-    -moz-transform: scale(0);
-    -webkit-transform: scale(0);
-    -o-transform: scale(0);
-    -ms-transform: scale(0);
-    transform: scale(0);
-    -webkit-transition: all 0.15s ease-out;
-    -moz-transition: all 0.15s ease-out;
-    -ms-transition: all 0.15s ease-out;
-    -o-transition: all 0.15s ease-out;
-    transition: all 0.15s ease-out;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+  font-size: 20px;
+  font-weight: 400;
+  cursor: pointer;
+  -moz-transform: scale(0);
+  -webkit-transform: scale(0);
+  -o-transform: scale(0);
+  -ms-transform: scale(0);
+  transform: scale(0);
+  -webkit-transition: all 0.15s ease-out;
+  -moz-transition: all 0.15s ease-out;
+  -ms-transition: all 0.15s ease-out;
+  -o-transition: all 0.15s ease-out;
+  transition: all 0.15s ease-out;
 }
 
 .card:hover > .card-remove {
-    -moz-transform: scale(1);
-    -webkit-transform: scale(1);
-    -o-transform: scale(1);
-    -ms-transform: scale(1);
-    transform: scale(1);
+  -moz-transform: scale(1);
+  -webkit-transform: scale(1);
+  -o-transform: scale(1);
+  -ms-transform: scale(1);
+  transform: scale(1);
 }
 
 /* Icons in the selector */
 /* fallback */
 @font-face {
-    font-family: 'Material Icons';
-    font-style: normal;
-    font-weight: 400;
-    src: url(https://fonts.gstatic.com/s/materialicons/v29/2fcrYFNaTjcS6g4U3t-Y5ZjZjT5FdEJ140U2DJYC3mY.woff2) format('woff2');
+  font-family: 'Material Icons';
+  font-style: normal;
+  font-weight: 400;
+  src: url(https://fonts.gstatic.com/s/materialicons/v29/2fcrYFNaTjcS6g4U3t-Y5ZjZjT5FdEJ140U2DJYC3mY.woff2) format('woff2');
 }
 
 .material-icons {
-    font-family: 'Material Icons';
-    font-weight: normal;
-    font-style: normal;
-    font-size: 24px;
-    line-height: 1;
-    letter-spacing: normal;
-    text-transform: none;
-    display: inline-block;
-    white-space: nowrap;
-    word-wrap: normal;
-    direction: ltr;
-    -webkit-font-feature-settings: 'liga';
-    -webkit-font-smoothing: antialiased;
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
 }
 
 /* Material icons */
 
 .material-icons {
-    display: inline-block;
-    vertical-align: top;
-    line-height: inherit;
-    font-size: inherit;
+  display: inline-block;
+  vertical-align: top;
+  line-height: inherit;
+  font-size: inherit;
 }
 
 /* Buttons */
 
 .btn {
-    display: inline-block;
-    position: relative;
-    vertical-align: top;
-    margin-left: auto;
-    border: 0;
-    outline: 0;
-    padding: 0px 15px;
-    font-size: 16px;
-    font-weight: 400;
-    line-height: 40px;
-    height: 40px;
-    text-align: center;
-    white-space: nowrap;
-    background: #4a9ff9;
-    color: #fff;
-    -ms-touch-action: manipulation;
-    touch-action: manipulation;
-    cursor: pointer;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    border-radius: 3px;
+  display: inline-block;
+  position: relative;
+  vertical-align: top;
+  margin-left: auto;
+  border: 0;
+  outline: 0;
+  padding: 0px 15px;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 40px;
+  height: 40px;
+  text-align: center;
+  white-space: nowrap;
+  background: #4a9ff9;
+  color: #fff;
+  -ms-touch-action: manipulation;
+  touch-action: manipulation;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  border-radius: 3px;
 }
 
 .btn:focus,
 .btn:hover,
 .btn:active {
-    outline: 0;
+  outline: 0;
 }
 
 .btn:hover {
-    background: #3989de;
+  background: #3989de;
 }
 
 .btn:active {
-    background: #3075bf;
+  background: #3075bf;
 }
 
 .btn.active {
-    background: #60ca47;
+  background: #60ca47;
 }
 
 .btn.active:hover {
-    background: #40b325;
+  background: #40b325;
 }
 
 .btn.active:active {
-    background: #309818;
+  background: #309818;
 }
 
 /* Modal */
 
 .cc-selector-brick input,
 .cc-selector-color input,
-.cc-selector-plugin input  {
-    margin:0;padding:0;
-    -webkit-appearance:none;
-    -moz-appearance:none;
-    appearance:none;
+.cc-selector-plugin input {
+  margin: 0;
+  padding: 0;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
 }
 
-.cc-selector-brick input:active +.brick,
-.cc-selector-color input:active +.color,
-.cc-selector-plugin input:active +.plugin {
-    opacity: .9;
+.cc-selector-brick input:active + .brick,
+.cc-selector-color input:active + .color,
+.cc-selector-plugin input:active + .plugin {
+  opacity: .9;
 }
 
-.cc-selector-brick input:checked +.brick,
-.cc-selector-color input:checked +.color,
-.cc-selector-plugin input:checked +.plugin {
-    -webkit-filter: none;
-    -moz-filter: none;
-    filter: none;
+.cc-selector-brick input:checked + .brick,
+.cc-selector-color input:checked + .color,
+.cc-selector-plugin input:checked + .plugin {
+  -webkit-filter: none;
+  -moz-filter: none;
+  filter: none;
 }
 
 .brick {
-     cursor:pointer;
-     margin: 10px;
-     background-size:contain;
-     background-repeat:no-repeat;
-     display:inline-block;
-     width:100px;
-     height:100px;
-     -webkit-transition: all 100ms ease-in;
-     -moz-transition: all 100ms ease-in;
-     transition: all 100ms ease-in;
-     -webkit-filter: opacity(.4);
-     -moz-filter: opacity(.4);
-     filter: opacity(.4);
+  cursor: pointer;
+  margin: 10px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  display: inline-block;
+  width: 100px;
+  height: 100px;
+  -webkit-transition: all 100ms ease-in;
+  -moz-transition: all 100ms ease-in;
+  transition: all 100ms ease-in;
+  -webkit-filter: opacity(.4);
+  -moz-filter: opacity(.4);
+  filter: opacity(.4);
 }
 
 .color {
-    cursor:pointer;
-    margin: 10px;
-    display:inline-block;
-    border-radius: 0.25rem;
-    width:50px;
-    height:50px;
-    -webkit-transition: all 100ms ease-in;
-    -moz-transition: all 100ms ease-in;
-    transition: all 100ms ease-in;
-    -webkit-filter: opacity(.4);
-    -moz-filter: opacity(.4);
-    filter: opacity(.4);
+  cursor: pointer;
+  margin: 10px;
+  display: inline-block;
+  border-radius: 0.25rem;
+  width: 50px;
+  height: 50px;
+  -webkit-transition: all 100ms ease-in;
+  -moz-transition: all 100ms ease-in;
+  transition: all 100ms ease-in;
+  -webkit-filter: opacity(.4);
+  -moz-filter: opacity(.4);
+  filter: opacity(.4);
 }
 
 .plugin {
-    cursor:pointer;
-    margin: 10px;
-    background-size:contain;
-    background-repeat:no-repeat;
-    display:inline-block;
-    width:50px;
-    height:50px;
-    -webkit-transition: all 100ms ease-in;
-    -moz-transition: all 100ms ease-in;
-    transition: all 100ms ease-in;
-    -webkit-filter: opacity(.4);
-    -moz-filter: opacity(.4);
-    filter: opacity(.4);
+  cursor: pointer;
+  margin: 10px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  -webkit-transition: all 100ms ease-in;
+  -moz-transition: all 100ms ease-in;
+  transition: all 100ms ease-in;
+  -webkit-filter: opacity(.4);
+  -moz-filter: opacity(.4);
+  filter: opacity(.4);
 }
 
 .brick:hover,
 .color:hover,
 .plugin:hover {
-    -webkit-filter: opacity(1);
-    -moz-filter: opacity(1);
-    filter: opacity(1);
+  -webkit-filter: opacity(1);
+  -moz-filter: opacity(1);
+  filter: opacity(1);
 }
 
 .color-black {
-    background-color: #000000;
+  background-color: #000000;
 }
 
 .color-green {
-    background-color: #2ac06d;
+  background-color: #2ac06d;
 }
 
 .color-blue {
-    background-color: #4a9ff9;
+  background-color: #4a9ff9;
 }
 
 .color-red {
-    background-color: #f94a7a;
+  background-color: #f94a7a;
 }
