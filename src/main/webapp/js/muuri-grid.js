@@ -202,7 +202,7 @@ function generateItem(size, color, plugin) {
             '<div class="muuri-item-content">' +
                 '<div class="card">' +
                     '<div class="plugin-card-title">' + plugin + '</div>' +
-                    '<div class="card-remove"><i class="material-icons">&#xE5CD;</i></div>' +
+                    '<div class="card-remove"><i class="material-icons icon">&#xE5CD;</i></div>' +
                 '</div>' +
             '</div>' +
         '</div>';
@@ -240,9 +240,8 @@ function elementClosest(element, selector) {
         }
         return element && element !== document ? element : null;
     }
-    else {
-        return element.closest(selector);
-    }
+
+    return element.closest(selector);
 
 }
 

@@ -64,13 +64,13 @@
 
                                     <j:if test="${it.getBranch(job).getHead().merge}">
 
-                                        <i class="material-icons">&#xe5ca;</i>
+                                        <i class="material-icons icon">&#xe5ca;</i>
 
                                     </j:if>
 
                                     <j:if test="${!it.getBranch(job).getHead().merge}">
 
-                                        <i class="material-icons">&#xe14c;</i>
+                                        <i class="material-icons icon">&#xe14c;</i>
 
                                     </j:if>
 

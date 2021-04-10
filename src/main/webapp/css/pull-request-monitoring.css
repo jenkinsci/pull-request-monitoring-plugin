@@ -38,6 +38,7 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
@@ -54,6 +55,11 @@
   -ms-transform: translate3d(0%, 0, 0);
   -o-transform: translate3d(0%, 0, 0);
   transform: translate3d(0%, 0, 0);
+}
+
+.modal-content {
+  border-radius: 0;
+  border: none;
 }
 
 .modal.right .modal-content {
@@ -75,11 +81,6 @@
 
 .modal.right.fade.in .modal-dialog {
   right: 0;
-}
-
-.modal-content {
-  border-radius: 0;
-  border: none;
 }
 
 /* Overview Cards */
@@ -178,7 +179,7 @@
 }
 
 .muuri-item.blue .card {
-  color: #4A9FF9;
+  color: #4a9ff9;
 }
 
 .card-id {
@@ -233,7 +234,7 @@
 }
 
 .material-icons {
-  font-family: 'Material Icons';
+  font-family: 'Material Icons', sans-serif;
   font-weight: normal;
   font-style: normal;
   font-size: 24px;
@@ -250,7 +251,7 @@
 
 /* Material icons */
 
-.material-icons {
+.icon {
   display: inline-block;
   vertical-align: top;
   line-height: inherit;
@@ -266,7 +267,7 @@
   margin-left: auto;
   border: 0;
   outline: 0;
-  padding: 0px 15px;
+  padding: 0 15px;
   font-size: 16px;
   font-weight: 400;
   line-height: 40px;
@@ -312,6 +313,52 @@
 }
 
 /* Modal */
+.brick {
+  cursor: pointer;
+  margin: 10px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  display: inline-block;
+  width: 100px;
+  height: 100px;
+  -webkit-transition: all 100ms ease-in;
+  -moz-transition: all 100ms ease-in;
+  transition: all 100ms ease-in;
+  -webkit-filter: opacity(0.4);
+  -moz-filter: opacity(0.4);
+  filter: opacity(0.4);
+}
+
+.color {
+  cursor: pointer;
+  margin: 10px;
+  display: inline-block;
+  border-radius: 0.25rem;
+  width: 50px;
+  height: 50px;
+  -webkit-transition: all 100ms ease-in;
+  -moz-transition: all 100ms ease-in;
+  transition: all 100ms ease-in;
+  -webkit-filter: opacity(0.4);
+  -moz-filter: opacity(0.4);
+  filter: opacity(0.4);
+}
+
+.plugin {
+  cursor: pointer;
+  margin: 10px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  -webkit-transition: all 100ms ease-in;
+  -moz-transition: all 100ms ease-in;
+  transition: all 100ms ease-in;
+  -webkit-filter: opacity(0.4);
+  -moz-filter: opacity(0.4);
+  filter: opacity(0.4);
+}
 
 .cc-selector-brick input,
 .cc-selector-color input,
@@ -326,7 +373,7 @@
 .cc-selector-brick input:active + .brick,
 .cc-selector-color input:active + .color,
 .cc-selector-plugin input:active + .plugin {
-  opacity: .9;
+  opacity: 0.9;
 }
 
 .cc-selector-brick input:checked + .brick,
@@ -337,53 +384,6 @@
   filter: none;
 }
 
-.brick {
-  cursor: pointer;
-  margin: 10px;
-  background-size: contain;
-  background-repeat: no-repeat;
-  display: inline-block;
-  width: 100px;
-  height: 100px;
-  -webkit-transition: all 100ms ease-in;
-  -moz-transition: all 100ms ease-in;
-  transition: all 100ms ease-in;
-  -webkit-filter: opacity(.4);
-  -moz-filter: opacity(.4);
-  filter: opacity(.4);
-}
-
-.color {
-  cursor: pointer;
-  margin: 10px;
-  display: inline-block;
-  border-radius: 0.25rem;
-  width: 50px;
-  height: 50px;
-  -webkit-transition: all 100ms ease-in;
-  -moz-transition: all 100ms ease-in;
-  transition: all 100ms ease-in;
-  -webkit-filter: opacity(.4);
-  -moz-filter: opacity(.4);
-  filter: opacity(.4);
-}
-
-.plugin {
-  cursor: pointer;
-  margin: 10px;
-  background-size: contain;
-  background-repeat: no-repeat;
-  display: inline-block;
-  width: 50px;
-  height: 50px;
-  -webkit-transition: all 100ms ease-in;
-  -moz-transition: all 100ms ease-in;
-  transition: all 100ms ease-in;
-  -webkit-filter: opacity(.4);
-  -moz-filter: opacity(.4);
-  filter: opacity(.4);
-}
-
 .brick:hover,
 .color:hover,
 .plugin:hover {
@@ -392,8 +392,9 @@
   filter: opacity(1);
 }
 
+
 .color-black {
-  background-color: #000000;
+  background-color: #000;
 }
 
 .color-green {

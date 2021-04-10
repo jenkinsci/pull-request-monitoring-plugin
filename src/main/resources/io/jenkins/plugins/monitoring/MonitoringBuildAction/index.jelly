@@ -31,7 +31,7 @@
                     <button class="btn btn-primary"
                             type="button"
                             data-toggle="modal" data-target="#itemsModal">
-                        <i class="material-icons">&#xE145;</i>
+                        <i class="material-icons icon">&#xE145;</i>
                         Add item
                     </button>
 
@@ -39,7 +39,7 @@
 
                 <button type="button" id="config-button" class="btn" data-toggle="modal" data-target="#configModal">
 
-                    <i class="material-icons spin">&#xE8B8;</i>
+                    <i class="material-icons icon spin">&#xE8B8;</i>
 
                 </button>
 
@@ -58,7 +58,7 @@
                                 </h5>
 
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <i class="material-icons">&#xe5cd;</i>
+                                    <i class="material-icons icon">&#xe5cd;</i>
                                 </button>
 
                             </div>
@@ -81,7 +81,7 @@
                                     <div class="col-3">
 
                                         <button id="copy" type="button" class="btn btn-light float-right" onclick="copyConfig()" data-toggle="tooltip" data-placement="bottom" title="Copy to clipboard">
-                                            <i class="material-icons">&#xe14d;</i>
+                                            <i class="material-icons icon">&#xe14d;</i>
                                         </button>
 
                                     </div>
@@ -114,7 +114,7 @@
                                 <h5 class="modal-title" id="itemsModalLabel">Add an item to your dashboard</h5>
 
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <i class="material-icons">&#xe5cd;</i>
+                                    <i class="material-icons icon">&#xe5cd;</i>
                                 </button>
 
                             </div>
