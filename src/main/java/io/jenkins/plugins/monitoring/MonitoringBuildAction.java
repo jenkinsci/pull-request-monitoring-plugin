@@ -16,10 +16,19 @@ import org.kohsuke.stapler.bind.JavaScriptMethod;
  */
 public class MonitoringBuildAction implements RunAction2 {
     private final Monitor monitor;
-    private transient Run<?, ?> run;
+    private transient Run<?, ?> owner;
 
+    /**
+     * Creates a new instance of {@link MonitoringBuildAction}.
+     *
+     * @param run
+     *          the run that owns this action.
+     *
+     * @param monitor
+     *          the {@link Monitor} to be add.
+     */
     public MonitoringBuildAction(Run<?, ?> run, Monitor monitor) {
-        this.run = run;
+        this.owner = run;
         this.monitor = monitor;
     }
 
@@ -35,7 +44,7 @@ public class MonitoringBuildAction implements RunAction2 {
 
     @Override
     public String getDisplayName() {
-        return String.format("%s '%s'", MonitoringMultibranchProjectAction.DISPLAY_NAME, run.getDisplayName());
+        return String.format("%s '%s'", MonitoringMultibranchProjectAction.DISPLAY_NAME, owner.getDisplayName());
     }
 
     @Override
@@ -44,17 +53,17 @@ public class MonitoringBuildAction implements RunAction2 {
     }
 
     public Run<?, ?> getRun() {
-        return run;
+        return owner;
     }
 
     @Override
     public void onAttached(Run<?, ?> run) {
-        this.run = run;
+        this.owner = run;
     }
 
     @Override
     public void onLoad(Run<?, ?> run) {
-        this.run = run;
+        this.owner = run;
     }
 
 

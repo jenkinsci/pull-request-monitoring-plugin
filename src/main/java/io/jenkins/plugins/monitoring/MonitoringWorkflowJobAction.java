@@ -15,8 +15,14 @@ import java.io.File;
  */
 public class MonitoringWorkflowJobAction implements Action {
 
-    private transient WorkflowJob workflowJob;
+    private final transient WorkflowJob workflowJob;
 
+    /**
+     * Creates a new instance of {@link MonitoringWorkflowJobAction}.
+     *
+     * @param workflowJob
+     *          the job that owns owns this action.
+     */
     public MonitoringWorkflowJobAction(WorkflowJob workflowJob) {
         this.workflowJob = workflowJob;
     }

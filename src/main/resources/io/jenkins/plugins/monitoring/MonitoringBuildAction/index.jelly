@@ -2,7 +2,7 @@
 
 <j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout" xmlns:st="jelly:stapler">
 
-    <l:layout title="Pull Request Monitoring ${it.run.getDisplayName()}">
+    <l:layout title="Pull Request Monitoring ${it.owner.getDisplayName()}">
 
         <link href="${resURL}/plugin/pull-request-monitoring/css/pull-request-monitoring.css" rel="stylesheet"/>
         <script src="${resURL}/plugin/pull-request-monitoring/js/muuri.min.js"/>
@@ -10,7 +10,7 @@
 
         <l:side-panel>
 
-            <st:include page="sidepanel.jelly" it="${it.run}" optional="true" />
+            <st:include page="sidepanel.jelly" it="${it.owner}" optional="true" />
 
         </l:side-panel>
 
@@ -24,7 +24,7 @@
 
                     <h1 class="col-8">
 
-                        Pull Request Monitoring ${it.run.getDisplayName()}
+                        Pull Request Monitoring ${it.owner.getDisplayName()}
 
                     </h1>
 

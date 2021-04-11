@@ -1,11 +1,11 @@
 package io.jenkins.plugins.monitoring;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
 import hudson.Extension;
 import hudson.model.Action;
 import jenkins.model.TransientActionFactory;
 import org.jenkinsci.plugins.workflow.job.WorkflowJob;
 
-import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -37,11 +37,11 @@ public class MonitoringWorkflowJobActionFactory extends TransientActionFactory<W
      *          {@link Collections} of {@link MonitoringWorkflowJobAction} if
      *          {@link WorkflowJob} is a Pull Request, else a empty collection.
      */
-    @Nonnull
+    @NonNull
     @Override
-    public Collection<? extends Action> createFor(@Nonnull WorkflowJob workflowJob) {
+    public Collection<? extends Action> createFor(@NonNull WorkflowJob workflowJob) {
 
-        if (workflowJob.getPronoun().equals("Pull Request") ) {
+        if (workflowJob.getPronoun().equals("Pull Request")) {
             return Collections.singletonList(new MonitoringWorkflowJobAction(workflowJob));
         }
 

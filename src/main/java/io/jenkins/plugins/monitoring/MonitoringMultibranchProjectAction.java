@@ -27,8 +27,14 @@ public class MonitoringMultibranchProjectAction implements ProminentProjectActio
     static final String ICON_SMALL = ICONS_PREFIX + "pull-request-monitoring-24x24.png";
     static final String ICON_BIG = ICONS_PREFIX + "pull-request-monitoring-48x48.png";
 
-    private transient final MultiBranchProject<?, ?> multiBranchProject;
+    private final transient MultiBranchProject<?, ?> multiBranchProject;
 
+    /**
+     * Creates a new instance of {@link MonitoringMultibranchProjectAction}.
+     *
+     * @param multiBranchProject
+     *          the project that owns this action.
+     */
     public MonitoringMultibranchProjectAction(MultiBranchProject<?, ?> multiBranchProject) {
         this.multiBranchProject = multiBranchProject;
     }
@@ -119,6 +125,8 @@ public class MonitoringMultibranchProjectAction implements ProminentProjectActio
     }
 
     /**
+     * Get the {@link ObjectMetadataAction} for a given job, e.g. the name of
+     * the pull request and the link to the repository.
      *
      * @param job
      *          the job to get {@link ObjectMetadataAction} for.
@@ -133,6 +141,7 @@ public class MonitoringMultibranchProjectAction implements ProminentProjectActio
     }
 
     /**
+     * Get the {@link ContributorMetadataAction} for a given job, e.g. the name of the contributor.
      *
      * @param job
      *          the job to get {@link ContributorMetadataAction} for.

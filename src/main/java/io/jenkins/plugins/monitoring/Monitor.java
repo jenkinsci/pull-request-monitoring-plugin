@@ -1,6 +1,7 @@
 package io.jenkins.plugins.monitoring;
 
 import com.google.common.collect.ImmutableSet;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import hudson.Extension;
 import hudson.model.Run;
 import hudson.model.TaskListener;
@@ -11,7 +12,6 @@ import org.jenkinsci.plugins.workflow.steps.SynchronousStepExecution;
 import org.jenkinsci.plugins.workflow.steps.StepDescriptor;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
-import javax.annotation.Nonnull;
 import java.io.Serializable;
 import java.util.Set;
 
@@ -34,7 +34,7 @@ public class Monitor extends Step implements Serializable {
     }
 
     /**
-     * Sets the configuration for the dashboard
+     * Sets the configuration for the dashboard.
      *
      * @param configuration
      *         the configuration as json
@@ -61,7 +61,7 @@ public class Monitor extends Step implements Serializable {
         private static final long serialVersionUID = 1300005476208035751L;
         private final Monitor monitor;
 
-        public Execution(StepContext stepContext, Monitor monitor) {
+        Execution(StepContext stepContext, Monitor monitor) {
             super(stepContext);
             this.monitor = monitor;
         }
@@ -95,7 +95,7 @@ public class Monitor extends Step implements Serializable {
         }
 
         @Override
-        @Nonnull
+        @NonNull
         public String getDisplayName() {
             return "Configure Monitoring Dashboard";
         }
