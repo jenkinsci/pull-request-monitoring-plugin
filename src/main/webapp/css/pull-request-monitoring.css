@@ -25,6 +25,26 @@
 
 /* Config Modal */
 
+.string {
+  color: yellowgreen;
+}
+
+.number {
+  color: firebrick;
+}
+
+.boolean {
+  color: cyan;
+}
+
+.null {
+  color: grey;
+}
+
+.key {
+  color: magenta;
+}
+
 .modal.right .modal-dialog {
   position: fixed;
   margin: auto;
@@ -60,6 +80,10 @@
 
 .modal.right.fade.in .modal-dialog {
   right: 0;
+}
+
+.badge {
+  margin: 5px;
 }
 
 /* Overview Cards */

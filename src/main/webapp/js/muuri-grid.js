@@ -119,34 +119,73 @@ function elementClosest(element, selector) {
 }
 
 /**
+ * Highlights a json based on given ccs style.
+ *
+ * @param json
+ *          the json to highlight.
+ *
+ * @returns {*}
+ *          the html code of highlighted json.
+ */
+function syntaxHighlight(json) {
+    json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    const reg = /("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g;
+    return json.replace(reg, function (match) {
+        let cls = 'number';
+        if (/^"/.test(match)) {
+            if (/:$/.test(match)) {
+                cls = 'key';
+            } else {
+                cls = 'string';
+            }
+        } else if (/true|false/.test(match)) {
+            cls = 'boolean';
+        } else if (/null/.test(match)) {
+            cls = 'null';
+        }
+        return '<span class="' + cls + '">' + match + '</span>';
+    });
+}
+
+/**
  * Updated the config panel on the right side of a build action
  * with information about current configuration compared to the default
  * configuration from Jenkinsfile.
  */
 function updateConfigPanel() {
-
     let badge = document.getElementById('badge-config');
+    let badge2 = document.getElementById('badge-config-type');
     let description = document.getElementById('config-text');
     let config = document.getElementById('config');
     let configButton = document.getElementById('config-button');
+
+    if (Object.keys(configuration.plugins).length === 0) {
+        badge2.innerHTML = 'default';
+        badge2.classList.remove('badge-success');
+        badge2.classList.add('badge-danger');
+    } else {
+        badge2.innerHTML = 'custom';
+        badge2.classList.remove('badge-danger');
+        badge2.classList.add('badge-success');
+    }
 
     if (isLocalConfigEqualsJenkinsfile()) {
         localStorage.removeItem(getLocalStorageId());
         badge.innerHTML = 'Jenkinsfile';
         badge.classList.remove('badge-danger');
         badge.classList.add('badge-success');
-        description.innerHTML = 'The configuration setting in your Jenkinsfile is up to date with local changes!';
-        config.innerHTML = JSON.stringify(configuration, null, 3);
+        description.innerHTML = '<p>The configuration setting in your Jenkinsfile is up to date with local changes!</p>';
+        config.innerHTML = syntaxHighlight(JSON.stringify(configuration, null, 3));
         configButton.classList.remove('btn-danger');
         configButton.classList.add('btn-success');
     } else {
         badge.innerHTML = 'Local Storage';
         badge.classList.remove('badge-success');
         badge.classList.add('badge-danger');
-        description.innerHTML = 'The configuration setting in your Jenkinsfile will be overwritten ' +
+        description.innerHTML = '<p>The configuration setting in your Jenkinsfile will be overwritten ' +
             'by your local changes. To save this permanently, copy the json below and replace the ' +
-            '<code>configuration</code> in the Jenkinsfile with it.';
-        config.innerHTML = JSON.stringify(getCurrentConfig(), null, 3);
+            '<code>configuration</code> in the Jenkinsfile with it.</p>';
+        config.innerHTML = syntaxHighlight(JSON.stringify(getCurrentConfig(), null, 3));
         configButton.classList.add('btn-success');
         configButton.classList.remove('btn-success');
         configButton.classList.add('btn-danger');
@@ -308,19 +347,28 @@ function initGrid() {
 }
 
 /**
+ * Checks if a configuration is stored with the local storage id in local storage.
+ *
+ * @returns {boolean}
+ *          if a configuration is stored, false else.
+ */
+function isConfigStored() {
+    return localStorage.getItem(getLocalStorageId()) !== null;
+}
+
+/**
  *  Load the grid slots either form default configuration or from local storage
  *  if present.
  */
 function loadGrid() {
 
-    const hasConfigStored = localStorage.getItem(getLocalStorageId()) !== null;
-    let items = hasConfigStored ?
+    let items = isConfigStored() ?
         JSON.parse(localStorage.getItem(getLocalStorageId())).plugins : configuration.plugins;
 
-    Object.keys(items).forEach(function(key) {
+    Object.keys(items).forEach(function (key) {
         const plugin = items[String(key)];
         const item = generateItem([plugin['width'], plugin['height']], plugin['color'], key);
-        grid.add(item, { active: false });
+        grid.add(item, {active: false});
     });
 
     grid.show(grid.getItems());

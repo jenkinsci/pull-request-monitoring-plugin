@@ -31,6 +31,7 @@ public class Monitor extends Step implements Serializable {
     @DataBoundConstructor
     public Monitor() {
         super();
+        this.configuration = "{\"plugins\":{}}";
     }
 
     /**

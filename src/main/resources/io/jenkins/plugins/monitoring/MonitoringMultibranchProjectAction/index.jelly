@@ -24,6 +24,10 @@
 
                 <div class="row">
 
+                    <j:if test="${it.pullRequests.size() == 0}">
+                        <p>Found no open pull requests!</p>
+                    </j:if>
+
                     <j:forEach var="job" items="${it.pullRequests}">
 
                         <div class="col-6 pt-4">
@@ -53,10 +57,12 @@
                                     <div class="row border-top"/>
 
                                     <button onclick="location.href='../../../${job.getLastBuild().getUrl()}/pull-request-monitoring'"
-                                            type="button" class="btn btn-outline-primary">Details</button>
+                                            type="button" class="btn btn-outline-primary">Show Dashboard</button>
 
                                     <button onclick="location.href='${it.getObjectMetaData(job).getObjectUrl()}'"
-                                            type="button" class="btn btn-outline-success">View Pull Request</button>
+                                            type="button" class="btn btn-outline-success">
+                                        Go To Pull Request
+                                    </button>
 
                                 </div>
 
