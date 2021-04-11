@@ -1,4 +1,5 @@
 /* Syntax Highlighting for Code block */
+
 .string {
   color: green;
 }
@@ -84,6 +85,7 @@
 }
 
 /* Overview Cards */
+
 .border-top {
   margin-top: 10px;
   margin-bottom: 10px;
@@ -225,7 +227,7 @@
 }
 
 /* Icons in the selector */
-/* fallback */
+
 @font-face {
   font-family: 'Material Icons';
   font-style: normal;
@@ -313,6 +315,7 @@
 }
 
 /* Modal */
+
 .brick {
   cursor: pointer;
   margin: 10px;
@@ -360,6 +363,14 @@
   filter: opacity(0.4);
 }
 
+.brick:hover,
+.color:hover,
+.plugin:hover {
+  -webkit-filter: opacity(1);
+  -moz-filter: opacity(1);
+  filter: opacity(1);
+}
+
 .cc-selector-brick input,
 .cc-selector-color input,
 .cc-selector-plugin input {
@@ -382,14 +393,6 @@
   -webkit-filter: none;
   -moz-filter: none;
   filter: none;
-}
-
-.brick:hover,
-.color:hover,
-.plugin:hover {
-  -webkit-filter: opacity(1);
-  -moz-filter: opacity(1);
-  filter: opacity(1);
 }
 
 .color-black {

@@ -39,17 +39,17 @@ public class MonitoringBuildAction implements RunAction2 {
 
     @Override
     public String getIconFileName() {
-        return MonitoringMultibranchProjectAction.ICON_SMALL;
+        return MonitoringMultibranchProjectAction.getIconSmall();
     }
 
     @Override
     public String getDisplayName() {
-        return String.format("%s '%s'", MonitoringMultibranchProjectAction.DISPLAY_NAME, owner.getDisplayName());
+        return String.format("%s '%s'", MonitoringMultibranchProjectAction.getName(), owner.getDisplayName());
     }
 
     @Override
     public String getUrlName() {
-        return MonitoringMultibranchProjectAction.URI;
+        return MonitoringMultibranchProjectAction.getURI();
     }
 
     public Run<?, ?> getRun() {

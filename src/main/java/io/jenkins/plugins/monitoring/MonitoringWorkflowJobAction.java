@@ -29,17 +29,17 @@ public class MonitoringWorkflowJobAction implements Action {
 
     @Override
     public String getIconFileName() {
-        return MonitoringMultibranchProjectAction.ICON_SMALL;
+        return MonitoringMultibranchProjectAction.getIconSmall();
     }
 
     @Override
     public String getDisplayName() {
-        return String.format("%s '%s'", MonitoringMultibranchProjectAction.DISPLAY_NAME, workflowJob.getLastBuild().getDisplayName());
+        return String.format("%s '%s'", MonitoringMultibranchProjectAction.getName(), workflowJob.getLastBuild().getDisplayName());
     }
 
     @Override
     public String getUrlName() {
-        return workflowJob.getLastBuild().getNumber() + File.separator + MonitoringMultibranchProjectAction.URI;
+        return workflowJob.getLastBuild().getNumber() + File.separator + MonitoringMultibranchProjectAction.getURI();
     }
 
 }

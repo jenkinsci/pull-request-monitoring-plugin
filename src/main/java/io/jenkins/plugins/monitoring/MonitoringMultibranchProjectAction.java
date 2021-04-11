@@ -21,11 +21,12 @@ import java.util.stream.Collectors;
  * @author Simon Symhoven
  */
 public class MonitoringMultibranchProjectAction implements ProminentProjectAction, Action {
-    static final String URI = "pull-request-monitoring";
-    static final String DISPLAY_NAME = "Pull Request Monitoring";
-    static final String ICONS_PREFIX = "/plugin/pull-request-monitoring/icons/";
-    static final String ICON_SMALL = ICONS_PREFIX + "pull-request-monitoring-24x24.png";
-    static final String ICON_BIG = ICONS_PREFIX + "pull-request-monitoring-48x48.png";
+
+    private static final String URI = "pull-request-monitoring";
+    private static final String NAME = "Pull Request Monitoring";
+    private static final String ICONS_PREFIX = "/plugin/pull-request-monitoring/icons/";
+    private static final String ICON_SMALL = ICONS_PREFIX + "pull-request-monitoring-24x24.png";
+    private static final String ICON_BIG = ICONS_PREFIX + "pull-request-monitoring-48x48.png";
 
     private final transient MultiBranchProject<?, ?> multiBranchProject;
 
@@ -47,7 +48,7 @@ public class MonitoringMultibranchProjectAction implements ProminentProjectActio
 
     @Override
     public String getDisplayName() {
-        return DISPLAY_NAME;
+        return NAME;
     }
 
     @Override
@@ -153,6 +154,18 @@ public class MonitoringMultibranchProjectAction implements ProminentProjectActio
                 .stream().filter(action -> action instanceof ContributorMetadataAction).findFirst();
 
         return (ContributorMetadataAction) contributorMetadataAction.orElse(null);
+    }
+
+    public static String getURI() {
+        return URI;
+    }
+
+    public static String getIconSmall() {
+        return ICON_SMALL;
+    }
+
+    public static String getName() {
+        return NAME;
     }
 
 }

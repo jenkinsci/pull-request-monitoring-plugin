@@ -20,6 +20,35 @@ function getLocalStorageId() {
 }
 
 /**
+ * Gets the current dashboard configuration as json.
+ *
+ * @returns {json}
+ *          the dashboard configuration as json.
+ */
+function getCurrentConfig() {
+
+    let config = '{"plugins": {';
+
+    grid.getItems().forEach(function(item, index) {
+        const id = item.getElement().getAttribute('data-id');
+        const width = Math.round(item.getWidth() / 120);
+        const height = Math.round(item.getHeight() / 120);
+        const color = item.getElement().getAttribute('data-color');
+
+        config += `"${id}": {"width":${width},"height":${height},"color":"${color}"}`;
+
+        if (index !== grid.getItems().length - 1) {
+            config += ', ';
+        }
+    });
+
+    config += '}}';
+
+    return JSON.parse(config);
+
+}
+
+/**
  * Check if the current dashboard configuration is equal the the configuration
  * from Jenkinsfile.
  *
@@ -43,35 +72,6 @@ function copyConfig() {
 }
 
 /**
- * Gets the current dashboard configuration as json.
- *
- * @returns {json}
- *          the dashboard configuration as json.
- */
-function getCurrentConfig() {
-
-    let config = '{"plugins": {'
-
-    grid.getItems().forEach(function(item, index) {
-        const id = item.getElement().getAttribute('data-id');
-        const width = Math.round(item.getWidth() / 120);
-        const height = Math.round(item.getHeight() / 120);
-        const color = item.getElement().getAttribute('data-color')
-
-        config += `"${id}": {"width":${width},"height":${height},"color":"${color}"}`
-
-        if (index !== grid.getItems().length - 1) {
-            config += ', ';
-        }
-    });
-
-    config += '}}';
-
-    return JSON.parse(config);
-
-}
-
-/**
  * Find the closest element (parent node of one grid slot) based on a specific element.
  *
  * @param element
@@ -83,6 +83,7 @@ function getCurrentConfig() {
  * @returns {*|null}
  *              the parent node with specific selector of the clicked element.
  */
+
 function elementClosest(element, selector) {
 
     if (window.Element && !Element.prototype.closest) {
@@ -220,34 +221,12 @@ function removeItem(e) {
 
     const items = grid.getItems();
     const elem = elementClosest(e.target, '.muuri-item');
-    const index = items.findIndex(e => e._element === elem);
+    const index = items.findIndex((e) => { return e._element === elem });
     const elemToRemove = items.slice(index, index + 1);
 
     grid.hide(elemToRemove, {onFinish: function (items) {
             grid.remove(items, {removeElements: true});
         }});
-
-}
-
-/**
- *  Event listener for 'Add item' button. Adds a new item to grid, based
- *  on user selection of the corresponding modal.
- */
-function addItem() {
-
-    const bricks = document.querySelectorAll('input[name="brick"]');
-    const colors = document.querySelectorAll('input[name="color"]');
-    const plugins = document.querySelectorAll('input[name="plugin"]');
-
-    const size = getCheckedValue(bricks).split(",");
-    const color = getCheckedValue(colors);
-    const plugin = getCheckedValue(plugins);
-
-    const newElem = generateItem(size, color, plugin);
-
-    grid.add(newElem);
-    const modal = document.getElementById('modalClose');
-    modal.click();
 
 }
 
@@ -288,6 +267,28 @@ function generateItem(size, color, plugin) {
 }
 
 /**
+ *  Event listener for 'Add item' button. Adds a new item to grid, based
+ *  on user selection of the corresponding modal.
+ */
+function addItem() {
+
+    const bricks = document.querySelectorAll('input[name="brick"]');
+    const colors = document.querySelectorAll('input[name="color"]');
+    const plugins = document.querySelectorAll('input[name="plugin"]');
+
+    const size = getCheckedValue(bricks).split(",");
+    const color = getCheckedValue(colors);
+    const plugin = getCheckedValue(plugins);
+
+    const newElem = generateItem(size, color, plugin);
+
+    grid.add(newElem);
+    const modal = document.getElementById('modalClose');
+    modal.click();
+
+}
+
+/**
  * Initialise the grid. Adds all event listener to grid methods.
  */
 function initGrid() {
@@ -303,7 +304,7 @@ function initGrid() {
         dragEnabled: true,
         dragSortInterval: 50,
         dragContainer: document.body,
-        dragStartPredicate: function (item, event) {
+        dragStartPredicate: (item, event) => {
             const isDraggable = true;
             const isRemoveAction = elementMatches(event.target, '.card-remove, .card-remove i');
             return isDraggable && !isRemoveAction ? Muuri.ItemDrag.defaultStartPredicate(item, event) : false;
