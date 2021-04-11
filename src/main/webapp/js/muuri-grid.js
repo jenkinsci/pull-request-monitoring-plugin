@@ -58,7 +58,7 @@ function getCurrentConfig() {
  */
 function isLocalConfigEqualsJenkinsfile() {
 
-    return JSON.stringify(this.configuration) === JSON.stringify(getCurrentConfig());
+    return JSON.stringify(configuration) === JSON.stringify(getCurrentConfig());
 
 }
 
@@ -68,34 +68,6 @@ function isLocalConfigEqualsJenkinsfile() {
 function copyConfig() {
 
     navigator.clipboard.writeText(document.getElementById('config').innerText);
-
-}
-
-/**
- * Find the closest element (parent node of one grid slot) based on a specific element.
- *
- * @param element
- *              the clicked element (remove button of one grid slot).
- *
- * @param selector
- *              the selector of parent node to find (e.g. '.muuri-item').
- *
- * @returns {*|null}
- *              the parent node with specific selector of the clicked element.
- */
-
-function elementClosest(element, selector) {
-
-    if (window.Element && !Element.prototype.closest) {
-        let isMatch = elementMatches(element, selector);
-        while (!isMatch && element && element !== document) {
-            element = element.parentNode;
-            isMatch = element && element !== document && elementMatches(element, selector);
-        }
-        return element && element !== document ? element : null;
-    }
-
-    return element.closest(selector);
 
 }
 
@@ -114,36 +86,36 @@ function elementClosest(element, selector) {
 function elementMatches(element, selector) {
 
     const p = Element.prototype;
-    return (p.matches || p.matchesSelector || p.webkitMatchesSelector || p.mozMatchesSelector || p.msMatchesSelector || p.oMatchesSelector).call(element, selector);
+    return (p.matches || p.matchesSelector || p.webkitMatchesSelector || p.mozMatchesSelector
+        || p.msMatchesSelector || p.oMatchesSelector).call(element, selector);
 
 }
 
 /**
- * Highlights a json with specific style set.
+ * Find the closest element (parent node of one grid slot) based on a specific element.
  *
- * @param json
- *          the json to highlight.
+ * @param element
+ *              the clicked element (remove button of one grid slot).
  *
- * @returns {*}
- *          the highlighted json.
+ * @param selector
+ *              the selector of parent node to find (e.g. '.muuri-item').
+ *
+ * @returns {*|null}
+ *              the parent node with specific selector of the clicked element.
  */
-function syntaxHighlight(json) {
-    json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-    return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
-        let cls = 'number';
-        if (/^"/.test(match)) {
-            if (/:$/.test(match)) {
-                cls = 'key';
-            } else {
-                cls = 'string';
-            }
-        } else if (/true|false/.test(match)) {
-            cls = 'boolean';
-        } else if (/null/.test(match)) {
-            cls = 'null';
+function elementClosest(element, selector) {
+
+    if (window.Element && !Element.prototype.closest) {
+        let isMatch = elementMatches(element, selector);
+        while (!isMatch && element && element !== document) {
+            element = element.parentNode;
+            isMatch = element && element !== document && elementMatches(element, selector);
         }
-        return '<span class="' + cls + '">' + match + '</span>';
-    });
+        return element && element !== document ? element : null;
+    }
+
+    return element.closest(selector);
+
 }
 
 /**
@@ -164,16 +136,17 @@ function updateConfigPanel() {
         badge.classList.remove('badge-danger');
         badge.classList.add('badge-success');
         description.innerHTML = 'The configuration setting in your Jenkinsfile is up to date with local changes!';
-        config.innerHTML = syntaxHighlight(JSON.stringify(this.configuration, null, 3));
+        config.innerHTML = JSON.stringify(configuration, null, 3);
         configButton.classList.remove('btn-danger');
         configButton.classList.add('btn-success');
     } else {
         badge.innerHTML = 'Local Storage';
         badge.classList.remove('badge-success');
         badge.classList.add('badge-danger');
-        description.innerHTML = 'The configuration setting in your Jenkinsfile will be overwritten by your local changes.' +
-            'To save this permanently, copy the json below and replace the <code>configuration</code> in the Jenkinsfile with it.';
-        config.innerHTML = syntaxHighlight(JSON.stringify(getCurrentConfig(), null, 3));
+        description.innerHTML = 'The configuration setting in your Jenkinsfile will be overwritten ' +
+            'by your local changes. To save this permanently, copy the json below and replace the ' +
+            '<code>configuration</code> in the Jenkinsfile with it.';
+        config.innerHTML = JSON.stringify(getCurrentConfig(), null, 3);
         configButton.classList.add('btn-success');
         configButton.classList.remove('btn-success');
         configButton.classList.add('btn-danger');
@@ -221,10 +194,10 @@ function removeItem(e) {
 
     const items = grid.getItems();
     const elem = elementClosest(e.target, '.muuri-item');
-    const index = items.findIndex((e) => { return e._element === elem });
+    const index = items.findIndex((e) => { return e._element === elem; });
     const elemToRemove = items.slice(index, index + 1);
 
-    grid.hide(elemToRemove, {onFinish: function (items) {
+    grid.hide(elemToRemove, {onFinish: (items) => {
             grid.remove(items, {removeElements: true});
         }});
 
@@ -253,7 +226,8 @@ function generateItem(size, color, plugin) {
     const height = size[1];
     const itemElem = document.createElement('div');
     itemElem.innerHTML =
-        '<div class="muuri-item h' + height + ' w' + width + ' ' + color + '" data-id="' + id + '" data-color="' + color + '" data-title="' + title + '">' +
+        '<div class="muuri-item h' + height + ' w' + width + ' ' + color + '" data-id="' +
+            id + '" data-color="' + color + '" data-title="' + title + '">' +
         '<div class="muuri-item-content">' +
         '<div class="card">' +
         '<div class="plugin-card-title">' + plugin + '</div>' +
@@ -296,6 +270,7 @@ function initGrid() {
     let docElem = document.documentElement;
     let demo = document.querySelector('.grid-demo');
     let gridElement = demo.querySelector('.grid');
+    let copy = document.getElementById('copy');
     let addItemsElement = document.querySelector('.add-more-items');
 
     grid = new Muuri(gridElement, {
@@ -328,6 +303,7 @@ function initGrid() {
             removeItem(e);
         }
     });
+    copy.addEventListener('click', copyConfig);
 
 }
 
@@ -338,10 +314,11 @@ function initGrid() {
 function loadGrid() {
 
     const hasConfigStored = localStorage.getItem(getLocalStorageId()) !== null;
-    let items = hasConfigStored ? JSON.parse(localStorage.getItem(getLocalStorageId())).plugins : this.configuration.plugins;
+    let items = hasConfigStored ?
+        JSON.parse(localStorage.getItem(getLocalStorageId())).plugins : configuration.plugins;
 
     Object.keys(items).forEach(function(key) {
-        const plugin = items[key];
+        const plugin = items[String(key)];
         const item = generateItem([plugin['width'], plugin['height']], plugin['color'], key);
         grid.add(item, { active: false });
     });
@@ -354,12 +331,12 @@ function loadGrid() {
  * Entry point for grid initialisation. Initialise the grid, load the grid slots and updates the
  * config panel on the right side of build action.
  *
- * @param configuration
+ * @param config
  *          the default configuration from Jenkinsfile.
  */
-function initDashboard(configuration) {
+function initDashboard(config) {
 
-    this.configuration = JSON.parse(configuration);
+    configuration = JSON.parse(config);
 
     initGrid();
 
