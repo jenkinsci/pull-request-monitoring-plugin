@@ -87,20 +87,20 @@ public class Monitor extends Step implements Serializable {
         public Void run() throws Exception {
             JSONObject configuration = new JSONObject(monitor.getConfiguration());
             getContext().get(TaskListener.class).getLogger()
-                    .printf("Configuration: %s", configuration);
+                    .println("Configuration: " + configuration.toString(3));
 
             List<String> classes = monitor.getAvailablePlugins()
                     .stream()
                     .map(plugin -> plugin.getClazz().getName())
                     .collect(Collectors.toList());
             getContext().get(TaskListener.class).getLogger()
-                    .printf("Classes that implement 'MonitorView' interface: %s",
-                            StringUtils.join(classes, ","));
+                    .println("Classes that implement 'MonitorView' interface: "
+                            + StringUtils.join(classes, ","));
 
             for (String key : ((JSONObject) configuration.get("plugins")).keySet()) {
                 if (!classes.contains(key)) {
                     getContext().get(TaskListener.class).getLogger()
-                            .printf("Can't find class '%s' in list of available plugins!", key);
+                            .println("Can't find class '" + key + "' in list of available plugins!");
 
                     stop(new Exception(String.format("Can't find class '%s' in list of available plugins!", key)));
                 }
@@ -108,7 +108,13 @@ public class Monitor extends Step implements Serializable {
 
             final Run<?, ?> run = getContext().get(Run.class);
             if (run.getParent().getPronoun().equals("Pull Request")) {
+                getContext().get(TaskListener.class).getLogger()
+                        .println("Build is part of a pull request. Add monitor now.");
                 run.addAction(new MonitoringBuildAction(run, monitor));
+            }
+            else {
+                getContext().get(TaskListener.class).getLogger()
+                        .println("Build is not part of a pull request. Skip adding monitor.");
             }
 
             return null;

@@ -220,12 +220,27 @@
 
                                                 <div class="cc-selector-plugin">
 
-                                                    <j:forEach var="plugin" items="${it.monitor.availablePlugins}">
+                                                    <j:choose>
 
-                                                        <input id="${plugin.clazz.name}" type="radio" name="plugin" value="${plugin.clazz.name}" />
-                                                        <label class="plugin" style="background-image:url(${resURL}${plugin.icon});" for="${plugin.clazz.name}"/>
+                                                        <j:when test="${it.monitor.availablePlugins.size() == 0}">
 
-                                                    </j:forEach>
+                                                            Found no plugins to display!
+
+                                                        </j:when>
+
+                                                        <j:otherwise>
+
+                                                            <j:forEach var="plugin" items="${it.monitor.availablePlugins}">
+
+                                                                <input checked="${it.monitor.availablePlugins.indexOf(plugin) == 0}"
+                                                                       id="${plugin.clazz.name}" type="radio" name="plugin" value="${plugin.clazz.name}" />
+                                                                <label class="plugin" style="background-image:url(${resURL}${plugin.icon});" for="${plugin.clazz.name}"/>
+
+                                                            </j:forEach>
+
+                                                        </j:otherwise>
+
+                                                    </j:choose>
 
                                                 </div>
 

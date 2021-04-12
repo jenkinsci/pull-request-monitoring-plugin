@@ -272,7 +272,8 @@ function generateItem(size, color, plugin) {
             id + '" data-color="' + color + '" data-title="' + title + '">' +
         '<div class="muuri-item-content">' +
         '<div class="card">' +
-        '<div class="plugin-card-title">' + plugin + '</div>' +
+        '<div class="plugin-card-id">' + plugin + '</div>' +
+        '<div class="plugin-card-title">Content</div>' +
         '<div class="card-remove"><i class="material-icons icon">&#xE5CD;</i></div>' +
         '</div>' +
         '</div>' +
@@ -296,11 +297,16 @@ function addItem() {
     const color = getCheckedValue(colors);
     const plugin = getCheckedValue(plugins);
 
-    const newElem = generateItem(size, color, plugin);
+    console.log(getCurrentConfig().plugins.hasOwnProperty(plugin))
 
-    grid.add(newElem);
-    const modal = document.getElementById('modalClose');
-    modal.click();
+    if (getCurrentConfig().plugins.hasOwnProperty(plugin)) {
+        alert(`Dashboard already contains the plugin '${plugin}'!`)
+    } else {
+        const newElem = generateItem(size, color, plugin);
+        grid.add(newElem);
+        const modal = document.getElementById('modalClose');
+        modal.click();
+    }
 
 }
 
