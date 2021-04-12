@@ -197,8 +197,10 @@ function updateConfigPanel() {
  *  Updates the local storage with the current grid config form dashboard.
  */
 function updateLocalStorage() {
+
     localStorage.setItem(getLocalStorageId(), JSON.stringify(getCurrentConfig()));
     updateConfigPanel();
+
 }
 
 /**
@@ -238,7 +240,8 @@ function removeItem(e) {
 
     grid.hide(elemToRemove, {onFinish: (items) => {
             grid.remove(items, {removeElements: true});
-        }});
+            updateLocalStorage();
+        }})
 
 }
 

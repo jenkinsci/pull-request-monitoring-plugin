@@ -45,7 +45,6 @@ public class MonitoringMultibranchProjectAction implements ProminentProjectActio
         return ICON_BIG;
     }
 
-
     @Override
     public String getDisplayName() {
         return NAME;
@@ -162,6 +161,10 @@ public class MonitoringMultibranchProjectAction implements ProminentProjectActio
 
     public static String getIconSmall() {
         return ICON_SMALL;
+    }
+
+    public static String getIconBig() {
+        return ICON_BIG;
     }
 
     public static String getName() {

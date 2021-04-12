@@ -3,17 +3,24 @@ package io.jenkins.plugins.monitoring;
 import com.google.common.collect.ImmutableSet;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import hudson.Extension;
+import hudson.ExtensionList;
 import hudson.model.Run;
 import hudson.model.TaskListener;
+import org.apache.commons.lang.StringUtils;
 import org.jenkinsci.plugins.workflow.steps.Step;
 import org.jenkinsci.plugins.workflow.steps.StepContext;
 import org.jenkinsci.plugins.workflow.steps.StepExecution;
 import org.jenkinsci.plugins.workflow.steps.SynchronousStepExecution;
 import org.jenkinsci.plugins.workflow.steps.StepDescriptor;
+import org.json.JSONObject;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
+
+import java.io.IOException;
 import java.io.Serializable;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * This {@link Step} is responsible for the configuration of the monitoring dashboard
@@ -49,6 +56,10 @@ public class Monitor extends Step implements Serializable {
         return configuration;
     }
 
+    public List<? extends MonitorView> getAvailablePlugins() {
+        return ExtensionList.lookup(MonitorView.class);
+    }
+
     @Override
     public StepExecution start(final StepContext stepContext) throws Exception {
         return new Execution(stepContext, this);
@@ -68,7 +79,33 @@ public class Monitor extends Step implements Serializable {
         }
 
         @Override
+        public void stop(Throwable cause) throws Exception {
+            super.stop(cause);
+        }
+
+        @Override
         public Void run() throws Exception {
+            JSONObject configuration = new JSONObject(monitor.getConfiguration());
+            getContext().get(TaskListener.class).getLogger()
+                    .printf("Configuration: %s", configuration);
+
+            List<String> classes = monitor.getAvailablePlugins()
+                    .stream()
+                    .map(plugin -> plugin.getClazz().getName())
+                    .collect(Collectors.toList());
+            getContext().get(TaskListener.class).getLogger()
+                    .printf("Classes that implement 'MonitorView' interface: %s",
+                            StringUtils.join(classes, ","));
+
+            for (String key : ((JSONObject) configuration.get("plugins")).keySet()) {
+                if (!classes.contains(key)) {
+                    getContext().get(TaskListener.class).getLogger()
+                            .printf("Can't find class '%s' in list of available plugins!", key);
+
+                    stop(new Exception(String.format("Can't find class '%s' in list of available plugins!", key)));
+                }
+            }
+
             final Run<?, ?> run = getContext().get(Run.class);
             if (run.getParent().getPronoun().equals("Pull Request")) {
                 run.addAction(new MonitoringBuildAction(run, monitor));

@@ -4,7 +4,6 @@ import hudson.model.Run;
 import jenkins.model.RunAction2;
 import org.kohsuke.stapler.bind.JavaScriptMethod;
 
-
 /**
  * This action displays a link on the side panel of a {@link Run}. The action is only displayed if the parent job
  * is a pull request.
@@ -56,6 +55,10 @@ public class MonitoringBuildAction implements RunAction2 {
         return owner;
     }
 
+    public Monitor getMonitor() {
+        return monitor;
+    }
+
     @Override
     public void onAttached(Run<?, ?> run) {
         this.owner = run;
@@ -65,6 +68,5 @@ public class MonitoringBuildAction implements RunAction2 {
     public void onLoad(Run<?, ?> run) {
         this.owner = run;
     }
-
 
 }

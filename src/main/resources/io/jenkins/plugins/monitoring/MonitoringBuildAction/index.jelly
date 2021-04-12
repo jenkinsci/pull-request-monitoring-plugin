@@ -220,14 +220,12 @@
 
                                                 <div class="cc-selector-plugin">
 
-                                                    <input checked="checked" id="1" type="radio" name="plugin" value="checkstyle" />
-                                                    <label class="plugin" style="background-image:url(${resURL}/plugin/pull-request-monitoring/tools/checkstyle.png);" for="1"/>
+                                                    <j:forEach var="plugin" items="${it.monitor.availablePlugins}">
 
-                                                    <input id="2" type="radio" name="plugin" value="spotbugs" />
-                                                    <label class="plugin" style="background-image:url(${resURL}/plugin/pull-request-monitoring/tools/spotbugs.png);" for="2"/>
+                                                        <input id="${plugin.clazz.name}" type="radio" name="plugin" value="${plugin.clazz.name}" />
+                                                        <label class="plugin" style="background-image:url(${resURL}${plugin.icon});" for="${plugin.clazz.name}"/>
 
-                                                    <input id="3" type="radio" name="plugin" value="codecov" />
-                                                    <label class="plugin" style="background-image:url(${resURL}/plugin/pull-request-monitoring/tools/codecov.png);" for="3"/>
+                                                    </j:forEach>
 
                                                 </div>
 
@@ -264,9 +262,7 @@
     </l:layout>
 
     <script type="module">
-
         var run = <st:bind value="${it}"/>;
-
         run.getConfiguration(function(result) {
             initDashboard(result.responseObject());
         })
