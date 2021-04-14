@@ -6,6 +6,7 @@ import hudson.Extension;
 import hudson.ExtensionList;
 import hudson.model.Run;
 import hudson.model.TaskListener;
+import org.apache.commons.lang.IllegalClassException;
 import org.apache.commons.lang.StringUtils;
 import org.jenkinsci.plugins.workflow.steps.Step;
 import org.jenkinsci.plugins.workflow.steps.StepContext;
@@ -16,7 +17,6 @@ import org.json.JSONObject;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
@@ -79,11 +79,6 @@ public class Monitor extends Step implements Serializable {
         }
 
         @Override
-        public void stop(Throwable cause) throws Exception {
-            super.stop(cause);
-        }
-
-        @Override
         public Void run() throws Exception {
             JSONObject configuration = new JSONObject(monitor.getConfiguration());
             getContext().get(TaskListener.class).getLogger()
@@ -102,7 +97,7 @@ public class Monitor extends Step implements Serializable {
                     getContext().get(TaskListener.class).getLogger()
                             .println("Can't find class '" + key + "' in list of available plugins!");
 
-                    stop(new Exception(String.format("Can't find class '%s' in list of available plugins!", key)));
+                    throw new IllegalClassException(String.format("Can't find class '%s' in list of available plugins!", key));
                 }
             }
 

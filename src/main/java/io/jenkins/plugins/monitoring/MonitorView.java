@@ -29,4 +29,7 @@ public interface MonitorView extends ExtensionPoint {
      */
     String getIcon();
 
+
+    String getData();
+
 }
