@@ -45,7 +45,37 @@
 
                 <section class="grid-demo">
 
-                    <div class="grid"/>
+                    <div class="grid">
+
+                        <j:forEach var="plugin" items="${it.monitor.availablePlugins}">
+
+                            <j:set var="pluginConfig" value="${it.monitor.getConfigurationForPluginById(plugin.clazz.name)}"/>
+
+                            <div class="muuri-item h${pluginConfig.get('height')} height w${pluginConfig.get('width')} width ${pluginConfig.get('color')}" data-id="${plugin.clazz.name}" data-color="${pluginConfig.get('color')}" data-title="${plugin.title}">
+
+                                <div class="muuri-item-content">
+
+                                    <div class="card">
+
+                                        <div class="plugin-card-id">${plugin.clazz.name}</div>
+
+                                        <div class="plugin-card-title">${plugin.title}</div>
+
+                                        <div class="plugin-card-content">
+                                            <st:include page="monitor.jelly" it="${plugin}"/>
+                                        </div>
+
+                                        <div class="plugin-remove"><i class="material-icons icon">&#xE5CD;</i></div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </j:forEach>
+
+                    </div>
 
                 </section>
 
@@ -280,7 +310,7 @@
         var run = <st:bind value="${it}"/>;
         run.getConfiguration(function(result) {
             initDashboard(result.responseObject());
-        })
+        });
     </script>
 
 

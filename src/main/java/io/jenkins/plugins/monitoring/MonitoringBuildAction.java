@@ -1,8 +1,12 @@
 package io.jenkins.plugins.monitoring;
 
+import hudson.ExtensionList;
 import hudson.model.Run;
 import jenkins.model.RunAction2;
+import org.apache.commons.jelly.JellyContext;
 import org.kohsuke.stapler.bind.JavaScriptMethod;
+
+import java.net.URL;
 
 /**
  * This action displays a link on the side panel of a {@link Run}. The action is only displayed if the parent job
@@ -34,6 +38,18 @@ public class MonitoringBuildAction implements RunAction2 {
     @JavaScriptMethod
     public String getConfiguration() {
         return monitor.getConfiguration();
+    }
+
+    @JavaScriptMethod
+    public MonitorView getMonitorViewById(String id) {
+
+        MonitorView m = monitor.getAvailablePlugins()
+                .stream()
+                .filter(monitorView -> monitorView.getClazz().getName().equals(id))
+                .findFirst()
+                .get();
+
+        return m;
     }
 
     @Override

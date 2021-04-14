@@ -185,6 +185,16 @@
   font-weight: 300;
 }
 
+.plugin-card-title {
+  position: absolute;
+  top: 30px;
+  height: 50px;
+  line-height: 50px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 300;
+}
+
 .muuri-item.red .card {
   color: #f94a7a;
 }
@@ -197,18 +207,7 @@
   color: #4a9ff9;
 }
 
-.card-id {
-  position: absolute;
-  left: 7px;
-  top: 0;
-  height: 30px;
-  line-height: 30px;
-  text-align: left;
-  font-size: 16px;
-  font-weight: 400;
-}
-
-.card-remove {
+.plugin-remove {
   position: absolute;
   right: 0;
   top: 0;
@@ -231,7 +230,7 @@
   transition: all 0.15s ease-out;
 }
 
-.card:hover > .card-remove {
+.card:hover > .plugin-remove {
   -moz-transform: scale(1);
   -webkit-transform: scale(1);
   -o-transform: scale(1);

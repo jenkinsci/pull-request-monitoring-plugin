@@ -56,6 +56,21 @@ public class Monitor extends Step implements Serializable {
         return configuration;
     }
 
+    /**
+     * Gets the configuration settings for one specific plugin.
+     *
+     * @param id
+     *          the plugin id to get configuration for.
+     *
+     * @return
+     *          the settings of the plugin as json.
+     */
+    public JSONObject getConfigurationForPluginById(String id) {
+        JSONObject config = new JSONObject(getConfiguration());
+        JSONObject plugins = (JSONObject) config.get("plugins");
+        return (JSONObject) plugins.get(id);
+    }
+
     public List<? extends MonitorView> getAvailablePlugins() {
         return ExtensionList.lookup(MonitorView.class);
     }

@@ -1,0 +1,8 @@
+<?jelly escape-by-default='true'?>
+
+<j:jelly xmlns:j="jelly:core" xmlns:c="/charts">
+
+    <c:pie-chart id="authors" model="${it.model}" height="256" />
+
+</j:jelly>
+

@@ -23,6 +23,7 @@
         <bootstrap4-api.version>4.6.0-2</bootstrap4-api.version>
         <plugin-util-api.version>2.1.0</plugin-util-api.version>
         <popper-api.version>1.16.1-2</popper-api.version>
+        <echarts-api.version>5.0.1-1</echarts-api.version>
     </properties>
     <name>Pull Request Monitoring</name>
     <url>https://github.com/simonsymhoven/${project.artifactId}-plugin</url>
@@ -91,6 +92,11 @@
             <groupId>io.jenkins.plugins</groupId>
             <artifactId>popper-api</artifactId>
             <version>${popper-api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jenkins.plugins</groupId>
+            <artifactId>echarts-api</artifactId>
+            <version>${echarts-api.version}</version>
         </dependency>
         <dependency>
             <groupId>org.jenkins-ci.plugins.workflow</groupId>

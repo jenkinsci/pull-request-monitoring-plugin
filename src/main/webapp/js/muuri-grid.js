@@ -273,8 +273,9 @@ function generateItem(size, color, plugin) {
         '<div class="muuri-item-content">' +
         '<div class="card">' +
         '<div class="plugin-card-id">' + plugin + '</div>' +
-        '<div class="plugin-card-title">Content</div>' +
-        '<div class="card-remove"><i class="material-icons icon">&#xE5CD;</i></div>' +
+        '<div class="plugin-card-title">Title</div>' +
+        '<div class="plugin-card-contente">Content</div>' +
+        '<div class="plugin-remove"><i class="material-icons icon">&#xE5CD;</i></div>' +
         '</div>' +
         '</div>' +
         '</div>';
@@ -329,7 +330,7 @@ function initGrid() {
         dragContainer: document.body,
         dragStartPredicate: (item, event) => {
             const isDraggable = true;
-            const isRemoveAction = elementMatches(event.target, '.card-remove, .card-remove i');
+            const isRemoveAction = elementMatches(event.target, '.plugin-remove, .plugin-remove i');
             return isDraggable && !isRemoveAction ? Muuri.ItemDrag.defaultStartPredicate(item, event) : false;
         },
         dragReleaseDuration: 400,
@@ -347,7 +348,7 @@ function initGrid() {
 
     addItemsElement.addEventListener('click', addItem);
     gridElement.addEventListener('click', function (e) {
-        if (elementMatches(e.target, '.card-remove, .card-remove i')) {
+        if (elementMatches(e.target, '.plugin-remove, .plugin-remove i')) {
             removeItem(e);
         }
     });
@@ -397,7 +398,7 @@ function initDashboard(config) {
 
     initGrid();
 
-    loadGrid();
+    // loadGrid();
 
     updateConfigPanel();
 

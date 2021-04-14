@@ -9,11 +9,11 @@ import hudson.ExtensionPoint;
 public interface MonitorView extends ExtensionPoint {
 
     /**
-     * Defines the name to be shown.
+     * Defines the the to be shown.
      * @return
-     *          the name.
+     *          the title.
      */
-    String getName();
+    String getTitle();
 
     /**
      * Defines the class, which implements the {@link MonitorView}.
@@ -28,8 +28,5 @@ public interface MonitorView extends ExtensionPoint {
      *          the icon filename.
      */
     String getIcon();
-
-
-    String getData();
 
 }
