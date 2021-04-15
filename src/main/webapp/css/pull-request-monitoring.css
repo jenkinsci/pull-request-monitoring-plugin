@@ -113,6 +113,10 @@
   will-change: transform;
 }
 
+.muuri-item.hidden {
+  visibility: hidden;
+}
+
 .muuri-item.muuri-item-positioning {
   z-index: 2;
 }
@@ -160,6 +164,8 @@
   top: 0;
   right: 0;
   bottom: 0;
+  width: 100%;
+  height: 100%;
   text-align: center;
   font-size: 24px;
   font-weight: 300;
@@ -182,16 +188,6 @@
   line-height: 30px;
   text-align: left;
   font-size: 9px;
-  font-weight: 300;
-}
-
-.plugin-card-title {
-  position: absolute;
-  top: 30px;
-  height: 50px;
-  line-height: 50px;
-  text-align: center;
-  font-size: 14px;
   font-weight: 300;
 }
 

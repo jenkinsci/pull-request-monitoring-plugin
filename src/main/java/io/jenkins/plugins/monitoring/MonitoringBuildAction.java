@@ -2,10 +2,19 @@ package io.jenkins.plugins.monitoring;
 
 import hudson.ExtensionList;
 import hudson.model.Run;
+import jenkins.model.Jenkins;
 import jenkins.model.RunAction2;
 import org.apache.commons.jelly.JellyContext;
+import org.apache.commons.jelly.JellyException;
+import org.apache.commons.jelly.Script;
+import org.apache.commons.jelly.XMLOutput;
+import org.kohsuke.stapler.Stapler;
 import org.kohsuke.stapler.bind.JavaScriptMethod;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 
 /**

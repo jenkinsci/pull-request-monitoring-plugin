@@ -30,16 +30,20 @@ function getCurrentConfig() {
     let config = '{"plugins": {';
 
     grid.getItems().forEach(function(item, index) {
-        const id = item.getElement().getAttribute('data-id');
-        const width = Math.round(item.getWidth() / 120);
-        const height = Math.round(item.getHeight() / 120);
-        const color = item.getElement().getAttribute('data-color');
 
-        config += `"${id}": {"width":${width},"height":${height},"color":"${color}"}`;
+        if (item.isActive()) {
+            const id = item.getElement().getAttribute('data-id');
+            const width = Math.round(item.getWidth() / 120);
+            const height = Math.round(item.getHeight() / 120);
+            const color = item.getElement().getAttribute('data-color');
 
-        if (index !== grid.getItems().length - 1) {
-            config += ', ';
+            config += `"${id}": {"width":${width},"height":${height},"color":"${color}"}`;
+
+            if (index !== grid.getItems().filter(item => item.isActive()).length - 1) {
+                config += ', ';
+            }
         }
+
     });
 
     config += '}}';
@@ -239,48 +243,8 @@ function removeItem(e) {
     const elemToRemove = items.slice(index, index + 1);
 
     grid.hide(elemToRemove, {onFinish: (items) => {
-            grid.remove(items, {removeElements: true});
             updateLocalStorage();
         }})
-
-}
-
-/**
- * Generates the html code for one grid slot based on input.
- *
- * @param size
- *          the site of the slot as array of [width, height]
- *
- * @param color
- *          the color of the slot.
- *
- * @param plugin
- *          the name of the plugin.
- *
- * @returns {ChildNode}
- *          the generated grid slot (the first child node).
- */
-function generateItem(size, color, plugin) {
-
-    const id = plugin;
-    const title = plugin;
-    const width = size[0];
-    const height = size[1];
-    const itemElem = document.createElement('div');
-    itemElem.innerHTML =
-        '<div class="muuri-item h' + height + ' w' + width + ' ' + color + '" data-id="' +
-            id + '" data-color="' + color + '" data-title="' + title + '">' +
-        '<div class="muuri-item-content">' +
-        '<div class="card">' +
-        '<div class="plugin-card-id">' + plugin + '</div>' +
-        '<div class="plugin-card-title">Title</div>' +
-        '<div class="plugin-card-contente">Content</div>' +
-        '<div class="plugin-remove"><i class="material-icons icon">&#xE5CD;</i></div>' +
-        '</div>' +
-        '</div>' +
-        '</div>';
-
-    return itemElem.firstChild;
 
 }
 
@@ -298,13 +262,33 @@ function addItem() {
     const color = getCheckedValue(colors);
     const plugin = getCheckedValue(plugins);
 
-    console.log(getCurrentConfig().plugins.hasOwnProperty(plugin))
-
     if (getCurrentConfig().plugins.hasOwnProperty(plugin)) {
         alert(`Dashboard already contains the plugin '${plugin}'!`)
     } else {
-        const newElem = generateItem(size, color, plugin);
-        grid.add(newElem);
+
+        let plugins = grid.getItems().filter(function(item, index) {
+            const dataId = item.getElement().getAttribute('data-id');
+
+            if (dataId === plugin) {
+                const oldColor = item.getElement().getAttribute('data-color');
+                item.getElement().classList.remove(oldColor);
+
+                item.getElement().setAttribute('data-color', color);
+                item.getElement().classList.add(color);
+
+                item.getElement().classList.remove('w2', 'w4');
+                item.getElement().classList.add('w' + size[0]);
+
+                item.getElement().classList.remove('h2', 'h4');
+                item.getElement().classList.add('h' + size[1]);
+                return true;
+            }
+
+            return false;
+        })
+
+        grid.show(plugins);
+
         const modal = document.getElementById('modalClose');
         modal.click();
     }
@@ -372,16 +356,46 @@ function isConfigStored() {
  */
 function loadGrid() {
 
-    let items = isConfigStored() ?
+    let config = isConfigStored() ?
         JSON.parse(localStorage.getItem(getLocalStorageId())).plugins : configuration.plugins;
 
-    Object.keys(items).forEach(function (key) {
-        const plugin = items[String(key)];
-        const item = generateItem([plugin['width'], plugin['height']], plugin['color'], key);
-        grid.add(item, {active: false});
-    });
+    // Hide all elements
+    grid.hide(grid.getItems(), {instant: true});
 
-    grid.show(grid.getItems());
+    // Remove html .hidden class
+    let pluginsToHide = document.getElementsByClassName('muuri-item');
+
+    for (let plugin of pluginsToHide) {
+        plugin.classList.remove('hidden');
+    }
+
+    let plugins = [];
+
+    Object.keys(config).forEach(id => {
+        let plugin = grid.getItems().find(function (item) {
+            return item.getElement().getAttribute('data-id') === id;
+        });
+
+        const color = plugin.getElement().getAttribute('data-color');
+        plugin.getElement().classList.remove(color);
+
+        const newColor = config[id].color;
+        plugin.getElement().setAttribute('data-color', newColor);
+        plugin.getElement().classList.add(newColor);
+
+        const width = config[id].width;
+        plugin.getElement().classList.remove('w2', 'w4');
+        plugin.getElement().classList.add('w' + width);
+
+        const height = config[id].height;
+        plugin.getElement().classList.remove('h2', 'h4');
+        plugin.getElement().classList.add('h' + height);
+
+        plugins.push(plugin);
+    })
+
+    grid.sort(plugins);
+    grid.show(plugins);
 
 }
 
@@ -398,7 +412,7 @@ function initDashboard(config) {
 
     initGrid();
 
-    // loadGrid();
+    loadGrid();
 
     updateConfigPanel();
 

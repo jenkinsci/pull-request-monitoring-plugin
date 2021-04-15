@@ -2,12 +2,14 @@ package io.jenkins.plugins.monitoring.examples;
 
 import edu.hm.hafner.echarts.JacksonFacade;
 import edu.hm.hafner.echarts.PercentagePieChart;
+import hudson.Extension;
 import io.jenkins.plugins.monitoring.MonitorView;
 import io.jenkins.plugins.monitoring.MonitoringMultibranchProjectAction;
 
 /**
  * Another example Monitor View.
  */
+@Extension
 public class Second implements MonitorView {
     @Override
     public String getTitle() {
