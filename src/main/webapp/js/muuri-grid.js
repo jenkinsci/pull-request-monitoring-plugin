@@ -28,26 +28,18 @@ function getLocalStorageId() {
  */
 function getCurrentConfig() {
 
-    let config = '{"plugins": {';
+    let plugins = grid.getItems().filter(function(item) {
+        return item.isActive();
+    }).map(function(item) {
+        const id = item.getElement().getAttribute('data-id');
+        const width = Math.round(item.getWidth() / 120);
+        const height = Math.round(item.getHeight() / 120);
+        const color = item.getElement().getAttribute('data-color');
 
-    grid.getItems().forEach(function(item, index) {
+        return `"${id}": {"width":${width},"height":${height},"color":"${color}"}`;
+    }).join(', ');
 
-        if (item.isActive()) {
-            const id = item.getElement().getAttribute('data-id');
-            const width = Math.round(item.getWidth() / 120);
-            const height = Math.round(item.getHeight() / 120);
-            const color = item.getElement().getAttribute('data-color');
-
-            config += `"${id}": {"width":${width},"height":${height},"color":"${color}"}`;
-
-            if (index < (grid.getItems().filter((item) => item.isActive()).length - 1)) {
-                config += ', ';
-            }
-        }
-
-    });
-
-    config += '}}';
+    const config = `{"plugins": { ${plugins} }}`;
 
     return JSON.parse(config);
 
@@ -286,7 +278,7 @@ function addItem() {
             }
 
             return false;
-        })
+        });
 
         grid.show(plugins);
 
@@ -360,8 +352,6 @@ function loadGrid() {
 
     let config = isConfigStored() ?
         JSON.parse(localStorage.getItem(getLocalStorageId())).plugins : configuration.plugins;
-
-    console.log(config);
 
     // Hide all elements
     grid.hide(grid.getItems(), {instant: true});
