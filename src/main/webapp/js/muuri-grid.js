@@ -4,6 +4,7 @@
  * @author Simon Symhoven
  */
 
+
 let grid;
 let configuration;
 
@@ -39,7 +40,7 @@ function getCurrentConfig() {
 
             config += `"${id}": {"width":${width},"height":${height},"color":"${color}"}`;
 
-            if (index !== grid.getItems().filter(item => item.isActive()).length - 1) {
+            if (index < (grid.getItems().filter((item) => item.isActive()).length - 1)) {
                 config += ', ';
             }
         }
@@ -231,7 +232,6 @@ function getCheckedValue(values) {
 
 /**
  * Removes an element from grid.
- *
  * @param e
  *          the clicked element (element to be deleted).
  */
@@ -242,9 +242,11 @@ function removeItem(e) {
     const index = items.findIndex((e) => { return e._element === elem; });
     const elemToRemove = items.slice(index, index + 1);
 
-    grid.hide(elemToRemove, {onFinish: (items) => {
+    grid.hide(elemToRemove, {onFinish: () => {
+            document.getElementById(elem.getAttribute('data-id'))
+                .removeAttribute('disabled');
             updateLocalStorage();
-        }})
+        }});
 
 }
 
@@ -263,12 +265,11 @@ function addItem() {
     const plugin = getCheckedValue(plugins);
 
     if (getCurrentConfig().plugins.hasOwnProperty(plugin)) {
-        alert(`Dashboard already contains the plugin '${plugin}'!`)
+        alert(`Dashboard already contains the plugin '${plugin}'!`);
     } else {
 
-        let plugins = grid.getItems().filter(function(item, index) {
+        let plugins = grid.getItems().filter(function(item) {
             const dataId = item.getElement().getAttribute('data-id');
-
             if (dataId === plugin) {
                 const oldColor = item.getElement().getAttribute('data-color');
                 item.getElement().classList.remove(oldColor);
@@ -289,6 +290,7 @@ function addItem() {
 
         grid.show(plugins);
 
+        document.getElementById(plugin).setAttribute('disabled', 'disabled');
         const modal = document.getElementById('modalClose');
         modal.click();
     }
@@ -359,6 +361,8 @@ function loadGrid() {
     let config = isConfigStored() ?
         JSON.parse(localStorage.getItem(getLocalStorageId())).plugins : configuration.plugins;
 
+    console.log(config);
+
     // Hide all elements
     grid.hide(grid.getItems(), {instant: true});
 
@@ -371,7 +375,7 @@ function loadGrid() {
 
     let plugins = [];
 
-    Object.keys(config).forEach(id => {
+    Object.keys(config).forEach((id) => {
         let plugin = grid.getItems().find(function (item) {
             return item.getElement().getAttribute('data-id') === id;
         });
@@ -379,22 +383,39 @@ function loadGrid() {
         const color = plugin.getElement().getAttribute('data-color');
         plugin.getElement().classList.remove(color);
 
-        const newColor = config[id].color;
+        const newColor = config[String(id)].color;
         plugin.getElement().setAttribute('data-color', newColor);
         plugin.getElement().classList.add(newColor);
 
-        const width = config[id].width;
+        const width = config[String(id)].width;
         plugin.getElement().classList.remove('w2', 'w4');
         plugin.getElement().classList.add('w' + width);
 
-        const height = config[id].height;
+        const height = config[String(id)].height;
         plugin.getElement().classList.remove('h2', 'h4');
         plugin.getElement().classList.add('h' + height);
 
         plugins.push(plugin);
+
+        document.getElementById(id).setAttribute('disabled', 'disabled');
+
     })
 
-    grid.sort(plugins);
+    // Merge DOM elements with elements to show and sort it
+    let pluginsToSort = [...plugins];
+    grid.getItems().forEach(function(item) {
+        const dataId = item.getElement().getAttribute('data-id');
+
+        let plugin = plugins.find(function (item) {
+            return item.getElement().getAttribute('data-id') === dataId;
+        });
+
+        if (!plugin) {
+            pluginsToSort.push(item);
+        }
+    })
+
+    grid.sort(pluginsToSort);
     grid.show(plugins);
 
 }

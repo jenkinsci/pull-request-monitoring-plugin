@@ -8,16 +8,14 @@ import hudson.model.Run;
 import hudson.model.TaskListener;
 import org.apache.commons.lang.IllegalClassException;
 import org.apache.commons.lang.StringUtils;
-import org.jenkinsci.plugins.workflow.steps.Step;
-import org.jenkinsci.plugins.workflow.steps.StepContext;
-import org.jenkinsci.plugins.workflow.steps.StepExecution;
-import org.jenkinsci.plugins.workflow.steps.SynchronousStepExecution;
-import org.jenkinsci.plugins.workflow.steps.StepDescriptor;
+import org.jenkinsci.plugins.workflow.steps.*;
 import org.json.JSONObject;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 
 import java.io.Serializable;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -56,8 +54,21 @@ public class Monitor extends Step implements Serializable {
         return configuration;
     }
 
-    public List<? extends MonitorView> getAvailablePlugins() {
-        return ExtensionList.lookup(MonitorView.class);
+    /**
+     * Gets all {@link MonitorView} for corresponding {@link MonitorFactory}.
+     *
+     * @param build
+     *          the reference build.
+     *
+     * @return
+     *          all available {@link MonitorView}.
+     */
+    public List<? extends MonitorView> getAvailablePlugins(Run<?, ?> build) {
+        return ExtensionList.lookup(MonitorFactory.class)
+                .stream()
+                .map(monitorFactory -> monitorFactory.getMonitorViews(build))
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -84,10 +95,11 @@ public class Monitor extends Step implements Serializable {
             getContext().get(TaskListener.class).getLogger()
                     .println("Configuration: " + configuration.toString(3));
 
-            List<String> classes = monitor.getAvailablePlugins()
+            List<String> classes = monitor.getAvailablePlugins(getContext().get(Run.class))
                     .stream()
-                    .map(plugin -> plugin.getClazz().getName())
+                    .map(MonitorView::getId)
                     .collect(Collectors.toList());
+
             getContext().get(TaskListener.class).getLogger()
                     .println("Classes that implement 'MonitorView' interface: "
                             + StringUtils.join(classes, ","));

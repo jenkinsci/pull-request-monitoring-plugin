@@ -3,27 +3,42 @@ package io.jenkins.plugins.monitoring.examples;
 import edu.hm.hafner.echarts.JacksonFacade;
 import edu.hm.hafner.echarts.PercentagePieChart;
 import hudson.Extension;
+import hudson.model.Run;
+import io.jenkins.plugins.monitoring.MonitorFactory;
 import io.jenkins.plugins.monitoring.MonitorView;
-import io.jenkins.plugins.monitoring.MonitoringMultibranchProjectAction;
+
+import java.util.Collection;
+import java.util.Collections;
 
 /**
  * Another example Monitor View.
  */
-@Extension
 public class Second implements MonitorView {
-    @Override
-    public String getTitle() {
-        return "Second Monitor";
+    private final Run<?, ?> build;
+
+    /**
+     * Create a new {@link First}.
+     *
+     * @param run
+     *          the {@link Run}
+     */
+    public Second(Run<?, ?> run) {
+        this.build = run;
     }
 
     @Override
-    public Class<?> getClazz() {
-        return Second.class;
+    public String getTitle() {
+        return "Second Monitor " + build.getDisplayName();
+    }
+
+    @Override
+    public String getId() {
+        return getClass().getName();
     }
 
     @Override
     public String getIcon() {
-        return MonitoringMultibranchProjectAction.getIconBig();
+        return "/plugin/pull-request-monitoring/monitors/second.png";
     }
 
     /**
@@ -37,5 +52,16 @@ public class Second implements MonitorView {
      */
     public String getProgressModel(final int percentage) {
         return new JacksonFacade().toJson(new PercentagePieChart().create(percentage));
+    }
+
+    /**
+     * Creates a new {@link SecondFactory}.
+     */
+    @Extension
+    public static class SecondFactory implements MonitorFactory {
+        @Override
+        public Collection<MonitorView> getMonitorViews(Run<?, ?> build) {
+            return Collections.singleton(new Second(build));
+        }
     }
 }

@@ -5,27 +5,48 @@ import edu.hm.hafner.echarts.Palette;
 import edu.hm.hafner.echarts.PieChartModel;
 import edu.hm.hafner.echarts.PieData;
 import hudson.Extension;
+import hudson.model.Run;
+import io.jenkins.plugins.monitoring.MonitorFactory;
 import io.jenkins.plugins.monitoring.MonitorView;
-import io.jenkins.plugins.monitoring.MonitoringMultibranchProjectAction;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * An example Monitor View.
  */
-@Extension
 public class First implements MonitorView {
-    @Override
-    public String getTitle() {
-        return "First Monitor";
+    private final Run<?, ?> build;
+    private final String id;
+
+    /**
+     * Create a new {@link First}.
+     *
+     * @param run
+     *          the {@link Run}
+     * @param viewId
+     *          the id.
+     */
+    public First(Run<?, ?> run, String viewId) {
+        this.build = run;
+        this.id = viewId;
     }
 
     @Override
-    public Class<?> getClazz() {
-        return First.class;
+    public String getTitle() {
+        return "First Monitor " + this.build.getDisplayName();
+    }
+
+    @Override
+    public String getId() {
+        return id;
     }
 
     @Override
     public String getIcon() {
-        return MonitoringMultibranchProjectAction.getIconBig();
+        return "/plugin/pull-request-monitoring/monitors/first.png";
     }
 
     /**
@@ -42,5 +63,19 @@ public class First implements MonitorView {
         model.add(new PieData("Segment 3 name", 20), Palette.YELLOW);
 
         return new JacksonFacade().toJson(model);
+    }
+
+    /**
+     * Creates a new {@link FirstFactory}.
+     */
+    @Extension
+    public static class FirstFactory implements MonitorFactory {
+        @Override
+        public Collection<MonitorView> getMonitorViews(Run<?, ?> build) {
+            List<MonitorView> monitors = new ArrayList<>();
+            monitors.add(new First(build, "io.jenkins.plugins.monitoring.examples.First.View1"));
+            monitors.add(new First(build, "io.jenkins.plugins.monitoring.examples.First.View2"));
+            return monitors;
+        }
     }
 }

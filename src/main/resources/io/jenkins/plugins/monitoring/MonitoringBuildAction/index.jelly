@@ -47,9 +47,9 @@
 
                     <div class="grid">
 
-                        <j:forEach var="plugin" items="${it.monitor.availablePlugins}">
+                        <j:forEach var="plugin" items="${it.monitor.getAvailablePlugins(it.run)}">
 
-                            <div class="muuri-item hidden h4 height w4 width black" data-id="${plugin.clazz.name}" data-color="black" data-title="${plugin.title}">
+                            <div class="muuri-item hidden h4 height w4 width black" data-id="${plugin.id}" data-color="black" data-title="${plugin.title}">
 
                                 <div class="muuri-item-content">
 
@@ -249,7 +249,7 @@
 
                                                     <j:choose>
 
-                                                        <j:when test="${it.monitor.availablePlugins.size() == 0}">
+                                                        <j:when test="${it.monitor.getAvailablePlugins(it.run).size() == 0}">
 
                                                             Found no plugins to display!
 
@@ -257,11 +257,10 @@
 
                                                         <j:otherwise>
 
-                                                            <j:forEach var="plugin" indexVar="i" items="${it.monitor.availablePlugins}">
+                                                            <j:forEach var="plugin" items="${it.monitor.getAvailablePlugins(it.run)}">
 
-                                                                <input checked="${i == 0}"
-                                                                       id="${plugin.clazz.name}" type="radio" name="plugin" value="${plugin.clazz.name}" />
-                                                                <label class="plugin" style="background-image:url(${resURL}${plugin.icon});" for="${plugin.clazz.name}"/>
+                                                                <input id="${plugin.id}" type="radio" name="plugin" value="${plugin.id}" />
+                                                                <label class="plugin" style="background-image:url(${resURL}${plugin.icon});" for="${plugin.id}"/>
 
                                                             </j:forEach>
 
@@ -303,8 +302,7 @@
 
     </l:layout>
 
-    <script type="module">
-        var run = <st:bind value="${it}"/>;
+    <script>var run = <st:bind value="${it}"/>;
         run.getConfiguration(function(result) {
             initDashboard(result.responseObject());
         });

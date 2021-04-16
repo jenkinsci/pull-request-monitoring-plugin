@@ -403,6 +403,10 @@
   filter: none;
 }
 
+input:disabled {
+  filter: grayscale(60%);
+}
+
 .color-black {
   background-color: #000;
 }
