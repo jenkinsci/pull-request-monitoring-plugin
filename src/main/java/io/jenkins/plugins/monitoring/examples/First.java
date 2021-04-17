@@ -9,11 +9,7 @@ import hudson.model.Run;
 import io.jenkins.plugins.monitoring.MonitorFactory;
 import io.jenkins.plugins.monitoring.MonitorView;
 
-import java.util.Random;
-import java.util.UUID;
-import java.util.Collection;
-import java.util.List;
-import java.util.ArrayList;
+import java.util.*;
 
 /**
  * An example Monitor View.
@@ -47,11 +43,6 @@ public class First implements MonitorView {
 
     public String getChartId() {
         return UUID.randomUUID().toString();
-    }
-
-    @Override
-    public String getIcon() {
-        return "/plugin/pull-request-monitoring/monitors/first.png";
     }
 
     /**

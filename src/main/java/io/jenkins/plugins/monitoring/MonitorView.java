@@ -19,12 +19,5 @@ public interface MonitorView {
      */
     String getId();
 
-    /**
-     * Defines the icon to be displayed in the dashboard.
-     * @return
-     *          the icon filename.
-     */
-    String getIcon();
-
 
 }

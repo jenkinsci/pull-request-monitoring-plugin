@@ -9,10 +9,6 @@
     let grid;
     let configuration;
 
-    run.getConfiguration(function(config) {
-        initDashboard(config.responseJSON);
-    })
-
     /**
      * Get the local storage id to store the configuration for based on selected build action.
      *
@@ -283,8 +279,6 @@
                     item.getElement().classList.remove('h2', 'h4');
                     item.getElement().classList.add('h' + size[1]);
 
-                    plugin.remove(plugin.selectedIndex);
-
                     return true;
                 }
 
@@ -395,9 +389,6 @@
             plugin.getElement().classList.remove('h2', 'h4');
             plugin.getElement().classList.add('h' + height);
 
-            const pluginSelectBox = document.querySelector('select[name="plugin"]');
-            pluginSelectBox.remove(pluginSelectBox.selectedIndex);
-
             plugins.push(plugin);
 
         });
@@ -439,5 +430,9 @@
         updateConfigPanel();
 
     }
+
+    run.getConfiguration(function(config) {
+        initDashboard(config.responseJSON);
+    });
 
 })(jQuery3);

@@ -36,11 +36,6 @@ public class Second implements MonitorView {
         return getClass().getName();
     }
 
-    @Override
-    public String getIcon() {
-        return "/plugin/pull-request-monitoring/monitors/second.png";
-    }
-
     /**
      * Generates a new {@link PercentagePieChart}.
      *

@@ -7,6 +7,8 @@
     <bs:page it="${it}">
 
         <link href="${resURL}/plugin/pull-request-monitoring/css/pull-request-monitoring.css" rel="stylesheet"/>
+        <link href="${resURL}/plugin/pull-request-monitoring/css/range-slider.css" rel="stylesheet"/>
+        <link href="${resURL}/plugin/pull-request-monitoring/css/view-selection.css" rel="stylesheet"/>
 
         <div class="container">
 
@@ -136,7 +138,12 @@
 
                                     <div class="col-sm-12">
 
-                                        <h5> Select your slot size: </h5>
+                                        <h5> Select your slot width: </h5>
+
+                                        <div class="range-slider width">
+                                            <input class="range-slider__range width" type="range" value="4" min="1" max="5" step="1"/>
+                                            <span class="range-slider__value width">0</span>
+                                        </div>
 
                                     </div>
 
@@ -146,25 +153,12 @@
 
                                     <div class="col-sm-12">
 
-                                        <form>
+                                        <h5> Select your slot height: </h5>
 
-                                            <div class="cc-selector-brick">
-
-                                                <input checked="checked" id="brick2x2" type="radio" name="brick" value="2,2" />
-                                                <label class="brick" style="background-image:url(${resURL}/plugin/pull-request-monitoring/icons/bricks/brick-2x2.png);" for="brick2x2"/>
-
-                                                <input id="brick4x4" type="radio" name="brick" value="4,4" />
-                                                <label class="brick" style="background-image:url(${resURL}/plugin/pull-request-monitoring/icons/bricks/brick-4x4.png);" for="brick4x4"/>
-
-                                                <input id="brick4x2" type="radio" name="brick" value="4,2" />
-                                                <label class="brick" style="background-image:url(${resURL}/plugin/pull-request-monitoring/icons/bricks/brick-4x2.png);" for="brick4x2"/>
-
-                                                <input id="brick2x4" type="radio" name="brick" value="2,4" />
-                                                <label class="brick" style="background-image:url(${resURL}/plugin/pull-request-monitoring/icons/bricks/brick-2x4.png);" for="brick2x4"/>
-
-                                            </div>
-
-                                        </form>
+                                        <div class="range-slider height">
+                                            <input class="range-slider__range height" type="range" value="3" min="1" max="5" step="1"/>
+                                            <span class="range-slider__value height">0</span>
+                                        </div>
 
                                     </div>
 
@@ -175,14 +169,6 @@
                                     <div class="col-sm-12">
 
                                         <h5> Choose a color for the slot: </h5>
-
-                                    </div>
-
-                                </div>
-
-                                <div class="row">
-
-                                    <div class="col-sm-12">
 
                                         <form>
 
@@ -218,38 +204,29 @@
 
                                 </div>
 
-                                <div class="row">
+                                <div class="select animated zoomIn">
 
-                                    <div class="col-sm-12">
+                                    <input type="radio" name="option"/>
+                                    <i class="material-icons toggle icon icon-plus">&#xe5c5;</i>
+                                    <i class="material-icons toggle icon icon-minus">&#xe5c7;</i>
+                                    <span class="placeholder">Choose...</span>
 
-                                        <form id="pluginSelectForm">
+                                    <j:forEach var="plugin" items="${it.monitor.getAvailablePlugins(it.run)}">
 
-                                            <div class="cc-selector-plugin">
+                                        <label class="option">
+                                            <input type="radio" name="option"/>
+                                            <span class="title animated fadeIn">
+                                                <i class="material-icons icon">&#xe433;</i>
+                                                ${plugin.id}</span>
+                                        </label>
 
-                                                <div class="input-group mb-3">
+                                    </j:forEach>
 
-                                                    <select name="plugin" class="form-select" id="pluginSelectGroup" required="true">
-
-                                                        <j:forEach var="plugin" items="${it.monitor.getAvailablePlugins(it.run)}">
-
-                                                            <option value="${plugin.id}">${plugin.id}</option>
-
-                                                        </j:forEach>
-
-                                                    </select>
-
-                                                </div>
-
-                                            </div>
-
-                                        </form>
-
-                                    </div>
 
                                 </div>
 
-                            </div>
 
+                            </div>
 
                         </div>
 
@@ -273,7 +250,7 @@
         <script>var run = <st:bind value="${it}"/></script>
         <script src="${resURL}/plugin/pull-request-monitoring/js/muuri.min.js"/>
         <script type="text/javascript" src="${resURL}/plugin/pull-request-monitoring/js/muuri-grid.js"/>
-        <script type="text/javascript" src="${resURL}/plugin/pull-request-moniotring/js/form-validation.js"/>
+        <script type="text/javascript" src="${resURL}/plugin/pull-request-monitoring/js/range-slider.js"/>
 
     </bs:page>
 
