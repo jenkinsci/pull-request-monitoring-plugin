@@ -4,6 +4,7 @@
  * @author Simon Symhoven
  */
 
+/* global jQuery3 */
 (function ($) {
 
     let slider = $('.range-slider');
@@ -22,4 +23,4 @@
         });
     });
 
-})(jQuery3)
+})(jQuery3);

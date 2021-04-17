@@ -202,25 +202,6 @@
     }
 
     /**
-     * Removes an element from grid.
-     * @param e
-     *          the clicked element (element to be deleted).
-     */
-    function removeItem(e) {
-
-        const items = grid.getItems();
-        const elem = elementClosest(e.target, '.muuri-item');
-        const index = items.findIndex((e) => { return e._element === elem; });
-        const elemToRemove = items.slice(index, index + 1);
-
-        grid.hide(elemToRemove, {onFinish: () => {
-                changeInput(elem.getAttribute('data-id'), 'false');
-                updateLocalStorage();
-            }});
-
-    }
-
-    /**
      * Disables or enables an input[name="plugin"] by its id.
      *
      * @param id
@@ -243,6 +224,25 @@
             }
 
         });
+
+    }
+
+    /**
+     * Removes an element from grid.
+     * @param e
+     *          the clicked element (element to be deleted).
+     */
+    function removeItem(e) {
+
+        const items = grid.getItems();
+        const elem = elementClosest(e.target, '.muuri-item');
+        const index = items.findIndex((e) => { return e._element === elem; });
+        const elemToRemove = items.slice(index, index + 1);
+
+        grid.hide(elemToRemove, {onFinish: () => {
+                changeInput(elem.getAttribute('data-id'), 'false');
+                updateLocalStorage();
+            }});
 
     }
 
@@ -404,7 +404,7 @@
             if (!plugin) {
                 pluginsToSort.push(item);
             }
-        })
+        });
 
         grid.sort(pluginsToSort);
         grid.show(plugins);
