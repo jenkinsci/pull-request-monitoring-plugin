@@ -141,8 +141,8 @@
                                         <h5> Select your slot width: </h5>
 
                                         <div class="range-slider width">
-                                            <input class="range-slider__range width" type="range" value="4" min="1" max="5" step="1"/>
-                                            <span class="range-slider__value width">0</span>
+                                            <input class="range-slider__range width" type="range" name="width" value="4" min="1" max="5" step="1"/>
+                                            <span id="pluginWidth" class="range-slider__value width">0</span>
                                         </div>
 
                                     </div>
@@ -156,8 +156,8 @@
                                         <h5> Select your slot height: </h5>
 
                                         <div class="range-slider height">
-                                            <input class="range-slider__range height" type="range" value="3" min="1" max="5" step="1"/>
-                                            <span class="range-slider__value height">0</span>
+                                            <input class="range-slider__range height" type="range" name="height" value="3" min="1" max="5" step="1"/>
+                                            <span id="pluginHeight" class="range-slider__value height">0</span>
                                         </div>
 
                                     </div>
@@ -206,7 +206,7 @@
 
                                 <div class="select animated zoomIn">
 
-                                    <input type="radio" name="option"/>
+                                    <input id="defaultInput" type="radio" name="plugin"/>
                                     <i class="material-icons toggle icon icon-plus">&#xe5c5;</i>
                                     <i class="material-icons toggle icon icon-minus">&#xe5c7;</i>
                                     <span class="placeholder">Choose...</span>
@@ -214,7 +214,7 @@
                                     <j:forEach var="plugin" items="${it.monitor.getAvailablePlugins(it.run)}">
 
                                         <label class="option">
-                                            <input type="radio" name="option"/>
+                                            <input type="radio" name="plugin" value="${plugin.id}"/>
                                             <span class="title animated fadeIn">
                                                 <i class="material-icons icon">&#xe433;</i>
                                                 ${plugin.id}</span>

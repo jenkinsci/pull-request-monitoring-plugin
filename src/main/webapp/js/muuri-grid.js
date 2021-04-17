@@ -202,28 +202,6 @@
     }
 
     /**
-     * Get the checked value of a input selection wrapped in a form.
-     *
-     * @param values
-     *          all possible input values.
-     *
-     * @returns {*}
-     *          the checked value.
-     */
-    function getCheckedValue(values) {
-
-        let checked;
-        for (const v of values) {
-            if (v.checked) {
-                checked = v.value;
-                break;
-            }
-        }
-        return checked;
-
-    }
-
-    /**
      * Removes an element from grid.
      * @param e
      *          the clicked element (element to be deleted).
@@ -236,12 +214,35 @@
         const elemToRemove = items.slice(index, index + 1);
 
         grid.hide(elemToRemove, {onFinish: () => {
-                const plugin = document.querySelector('select[name="plugin"]');
-                const newOption = new Option(elem.getAttribute('data-id'),elem.getAttribute('data-id'));
-                plugin.add(newOption, undefined);
-
+                changeInput(elem.getAttribute('data-id'), 'false');
                 updateLocalStorage();
             }});
+
+    }
+
+    /**
+     * Disables or enables an input[name="plugin"] by its id.
+     *
+     * @param id
+     *          the id of plugin to set the state.
+     *
+     * @param disabled
+     *          the state to set.
+     */
+    function changeInput(id, disabled) {
+
+        let plugins = document.querySelectorAll('input[name="plugin"]');
+        Array.from(plugins).filter(function(item) {
+            return item.value === id;
+        }).map(function(item) {
+
+            if (disabled === 'true') {
+                item.setAttribute('disabled', disabled);
+            } else {
+                item.removeAttribute('disabled');
+            }
+
+        });
 
     }
 
@@ -251,33 +252,28 @@
      */
     function addItem() {
 
-        const bricks = document.querySelectorAll('input[name="brick"]');
-        const colors = document.querySelectorAll('input[name="color"]');
-        const plugin = document.querySelector('select[name="plugin"]');
+        const color = document.querySelector('input[name="color"]:checked').value;
+        const width = document.querySelector('input[name="width"]').value;
+        const height = document.querySelector('input[name="height"]').value;
+        const plugin = document.querySelector('input[name="plugin"]:checked').value;
 
-        const size = getCheckedValue(bricks).split(",");
-        const color = getCheckedValue(colors);
-
-        const pluginId = plugin.options[plugin.selectedIndex].value;
-        const pluginTitle = plugin.options[plugin.selectedIndex].text;
-
-        if (getCurrentConfig().plugins.hasOwnProperty(pluginId)) {
-            alert(`Dashboard already contains the plugin '${pluginTitle}'!`);
+        if (getCurrentConfig().plugins.hasOwnProperty(plugin)) {
+            alert(`Dashboard already contains the plugin '${plugin}'!`);
         } else {
             let plugins = grid.getItems().filter(function(item) {
                 const dataId = item.getElement().getAttribute('data-id');
-                if (dataId === pluginId) {
+                if (dataId === plugin) {
                     const oldColor = item.getElement().getAttribute('data-color');
                     item.getElement().classList.remove(oldColor);
 
                     item.getElement().setAttribute('data-color', color);
                     item.getElement().classList.add(color);
 
-                    item.getElement().classList.remove('w2', 'w4');
-                    item.getElement().classList.add('w' + size[0]);
+                    item.getElement().classList.remove('w1', 'w2', 'w3', 'w4', 'w5');
+                    item.getElement().classList.add('w' + width);
 
-                    item.getElement().classList.remove('h2', 'h4');
-                    item.getElement().classList.add('h' + size[1]);
+                    item.getElement().classList.remove('h1', 'h2', 'h3', 'h4', 'h5');
+                    item.getElement().classList.add('h' + height);
 
                     return true;
                 }
@@ -285,8 +281,10 @@
                 return false;
             });
 
+            changeInput(plugin, 'true');
             grid.show(plugins);
 
+            document.getElementById('defaultInput').select();
             const modal = document.getElementById('modalClose');
             modal.click();
         }
@@ -389,6 +387,7 @@
             plugin.getElement().classList.remove('h2', 'h4');
             plugin.getElement().classList.add('h' + height);
 
+            changeInput(id, 'true');
             plugins.push(plugin);
 
         });

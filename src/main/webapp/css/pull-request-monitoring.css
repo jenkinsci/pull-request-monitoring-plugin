@@ -140,6 +140,15 @@
   z-index: 0;
 }
 
+.muuri-item.h1 {
+  height: 110px;
+  line-height: 110px;
+}
+
+.muuri-item.w1 {
+  width: 110px;
+}
+
 .muuri-item.h2 {
   height: 240px;
   line-height: 240px;
@@ -149,6 +158,15 @@
   width: 240px;
 }
 
+.muuri-item.h3 {
+  height: 360px;
+  line-height: 360px;
+}
+
+.muuri-item.w3 {
+  width: 360px;
+}
+
 .muuri-item.h4 {
   height: 500px;
   line-height: 500px;
@@ -156,6 +174,15 @@
 
 .muuri-item.w4 {
   width: 500px;
+}
+
+.muuri-item.h5 {
+  height: 660px;
+  line-height: 660px;
+}
+
+.muuri-item.w5 {
+  width: 660px;
 }
 
 .muuri-item-content {
@@ -195,6 +222,10 @@
   text-align: left;
   font-size: 9px;
   font-weight: 300;
+}
+
+.plugin-card-content {
+  margin: 10px;
 }
 
 .muuri-item.red .card {

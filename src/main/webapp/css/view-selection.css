@@ -8,7 +8,7 @@
   margin: auto;
   width: 100%;
   height: 100%;
-  border-bottom: 0px;
+  border-bottom: 0;
   border-radius: 3px;
   font-size: 12px;
 }
@@ -28,14 +28,14 @@
   height: 100%;
   padding: 1.5em 2em;
   background: rgba(255, 255, 255, 1);
-  border-top: 1px solid rgba(0, 0, 0, .05);
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
   cursor: pointer;
 }
 
 .select > input {
   position: absolute;
-  left: 0px;
-  top: 0px;
+  left: 0;
+  top: 0;
   z-index: 1;
   width: 100%;
   height: 100%;
@@ -53,11 +53,23 @@
 }
 
 .select > input:checked div.options label.option .title {
-  display: none !important;
+  display: none;
 }
 
 .select > input:not(:checked) {
   z-index: 4;
+}
+
+.select label.option span.title {
+  position: relative;
+  z-index: 2;
+  transition: background 0.3s ease-out;
+}
+
+.select label.option span.title:hover {
+  color: #fff;
+  background: #2c3e50;
+  box-shadow: inset 0px 1px 0px rgba(0, 0, 0, .1);
 }
 
 .select > input:not(:checked) ~ label.option > span.title {
@@ -82,7 +94,7 @@
   display: inline-block;
   width: 100%;
   color: #999;
-  border-top: 0px;
+  border-top: 0;
 }
 
 .select label.option {
@@ -93,21 +105,9 @@
   transition: all 1s ease-out;
 }
 
-.select label.option span.title {
-  position: relative;
-  z-index: 2;
-  transition: background 0.3s ease-out;
-}
-
 .select label.option span.title i.icon {
   padding-right: 8px;
   color: rgba(146, 168, 209, 1);
-}
-
-.select label.option span.title:hover {
-  color: #fff;
-  background: #2c3e50;
-  box-shadow: inset 0px 1px 0px rgba(0, 0, 0, .1);
 }
 
 .select label.option input {
@@ -118,22 +118,22 @@
   position: absolute;
   display: block;
   z-index: 3;
-  top: 0px;
+  top: 0;
   font-size: 12px;
   background: #fff;
-  border-top: 0px;
+  border-top: 0;
   box-shadow: none;
   color: inherit;
   width: 100%;
 }
 
 .select label.option input:disabled ~ span.title {
-  background: #2c3e50 !important;
+  background: #fff;
   color: #aaa;
 }
 
 .select label.option input:disabled ~ span.title:hover {
   color: #aaa;
-  background: rgba(44, 62, 80, 0.3);
+  background: #fff;
   cursor: no-drop;
 }

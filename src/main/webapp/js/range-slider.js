@@ -1,3 +1,9 @@
+/**
+ * Custom javascript method to handle the range slider "Add item" modal.
+ *
+ * @author Simon Symhoven
+ */
+
 (function ($) {
 
     let slider = $('.range-slider');
