@@ -1,126 +1,103 @@
 <?jelly escape-by-default='true'?>
 
-<j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout" xmlns:st="jelly:stapler">
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:bs="/bootstrap">
 
-    <l:layout title="Pull Request Monitoring ${it.run.getDisplayName()}">
+    <st:header name="Content-Type" value="text/html;charset=UTF-8"/>
+
+    <bs:page it="${it}">
 
         <link href="${resURL}/plugin/pull-request-monitoring/css/pull-request-monitoring.css" rel="stylesheet"/>
-        <script src="${resURL}/plugin/pull-request-monitoring/js/muuri.min.js"/>
-        <script src="${resURL}/plugin/pull-request-monitoring/js/muuri-grid.js"/>
 
-        <l:side-panel>
+        <div class="container">
 
-            <st:include page="sidepanel.jelly" it="${it.run}" optional="true" />
+            <button type="button" id="config-button" class="btn" data-toggle="modal" data-target="#configModal">
 
-        </l:side-panel>
+                <i class="material-icons icon spin">&#xE8B8;</i>
 
-        <l:main-panel>
+            </button>
 
-            <st:adjunct includes="io.jenkins.plugins.bootstrap4"/>
+            <button type="button" class="btn btn-primary" id="add-item-button" data-toggle="modal" data-target="#itemsModal">
 
-            <div class="container">
+                <i class="material-icons icon">&#xE145;</i>
 
-                <div class="row">
+            </button>
 
-                    <h1 class="col-8">
+            <section class="grid-demo">
 
-                        Pull Request Monitoring ${it.run.getDisplayName()}
+                <div class="grid">
 
-                    </h1>
+                    <j:forEach var="plugin" items="${it.monitor.getAvailablePlugins(it.run)}">
 
-                    <button class="btn btn-primary"
-                            type="button"
-                            data-toggle="modal" data-target="#itemsModal">
-                        <i class="material-icons icon">&#xE145;</i>
-                        Add item
-                    </button>
+                        <div class="muuri-item hidden h4 height w4 width black" data-id="${plugin.id}" data-color="black" data-title="${plugin.title}">
 
-                </div>
+                            <div class="muuri-item-content">
 
-                <button type="button" id="config-button" class="btn" data-toggle="modal" data-target="#configModal">
+                                <div class="card">
 
-                    <i class="material-icons icon spin">&#xE8B8;</i>
+                                    <div class="plugin-card-id">${plugin.title}</div>
 
-                </button>
-
-                <section class="grid-demo">
-
-                    <div class="grid">
-
-                        <j:forEach var="plugin" items="${it.monitor.getAvailablePlugins(it.run)}">
-
-                            <div class="muuri-item hidden h4 height w4 width black" data-id="${plugin.id}" data-color="black" data-title="${plugin.title}">
-
-                                <div class="muuri-item-content">
-
-                                    <div class="card">
-
-                                        <div class="plugin-card-id">${plugin.title}</div>
-
-                                        <div class="plugin-card-content">
-                                            <st:include page="monitor.jelly" it="${plugin}"/>
-                                        </div>
-
-                                        <div class="plugin-remove"><i class="material-icons icon">&#xE5CD;</i></div>
-
+                                    <div class="plugin-card-content">
+                                        <st:include page="monitor.jelly" it="${plugin}"/>
                                     </div>
+
+                                    <div class="plugin-remove"><i class="material-icons icon">&#xE5CD;</i></div>
 
                                 </div>
 
                             </div>
 
-                        </j:forEach>
+                        </div>
 
-                    </div>
+                    </j:forEach>
+
+                </div>
 
 
-                </section>
+            </section>
 
-                <!-- MODALS -->
+            <!-- MODALS -->
 
-                <!-- Config Modal -->
-                <div class="modal right fade" id="configModal" tabindex="-1" aria-labelledby="configModalLabel">
+            <!-- Config Modal -->
+            <div class="modal right fade" id="configModal" tabindex="-1" aria-labelledby="configModalLabel">
 
-                    <div class="modal-dialog">
+                <div class="modal-dialog">
 
-                        <div class="modal-content">
+                    <div class="modal-content">
 
-                            <div class="modal-header">
+                        <div class="modal-header">
 
-                                <h5 class="modal-title" id="configModalLabel">
-                                    <img src="${resURL}/plugin/pull-request-monitoring/icons/washington.png" width="15%" height="15%"/>
-                                    Jenkinsfile Configuration
-                                </h5>
+                            <h5 class="modal-title" id="configModalLabel">
+                                <img src="${resURL}/plugin/pull-request-monitoring/icons/washington.png" width="15%" height="15%"/>
+                                Jenkinsfile Configuration
+                            </h5>
 
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <i class="material-icons icon">&#xe5cd;</i>
-                                </button>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <i class="material-icons icon">&#xe5cd;</i>
+                            </button>
 
-                            </div>
+                        </div>
 
-                            <div class="modal-body">
-                                <h4>
-                                    <span class="badge badge-pill" id="badge-config"/>
-                                    <span class="badge badge-pill" id="badge-config-type"/>
-                                </h4>
+                        <div class="modal-body">
+                            <h4>
+                                <span class="badge badge-pill" id="badge-config"/>
+                                <span class="badge badge-pill" id="badge-config-type"/>
+                            </h4>
 
-                                <p id="config-text"/>
+                            <p id="config-text"/>
 
-                                <div class="row">
+                            <div class="row">
 
-                                    <div class="col-9">
+                                <div class="col-9">
 
-                                        <pre id="config"/>
+                                    <pre id="config"/>
 
-                                    </div>
+                                </div>
 
-                                    <div class="col-3">
+                                <div class="col-3">
 
-                                        <button id="copy" type="button" class="btn btn-light float-right" data-toggle="tooltip" data-placement="bottom" title="Copy to clipboard">
-                                            <i class="material-icons icon">&#xe14d;</i>
-                                        </button>
-
-                                    </div>
+                                    <button id="copy" type="button" class="btn btn-light float-right" data-toggle="tooltip" data-placement="bottom" title="Copy to clipboard">
+                                        <i class="material-icons icon">&#xe14d;</i>
+                                    </button>
 
                                 </div>
 
@@ -131,182 +108,175 @@
                     </div>
 
                 </div>
-
-                <!--  Add Item Modal -->
-                <div class="modal fade" id="itemsModal" tabindex="-1" aria-labelledby="itemsModalLabel" aria-hidden="true">
-
-                    <div class="modal-dialog modal-lg modal-dialog-centered">
-
-                        <div class="modal-content">
-
-                            <div class="modal-header">
-
-                                <h5 class="modal-title" id="itemsModalLabel">Add an item to your dashboard</h5>
-
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <i class="material-icons icon">&#xe5cd;</i>
-                                </button>
-
-                            </div>
-
-                            <div class="modal-body">
-
-                                <div class="container-fluid">
-
-                                    <div class="row">
-
-                                        <div class="col-sm-12">
-
-                                            1. Select your slot size:
-
-                                        </div>
-
-                                    </div>
-
-                                    <div class="row">
-
-                                        <div class="col-sm-12">
-
-                                            <form>
-
-                                                <div class="cc-selector-brick">
-
-                                                    <input checked="checked" id="brick2x2" type="radio" name="brick" value="2,2" />
-                                                    <label class="brick" style="background-image:url(${resURL}/plugin/pull-request-monitoring/icons/bricks/brick-2x2.png);" for="brick2x2"/>
-
-                                                    <input id="brick4x4" type="radio" name="brick" value="4,4" />
-                                                    <label class="brick" style="background-image:url(${resURL}/plugin/pull-request-monitoring/icons/bricks/brick-4x4.png);" for="brick4x4"/>
-
-                                                    <input id="brick4x2" type="radio" name="brick" value="4,2" />
-                                                    <label class="brick" style="background-image:url(${resURL}/plugin/pull-request-monitoring/icons/bricks/brick-4x2.png);" for="brick4x2"/>
-
-                                                    <input id="brick2x4" type="radio" name="brick" value="2,4" />
-                                                    <label class="brick" style="background-image:url(${resURL}/plugin/pull-request-monitoring/icons/bricks/brick-2x4.png);" for="brick2x4"/>
-
-                                                </div>
-
-                                            </form>
-
-                                        </div>
-
-                                    </div>
-
-                                    <div class="row">
-
-                                        <div class="col-sm-12">
-
-                                            2. Choose a color:
-
-                                        </div>
-
-                                    </div>
-
-                                    <div class="row">
-
-                                        <div class="col-sm-12">
-
-                                            <form>
-
-                                                <div class="cc-selector-color">
-
-                                                    <input checked="checked" id="black" type="radio" name="color" value="black" />
-                                                    <label class="color color-black" for="black"/>
-
-                                                    <input id="blue" type="radio" name="color" value="blue" />
-                                                    <label class="color color-blue" for="blue"/>
-
-                                                    <input id="green" type="radio" name="color" value="green" />
-                                                    <label class="color color-green" for="green"/>
-
-                                                    <input id="red" type="radio" name="color" value="red" />
-                                                    <label class="color color-red" for="red"/>
-
-                                                </div>
-
-                                            </form>
-
-                                        </div>
-
-                                    </div>
-
-                                    <div class="row">
-
-                                        <div class="col-sm-12">
-
-                                            3. Choose a plugin to display:
-
-                                        </div>
-
-                                    </div>
-
-                                    <div class="row">
-
-                                        <div class="col-sm-12">
-
-                                            <form>
-
-                                                <div class="cc-selector-plugin">
-
-                                                    <j:choose>
-
-                                                        <j:when test="${it.monitor.getAvailablePlugins(it.run).size() == 0}">
-
-                                                            Found no plugins to display!
-
-                                                        </j:when>
-
-                                                        <j:otherwise>
-
-                                                            <j:forEach var="plugin" items="${it.monitor.getAvailablePlugins(it.run)}">
-
-                                                                <input id="${plugin.id}" type="radio" name="plugin" value="${plugin.id}" />
-                                                                <label class="plugin" style="background-image:url(${resURL}${plugin.icon});" for="${plugin.id}"/>
-
-                                                            </j:forEach>
-
-                                                        </j:otherwise>
-
-                                                    </j:choose>
-
-                                                </div>
-
-                                            </form>
-
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-
-                            </div>
-
-                            <div class="modal-footer">
-
-                                <button id="modalClose" type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-
-                                <button type="button" class="btn btn-primary add-more-items">Add item</button>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-                <!-- MODALS -->
 
             </div>
 
-        </l:main-panel>
+            <!--  Add Item Modal -->
+            <div class="modal fade" id="itemsModal" tabindex="-1" aria-labelledby="itemsModalLabel" aria-hidden="true">
 
-    </l:layout>
+                <div class="modal-dialog modal-lg modal-dialog-centered">
 
-    <script>var run = <st:bind value="${it}"/>;
-        run.getConfiguration(function(result) {
-            initDashboard(result.responseObject());
-        });
-    </script>
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+
+                            <h3 class="modal-title" id="itemsModalLabel">Add an item to your dashboard</h3>
+
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <i class="material-icons icon">&#xe5cd;</i>
+                            </button>
+
+                        </div>
+
+                        <div class="modal-body">
+
+                            <div class="container-fluid">
+
+                                <div class="row">
+
+                                    <div class="col-sm-12">
+
+                                        <h5> Select your slot size: </h5>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="row">
+
+                                    <div class="col-sm-12">
+
+                                        <form>
+
+                                            <div class="cc-selector-brick">
+
+                                                <input checked="checked" id="brick2x2" type="radio" name="brick" value="2,2" />
+                                                <label class="brick" style="background-image:url(${resURL}/plugin/pull-request-monitoring/icons/bricks/brick-2x2.png);" for="brick2x2"/>
+
+                                                <input id="brick4x4" type="radio" name="brick" value="4,4" />
+                                                <label class="brick" style="background-image:url(${resURL}/plugin/pull-request-monitoring/icons/bricks/brick-4x4.png);" for="brick4x4"/>
+
+                                                <input id="brick4x2" type="radio" name="brick" value="4,2" />
+                                                <label class="brick" style="background-image:url(${resURL}/plugin/pull-request-monitoring/icons/bricks/brick-4x2.png);" for="brick4x2"/>
+
+                                                <input id="brick2x4" type="radio" name="brick" value="2,4" />
+                                                <label class="brick" style="background-image:url(${resURL}/plugin/pull-request-monitoring/icons/bricks/brick-2x4.png);" for="brick2x4"/>
+
+                                            </div>
+
+                                        </form>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="row">
+
+                                    <div class="col-sm-12">
+
+                                        <h5> Choose a color for the slot: </h5>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="row">
+
+                                    <div class="col-sm-12">
+
+                                        <form>
+
+                                            <div class="cc-selector-color">
+
+                                                <input checked="checked" id="black" type="radio" name="color" value="black" />
+                                                <label class="color color-black" for="black"/>
+
+                                                <input id="blue" type="radio" name="color" value="blue" />
+                                                <label class="color color-blue" for="blue"/>
+
+                                                <input id="green" type="radio" name="color" value="green" />
+                                                <label class="color color-green" for="green"/>
+
+                                                <input id="red" type="radio" name="color" value="red" />
+                                                <label class="color color-red" for="red"/>
+
+                                            </div>
+
+                                        </form>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="row">
+
+                                    <div class="col-sm-12">
+
+                                        <h5> Choose a view to display: </h5>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="row">
+
+                                    <div class="col-sm-12">
+
+                                        <form id="pluginSelectForm">
+
+                                            <div class="cc-selector-plugin">
+
+                                                <div class="input-group mb-3">
+
+                                                    <select name="plugin" class="form-select" id="pluginSelectGroup" required="true">
+
+                                                        <j:forEach var="plugin" items="${it.monitor.getAvailablePlugins(it.run)}">
+
+                                                            <option value="${plugin.id}">${plugin.id}</option>
+
+                                                        </j:forEach>
+
+                                                    </select>
+
+                                                </div>
+
+                                            </div>
+
+                                        </form>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                        </div>
+
+                        <div class="modal-footer">
+
+                            <button id="modalClose" type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+
+                            <button type="button" class="btn btn-primary add-more-items">Add item</button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+            <!-- MODALS -->
+
+        </div>
+
+        <script>var run = <st:bind value="${it}"/></script>
+        <script src="${resURL}/plugin/pull-request-monitoring/js/muuri.min.js"/>
+        <script type="text/javascript" src="${resURL}/plugin/pull-request-monitoring/js/muuri-grid.js"/>
+        <script type="text/javascript" src="${resURL}/plugin/pull-request-moniotring/js/form-validation.js"/>
+
+    </bs:page>
+
 
 
 </j:jelly>

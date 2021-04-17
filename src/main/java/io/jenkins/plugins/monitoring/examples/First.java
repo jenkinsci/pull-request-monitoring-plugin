@@ -9,7 +9,11 @@ import hudson.model.Run;
 import io.jenkins.plugins.monitoring.MonitorFactory;
 import io.jenkins.plugins.monitoring.MonitorView;
 
-import java.util.*;
+import java.util.Random;
+import java.util.UUID;
+import java.util.Collection;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * An example Monitor View.
@@ -59,9 +63,9 @@ public class First implements MonitorView {
     public String getModel() {
         PieChartModel model = new PieChartModel("Title");
         Random r = new Random();
-        model.add(new PieData("Segment 1", Math.abs(r.nextInt())), Palette.RED);
-        model.add(new PieData("Segment 2",  Math.abs(r.nextInt())), Palette.GREEN);
-        model.add(new PieData("Segment 3",  Math.abs(r.nextInt())), Palette.YELLOW);
+        model.add(new PieData("Segment 1", r.nextInt(100)), Palette.RED);
+        model.add(new PieData("Segment 2",  r.nextInt(100)), Palette.GREEN);
+        model.add(new PieData("Segment 3",  r.nextInt(100)), Palette.YELLOW);
 
         return new JacksonFacade().toJson(model);
     }
