@@ -7,8 +7,6 @@
     <bs:page it="${it}">
 
         <link href="${resURL}/plugin/pull-request-monitoring/css/pull-request-monitoring.css" rel="stylesheet"/>
-        <link href="${resURL}/plugin/pull-request-monitoring/css/range-slider.css" rel="stylesheet"/>
-        <link href="${resURL}/plugin/pull-request-monitoring/css/view-selection.css" rel="stylesheet"/>
 
         <div class="container">
 
@@ -29,7 +27,7 @@
                 <div class="grid">
 
                     <j:forEach var="plugin" items="${it.monitor.getAvailablePlugins(it.run)}">
-
+                        
                         <div class="muuri-item hidden h4 height w4 width black" data-id="${plugin.id}" data-color="black" data-title="${plugin.title}">
 
                             <div class="muuri-item-content">
@@ -39,7 +37,9 @@
                                     <div class="plugin-card-id">${plugin.title}</div>
 
                                     <div class="plugin-card-content">
+
                                         <st:include page="monitor.jelly" it="${plugin}"/>
+
                                     </div>
 
                                     <div class="plugin-remove"><i class="material-icons icon">&#xE5CD;</i></div>
@@ -53,7 +53,6 @@
                     </j:forEach>
 
                 </div>
-
 
             </section>
 
@@ -69,8 +68,10 @@
                         <div class="modal-header">
 
                             <h5 class="modal-title" id="configModalLabel">
+
                                 <img src="${resURL}/plugin/pull-request-monitoring/icons/washington.png" width="15%" height="15%"/>
                                 Jenkinsfile Configuration
+
                             </h5>
 
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -80,6 +81,7 @@
                         </div>
 
                         <div class="modal-body">
+
                             <h4>
                                 <span class="badge badge-pill" id="badge-config"/>
                                 <span class="badge badge-pill" id="badge-config-type"/>
@@ -97,7 +99,8 @@
 
                                 <div class="col-3">
 
-                                    <button id="copy" type="button" class="btn btn-light float-right" data-toggle="tooltip" data-placement="bottom" title="Copy to clipboard">
+                                    <button id="copy" type="button" class="btn btn-light float-right"
+                                            data-toggle="tooltip" data-placement="bottom" title="Copy to clipboard">
                                         <i class="material-icons icon">&#xe14d;</i>
                                     </button>
 
@@ -141,8 +144,10 @@
                                         <h5> Select your slot width: </h5>
 
                                         <div class="range-slider width">
-                                            <input class="range-slider__range width" type="range" name="width" value="4" min="1" max="5" step="1"/>
-                                            <span id="pluginWidth" class="range-slider__value width">0</span>
+
+                                            <input class="range-slider-range width" type="range" name="width" value="4" min="1" max="5" step="1"/>
+                                            <span id="pluginWidth" class="range-slider-value width">0</span>
+
                                         </div>
 
                                     </div>
@@ -156,8 +161,10 @@
                                         <h5> Select your slot height: </h5>
 
                                         <div class="range-slider height">
-                                            <input class="range-slider__range height" type="range" name="height" value="3" min="1" max="5" step="1"/>
-                                            <span id="pluginHeight" class="range-slider__value height">0</span>
+
+                                            <input class="range-slider-range height" type="range" name="height" value="3" min="1" max="5" step="1"/>
+                                            <span id="pluginHeight" class="range-slider-value height">0</span>
+
                                         </div>
 
                                     </div>
@@ -204,24 +211,26 @@
 
                                 </div>
 
-                                <div class="select animated zoomIn">
+                                <div class="select">
 
-                                    <input id="defaultInput" type="radio" name="plugin"/>
-                                    <i class="material-icons toggle icon icon-plus">&#xe5c5;</i>
-                                    <i class="material-icons toggle icon icon-minus">&#xe5c7;</i>
+                                    <input id="defaultInput" type="radio" name="plugin" value="default"/>
+
+                                        <i class="material-icons toggle icon icon-plus">&#xe5c5;</i>
+
+                                        <i class="material-icons toggle icon icon-minus">&#xe5c7;</i>
+
                                     <span class="placeholder">Choose...</span>
 
                                     <j:forEach var="plugin" items="${it.monitor.getAvailablePlugins(it.run)}">
 
                                         <label class="option">
                                             <input type="radio" name="plugin" value="${plugin.id}"/>
-                                            <span class="title animated fadeIn">
+                                            <span class="title">
                                                 <i class="material-icons icon">&#xe433;</i>
                                                 ${plugin.id}</span>
                                         </label>
 
                                     </j:forEach>
-
 
                                 </div>
 
@@ -234,7 +243,7 @@
 
                             <button id="modalClose" type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
 
-                            <button type="button" class="btn btn-primary add-more-items">Add item</button>
+                            <button type="button" id="submitButton" class="btn btn-primary add-more-items">Add item</button>
 
                         </div>
 
@@ -249,12 +258,9 @@
 
         <script>var run = <st:bind value="${it}"/></script>
         <script src="${resURL}/plugin/pull-request-monitoring/js/muuri.min.js"/>
-        <script type="text/javascript" src="${resURL}/plugin/pull-request-monitoring/js/muuri-grid.js"/>
-        <script type="text/javascript" src="${resURL}/plugin/pull-request-monitoring/js/range-slider.js"/>
+        <script type="text/javascript" src="${resURL}/plugin/pull-request-monitoring/js/pull-request-monitoring.js"/>
 
     </bs:page>
-
-
 
 </j:jelly>
 

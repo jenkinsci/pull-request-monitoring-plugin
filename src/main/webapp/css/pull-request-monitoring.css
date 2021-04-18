@@ -307,75 +307,7 @@
   font-size: inherit;
 }
 
-/* Buttons */
-
-.btn {
-  display: inline-block;
-  position: relative;
-  vertical-align: top;
-  border: 0;
-  outline: 0;
-  padding: 0 15px;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 40px;
-  height: 40px;
-  text-align: center;
-  white-space: nowrap;
-  color: #fff;
-  -ms-touch-action: manipulation;
-  touch-action: manipulation;
-  cursor: pointer;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  border-radius: 3px;
-}
-
-.btn:focus,
-.btn:hover,
-.btn:active {
-  outline: 0;
-}
-
-.btn:hover {
-  background: #3989de;
-}
-
-.btn:active {
-  background: #3075bf;
-}
-
-.btn.active {
-  background: #60ca47;
-}
-
-.btn.active:hover {
-  background: #40b325;
-}
-
-.btn.active:active {
-  background: #309818;
-}
-
-/* Modal */
-
-.brick {
-  cursor: pointer;
-  margin: 10px;
-  background-size: contain;
-  background-repeat: no-repeat;
-  display: inline-block;
-  width: 100px;
-  height: 100px;
-  -webkit-transition: all 100ms ease-in;
-  -moz-transition: all 100ms ease-in;
-  transition: all 100ms ease-in;
-  -webkit-filter: opacity(0.4);
-  -moz-filter: opacity(0.4);
-  filter: opacity(0.4);
-}
+/* Color Selection (Modal) */
 
 .color {
   cursor: pointer;
@@ -392,33 +324,13 @@
   filter: opacity(0.4);
 }
 
-.plugin {
-  cursor: pointer;
-  margin: 10px;
-  background-size: contain;
-  background-repeat: no-repeat;
-  display: inline-block;
-  width: 50px;
-  height: 50px;
-  -webkit-transition: all 100ms ease-in;
-  -moz-transition: all 100ms ease-in;
-  transition: all 100ms ease-in;
-  -webkit-filter: opacity(0.4);
-  -moz-filter: opacity(0.4);
-  filter: opacity(0.4);
-}
-
-.brick:hover,
-.color:hover,
-.plugin:hover {
+.color:hover {
   -webkit-filter: opacity(1);
   -moz-filter: opacity(1);
   filter: opacity(1);
 }
 
-.cc-selector-brick input,
-.cc-selector-color input,
-.cc-selector-plugin input {
+.cc-selector-color input {
   margin: 0;
   padding: 0;
   -webkit-appearance: none;
@@ -426,15 +338,11 @@
   appearance: none;
 }
 
-.cc-selector-brick input:active + .brick,
-.cc-selector-color input:active + .color,
-.cc-selector-plugin input:active + .plugin {
+.cc-selector-color input:active + .color {
   opacity: 0.9;
 }
 
-.cc-selector-brick input:checked + .brick,
-.cc-selector-color input:checked + .color,
-.cc-selector-plugin input:checked + .plugin {
+.cc-selector-color input:checked + .color {
   -webkit-filter: none;
   -moz-filter: none;
   filter: none;
@@ -458,4 +366,235 @@ input:disabled {
 
 .color-red {
   background-color: #f94a7a;
+}
+
+/* Range Slider (Modal) */
+
+.range-slider {
+  width: 100%;
+}
+
+.range-slider-range {
+  -webkit-appearance: none;
+  width: calc(100% - (73px));
+  height: 10px;
+  border-radius: 5px;
+  background: #d7dcdf;
+  outline: none;
+  padding: 0;
+  margin: 0;
+}
+
+.range-slider-range::-webkit-slider-thumb {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #2c3e50;
+  cursor: pointer;
+  transition: background 0.15s ease-in-out;
+}
+
+.range-slider-range::-webkit-slider-thumb:hover {
+  background: #1abc9c;
+}
+
+.range-slider-range:active::-webkit-slider-thumb {
+  background: #1abc9c;
+}
+
+.range-slider-range::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border: 0;
+  border-radius: 50%;
+  background: #2c3e50;
+  cursor: pointer;
+  transition: background 0.15s ease-in-out;
+}
+
+.range-slider-range::-moz-range-thumb:hover {
+  background: #1abc9c;
+}
+
+.range-slider-range:active::-moz-range-thumb {
+  background: #1abc9c;
+}
+
+.range-slider-range:focus::-webkit-slider-thumb {
+  box-shadow: 0 0 0 3px #fff, 0 0 0 6px #1abc9c;
+}
+
+.range-slider-value {
+  display: inline-block;
+  position: relative;
+  width: 60px;
+  color: #fff;
+  line-height: 20px;
+  text-align: center;
+  border-radius: 3px;
+  background: #2c3e50;
+  padding: 5px 10px;
+  margin-left: 8px;
+}
+
+.range-slider-value:after {
+  position: absolute;
+  top: 8px;
+  left: -7px;
+  width: 0;
+  height: 0;
+  border-top: 7px solid transparent;
+  border-right: 7px solid #2c3e50;
+  border-bottom: 7px solid transparent;
+  content: '';
+}
+
+::-moz-range-track {
+  background: #d7dcdf;
+  border: 0;
+}
+
+input::-moz-focus-inner, input::-moz-focus-outer {
+  border: 0;
+}
+
+/* Plugin View Selection (Modal) */
+
+.select {
+  position: relative;
+  overflow: auto;
+  max-height: 320px;
+  display: block;
+  margin: auto;
+  width: 100%;
+  height: 100%;
+  border-bottom: 0;
+  border-radius: 3px;
+  font-size: 12px;
+}
+
+.select > i.toggle {
+  position: absolute;
+  z-index: 4;
+  right: 1.5em;
+  top: 1.6em;
+  color: #2c3e50;
+}
+
+.select .title, .select .placeholder {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 1.5em 2em;
+  background: rgba(255, 255, 255, 1);
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+}
+
+.select > input {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  display: block;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.select > input:checked ~ i.toggle.icon-minus {
+  display: block;
+}
+
+.select > input:checked ~ i.toggle.icon-plus {
+  display: none;
+}
+
+.select > input:checked div.options label.option .title {
+  display: none;
+}
+
+.select > input:not(:checked) {
+  z-index: 4;
+}
+
+.select label.option span.title {
+  position: relative;
+  z-index: 2;
+  transition: background 0.3s ease-out;
+}
+
+.select label.option span.title:hover {
+  color: #fff;
+  background: #2c3e50;
+  box-shadow: inset 0px 1px 0px rgba(0, 0, 0, 0.1);
+}
+
+.select > input:not(:checked) ~ label.option > span.title {
+  display: none;
+}
+
+.select > input:not(:checked) ~ i.toggle.icon-plus {
+  display: block;
+}
+
+.select > input:not(:checked) ~ i.toggle.icon-minus {
+  display: none;
+}
+
+.select > input:disabled {
+  cursor: no-drop;
+}
+
+.select > span.placeholder {
+  position: relative;
+  z-index: 0;
+  display: inline-block;
+  width: 100%;
+  color: #999;
+  border-top: 0;
+}
+
+.select label.option {
+  display: block;
+  overflow: hidden;
+  z-index: 1;
+  width: 100%;
+  transition: all 1s ease-out;
+}
+
+.select label.option span.title i.icon {
+  padding-right: 8px;
+  color: rgba(146, 168, 209, 1);
+}
+
+.select label.option input {
+  display: none;
+}
+
+.select label.option input:checked ~ span.title {
+  position: absolute;
+  display: block;
+  z-index: 3;
+  top: 0;
+  font-size: 12px;
+  background: #fff;
+  border-top: 0;
+  box-shadow: none;
+  color: inherit;
+  width: 100%;
+}
+
+.select label.option input:disabled ~ span.title {
+  background: #fff;
+  color: #aaa;
+}
+
+.select label.option input:disabled ~ span.title:hover {
+  color: #aaa;
+  background: #fff;
+  cursor: no-drop;
 }

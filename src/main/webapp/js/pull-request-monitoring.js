@@ -257,37 +257,32 @@
         const height = document.querySelector('input[name="height"]').value;
         const plugin = document.querySelector('input[name="plugin"]:checked').value;
 
-        if (getCurrentConfig().plugins.hasOwnProperty(plugin)) {
-            alert(`Dashboard already contains the plugin '${plugin}'!`);
-        } else {
-            let plugins = grid.getItems().filter(function(item) {
-                const dataId = item.getElement().getAttribute('data-id');
-                if (dataId === plugin) {
-                    const oldColor = item.getElement().getAttribute('data-color');
-                    item.getElement().classList.remove(oldColor);
+        let plugins = grid.getItems().filter(function(item) {
+            const dataId = item.getElement().getAttribute('data-id');
+            if (dataId === plugin) {
+                const oldColor = item.getElement().getAttribute('data-color');
+                item.getElement().classList.remove(oldColor);
 
-                    item.getElement().setAttribute('data-color', color);
-                    item.getElement().classList.add(color);
+                item.getElement().setAttribute('data-color', color);
+                item.getElement().classList.add(color);
 
-                    item.getElement().classList.remove('w1', 'w2', 'w3', 'w4', 'w5');
-                    item.getElement().classList.add('w' + width);
+                item.getElement().classList.remove('w1', 'w2', 'w3', 'w4', 'w5');
+                item.getElement().classList.add('w' + width);
 
-                    item.getElement().classList.remove('h1', 'h2', 'h3', 'h4', 'h5');
-                    item.getElement().classList.add('h' + height);
+                item.getElement().classList.remove('h1', 'h2', 'h3', 'h4', 'h5');
+                item.getElement().classList.add('h' + height);
 
-                    return true;
-                }
+                return true;
+            }
 
-                return false;
-            });
+            return false;
+        });
 
-            changeInput(plugin, 'true');
-            grid.show(plugins);
+        changeInput(plugin, 'true');
+        grid.show(plugins);
 
-            document.getElementById('defaultInput').select();
-            const modal = document.getElementById('modalClose');
-            modal.click();
-        }
+        const modal = document.getElementById('modalClose');
+        modal.click();
 
     }
 
@@ -380,11 +375,11 @@
             plugin.getElement().classList.add(newColor);
 
             const width = config[String(id)].width;
-            plugin.getElement().classList.remove('w2', 'w4');
+            plugin.getElement().classList.remove('w1', 'w2', 'w3', 'w4', 'w5');
             plugin.getElement().classList.add('w' + width);
 
             const height = config[String(id)].height;
-            plugin.getElement().classList.remove('h2', 'h4');
+            plugin.getElement().classList.remove('h1', 'h2', 'h3', 'h4', 'h5');
             plugin.getElement().classList.add('h' + height);
 
             changeInput(id, 'true');
@@ -428,10 +423,57 @@
 
         updateConfigPanel();
 
+        /**
+         * Trigger window resize event to resize echarts.
+         */
+        $(document).ready(function() {
+            $(window).trigger('resize');
+        });
+
     }
 
     run.getConfiguration(function(config) {
         initDashboard(config.responseJSON);
+    });
+
+    /**
+     * Form validation.
+     */
+    $(document).ready(function() {
+        $('#submitButton').attr('disabled', 'disabled');
+
+        $('input[name=plugin]').on('change', function() {
+
+            const plugin = document.querySelector('input[name="plugin"]:checked');
+
+            if (plugin.value !== 'default') {
+                $('#submitButton').removeAttr("disabled");
+            }
+            else {
+                $('#submitButton').attr('disabled', 'disabled');
+            }
+        });
+    });
+
+    /**
+     * Range slider value changes.
+     */
+    $(document).ready(function() {
+        let slider = $('.range-slider');
+        let range = $('.range-slider-range');
+        let value = $('.range-slider-value');
+
+        slider.each(function(){
+
+            value.each(function(){
+                let value = jQuery3(this).prev().attr('value');
+                jQuery3(this).html(value);
+            });
+
+            range.on('input', function(){
+                jQuery3(this).next(value).html(this.value);
+            });
+        });
     });
 
 })(jQuery3);
