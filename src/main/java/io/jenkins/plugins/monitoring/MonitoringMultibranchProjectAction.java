@@ -25,8 +25,8 @@ public class MonitoringMultibranchProjectAction implements ProminentProjectActio
     private static final String URI = "pull-request-monitoring";
     private static final String NAME = "Pull Request Monitoring";
     private static final String ICONS_PREFIX = "/plugin/pull-request-monitoring/icons/";
-    private static final String ICON_SMALL = ICONS_PREFIX + "pull-request-monitoring-24x24.png";
-    private static final String ICON_BIG = ICONS_PREFIX + "pull-request-monitoring-48x48.png";
+    private static final String ICON_SMALL = ICONS_PREFIX + "line-graph-32x32.png";
+    private static final String ICON_BIG = ICONS_PREFIX + "line-graph-64x64.png";
 
     private final transient MultiBranchProject<?, ?> multiBranchProject;
 
