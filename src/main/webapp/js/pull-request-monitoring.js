@@ -4,10 +4,22 @@
  * @author Simon Symhoven
  */
 
+
 /* global jQuery3 */
 (function ($) {
     let grid;
     let configuration;
+
+    /**
+     * Trigger window resize event to resize echarts.
+     */
+    function resize() {
+
+        $(document).ready(function() {
+            $(window).trigger('resize');
+        });
+
+    }
 
     /**
      * Get the local storage id to store the configuration for based on selected build action.
@@ -319,6 +331,7 @@
             })
             .on('layoutEnd', function () {
                 updateLocalStorage();
+                resize();
             });
 
         addItemsElement.addEventListener('click', addItem);
@@ -422,13 +435,6 @@
         loadGrid();
 
         updateConfigPanel();
-
-        /**
-         * Trigger window resize event to resize echarts.
-         */
-        $(document).ready(function() {
-            $(window).trigger('resize');
-        });
 
     }
 
