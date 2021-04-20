@@ -42,7 +42,11 @@
       <a href="#getting-started">Getting Started</a>
       <ul>
         <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
+        <li><a href="#provide-a-view">Provide A View</a></li>
+            <ul>
+                <li><a href="#the-code-behind">The code behind</a></li>
+                <li><a href="#the-corresponding-jelly-file">The corresponding jelly file</a></li>
+            </ul>
       </ul>
     </li>
     <li><a href="#usage">Usage</a></li>
@@ -59,7 +63,19 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-TODO!
+Many software teams have changed their development processes to lightweight pull requests. 
+Changes to the software are packed into such a pull request, 
+which is then manually reviewed and also automatically built in the CI/CD server. 
+In Jenkins, however, these pull requests are not "first-class citizens"; the results of a pull request 
+are currently simulated via branches.
+
+For developers, this representation is insufficient: instead of having Git diffs, tests, static analysis, etc. 
+as an overview in the overall project, a filtered representation of these results on the changes actually made 
+would be much more helpful.
+
+This plugin offers a possibility to display and aggregate the results (in the form of individual views) of a pull 
+request in a configurable dashboard. Views can only be accessed or displayed if the corresponding plugin fulfils 
+certain requirements and already provides a view.
 
 
 
@@ -75,16 +91,141 @@ TODO!
 
 ### Prerequisites
 
-Currently, only **multibranch pipelines** are supported. Therefore, you have to install the corresponding Jenkins plugin
-[Multibranch: Pipeline](https://plugins.jenkins.io/workflow-multibranch/) and connect to own of your SCM Repositories
-to use the **Pull Request Monitoring** Jenkins plugin.
+Currently, only **multibranch pipelines** projects are supported to use this plugin. Therefore, you have to 
+install the corresponding Jenkins plugin [Multibranch: Pipeline](https://plugins.jenkins.io/workflow-multibranch/) 
+and connect to own of your SCM Repositories to use the **Pull Request Monitoring** Jenkins plugin.
 
-### Installation
+### Provide a view
 
-TODO!
+#### The code behind
+The [MonitorView](src/main/java/io/jenkins/plugins/monitoring/MonitorView.java) interface defines the interface 
+for each view that is to be displayed.
+Each view needs at least one unique `id` and a `title`. In order to register the view for the plugin, 
+a factory class is required, which must be provided with the annotation `@Extension`. 
+The factory have to implement the [MonitorFactory](src/main/java/io/jenkins/plugins/monitoring/MonitorFactory.java) 
+interface and delivers a set of `MonitorViews`.
 
-<!-- USAGE EXAMPLES -->
-## Usage
+A minimal example could look as follows:
+
+```java
+public class ExampleMonitor implements MonitorView {
+    private final Run<?, ?> build;
+
+    /**
+     * Create a new {@link ExampleMonitor}.
+     *
+     * @param run
+     *          the {@link Run}
+     */
+    public ExampleMonitor(Run<?, ?> run) {
+        this.build = run;
+    }
+
+    @Override
+    public String getTitle() {
+        return "Example Monitor for build " + build.getDisplayName();
+    }
+
+    @Override
+    public String getId() {
+        return getClass().getName();
+    }
+
+    /**
+     * Creates a new {@link ExampleMonitorFactory}.
+     */
+    @Extension
+    public static class ExampleMonitorFactory implements MonitorFactory {
+        @Override
+        public Collection<MonitorView> getMonitorViews(Run<?, ?> build) {
+            return Collections.singleton(new ExampleMonitor(build));
+        }
+    }
+}
+```
+
+The factory can also deliver several views of a class, but please careful with the unique id of each view.
+
+> **Unique View Id**:
+Usually the class name is used for the ID if only one view is delivered. If several views of the same class are created in the factory, it must be ensured that the ID is always unique!
+
+Here is an example of a factory that delivers two instances of a class:
+
+```java
+/**
+ * An example Monitor View.
+ */
+public class ExampleMonitor2 implements MonitorView {
+    private final Run<?, ?> build;
+    private final String id;
+
+    /**
+     * Create a new {@link ExampleMonitor2}.
+     *
+     * @param run
+     *          the {@link Run}
+     * @param viewId
+     *          the id.
+     */
+    public First(Run<?, ?> run, String viewId) {
+        this.build = run;
+        this.id = viewId;
+    }
+
+    @Override
+    public String getTitle() {
+        return "Example Monitor 2 for build " + this.build.getDisplayName();
+    }
+
+    @Override
+    public String getId() {
+        return id;
+    }
+    
+    /**
+     * Creates a new {@link ExampleMonitor2Factory}.
+     */
+    @Extension
+    public static class ExampleMonitor2Factory implements MonitorFactory {
+        @Override
+        public Collection<MonitorView> getMonitorViews(Run<?, ?> build) {
+            List<MonitorView> monitors = new ArrayList<>();
+            monitors.add(new ExampleMonitor2(build, "io.jenkins.plugins.monitoring.examples.First.View1"));
+            monitors.add(new ExampleMonitor2(build, "io.jenkins.plugins.monitoring.examples.First.View2"));
+            return monitors;
+        }
+    }
+}
+```
+
+#### The corresponding jelly file
+
+Each view have to have a corresponding `monitor.jelly` file, which is responsible for the content of the 
+plugins view delivered on the dashboard later. Therefore you have to create a new `monitor.jelly` file 
+in the directory, which corresponds to the `MonitorView` class. 
+
+> **Example**: The code behind is defined in 
+`src/main/java/io/jenkins/plugins/sample/ExampleMonitor.java`. The related sources (e.g. the `monitor.jelly` file) have 
+to be defined in `src/main/resources/io/jenkins/plugins/sample/ExampleMonitor/monitory.jelly`. 
+
+Now the view, which can be added later in the dashboard, can be filled individually.
+Of course, all obligatory functions of the Jelly files, such as [JEXL](https://commons.apache.org/proper/commons-jexl/) 
+calls, can be used. To do this, please refer to the official Jenkins documentation.
+A minimal example:
+
+```xml
+<?jelly escape-by-default='true'?>
+
+<j:jelly xmlns:j="jelly:core">
+
+    <p>Plugin content goes here!</p>
+
+</j:jelly>
+```
+
+
+<!-- USAGE EXAMPLES --> 
+## Usage Of Monitoring
 
 TODO!
 

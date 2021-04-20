@@ -17,7 +17,7 @@ public class Second implements MonitorView {
     private final Run<?, ?> build;
 
     /**
-     * Create a new {@link First}.
+     * Create a new {@link Second}.
      *
      * @param run
      *          the {@link Run}

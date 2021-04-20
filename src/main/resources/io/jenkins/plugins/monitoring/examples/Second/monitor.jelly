@@ -1,6 +1,6 @@
 <?jelly escape-by-default='true'?>
 
-<j:jelly xmlns:j="jelly:core" xmlns:c="/charts">
+<j:jelly xmlns:j="jelly:core">
 
     <p>Plugin content goes here!</p>
 
