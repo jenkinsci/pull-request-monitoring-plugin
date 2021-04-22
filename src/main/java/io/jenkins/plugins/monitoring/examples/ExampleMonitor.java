@@ -13,16 +13,16 @@ import java.util.Collections;
 /**
  * Another example Monitor View.
  */
-public class Second implements MonitorView {
+public class ExampleMonitor implements MonitorView {
     private final Run<?, ?> build;
 
     /**
-     * Create a new {@link Second}.
+     * Create a new {@link ExampleMonitor}.
      *
      * @param run
      *          the {@link Run}
      */
-    public Second(Run<?, ?> run) {
+    public ExampleMonitor(Run<?, ?> run) {
         this.build = run;
     }
 
@@ -50,13 +50,13 @@ public class Second implements MonitorView {
     }
 
     /**
-     * Creates a new {@link SecondFactory}.
+     * Creates a new {@link ExampleMonitorFactory}.
      */
     @Extension
-    public static class SecondFactory implements MonitorFactory {
+    public static class ExampleMonitorFactory implements MonitorFactory {
         @Override
         public Collection<MonitorView> getMonitorViews(Run<?, ?> build) {
-            return Collections.singleton(new Second(build));
+            return Collections.singleton(new ExampleMonitor(build));
         }
     }
 }

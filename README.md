@@ -50,6 +50,10 @@
       </ul>
     </li>
     <li><a href="#usage">Usage</a></li>
+        <ul>
+            <li><a href="#default-dashboard">Default Dashboard</a></li>
+            <li><a href="#custom-dashboard">Custom Dashboard</a></li>
+        </ul>
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
@@ -190,8 +194,8 @@ public class ExampleMonitor2 implements MonitorView {
         @Override
         public Collection<MonitorView> getMonitorViews(Run<?, ?> build) {
             List<MonitorView> monitors = new ArrayList<>();
-            monitors.add(new ExampleMonitor2(build, "io.jenkins.plugins.monitoring.examples.First.View1"));
-            monitors.add(new ExampleMonitor2(build, "io.jenkins.plugins.monitoring.examples.First.View2"));
+            monitors.add(new ExampleMonitor2(build, "io.jenkins.plugins.monitoring.examples.ExampleMonitor2.View1"));
+            monitors.add(new ExampleMonitor2(build, "io.jenkins.plugins.monitoring.examples.ExampleMonitor2.View2"));
             return monitors;
         }
     }
@@ -227,7 +231,70 @@ A minimal example:
 <!-- USAGE EXAMPLES --> 
 ## Usage Of Monitoring
 
-TODO!
+### Default Dashboard
+
+To get an empty dashboard, add the following stage to your Jenkinsfile:
+
+```json
+stage ('Pull Request Monitoring - Dashboard Configuration') {
+    monitoring ( )
+}
+```
+
+The dashboard will be added to each build, which corresponds to a pull request.
+Now you are able to add plugins to the dashboard, change the layout or remove it again.
+The configuration will be saved for each project locally. If you want to save the configuration permanently, 
+it is best to copy and paste it into the Jenkinsfile and overwrite the default dashboard.
+
+![Example Monitor](etc/gifs/example-monitor-without-config.gif)
+
+### Custom Dashboard
+
+You can add your own pre-defined dashboard in the Jenkinsfile, e.g.:
+
+```json
+stage ('Pull Request Monitoring - Dashboard Configuration') {
+    monitoring (
+        configuration:
+        '''
+        {
+          "plugins": {
+            "io.jenkins.plugins.monitoring.examples.ExampleMonitor2.View1": {
+              "width": 4,
+              "height": 4,
+              "color": "black"
+            },
+            "io.jenkins.plugins.monitoring.examples.ExampleMonitor2.View2": {
+              "width": 2,
+              "height": 4,
+              "color": "red"
+            },
+            "io.jenkins.plugins.monitoring.examples.ExampleMonitor": {
+              "width": 4,
+              "height": 2,
+              "color": "green"
+            }
+          }
+        }
+        '''
+ )
+}
+```
+
+Therefore, each plugin needs at least the following keys:
+
+```
+    "<plugin-id>" : {
+        "width": 1, 2, 3, 4 or 5,
+        "height": 1, 2, 3, 4 or 5,
+        "color": "green", "red", "black" or "blue"
+    }
+```
+
+Then, if you open the build, the pre-defined plugins will be loaded:
+
+![Example Monitor 2](etc/gifs/example-monitor-with-config.png)
+
 
 <!-- ROADMAP -->
 ## Roadmap

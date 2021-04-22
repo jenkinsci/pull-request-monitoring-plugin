@@ -14,19 +14,19 @@ import java.util.*;
 /**
  * An example Monitor View.
  */
-public class First implements MonitorView {
+public class ExampleMonitor2 implements MonitorView {
     private final Run<?, ?> build;
     private final String id;
 
     /**
-     * Create a new {@link First}.
+     * Create a new {@link ExampleMonitor2}.
      *
      * @param run
      *          the {@link Run}
      * @param viewId
      *          the id.
      */
-    public First(Run<?, ?> run, String viewId) {
+    public ExampleMonitor2(Run<?, ?> run, String viewId) {
         this.build = run;
         this.id = viewId;
     }
@@ -62,15 +62,15 @@ public class First implements MonitorView {
     }
 
     /**
-     * Creates a new {@link FirstFactory}.
+     * Creates a new {@link ExampleMonitor2Factory}.
      */
     @Extension
-    public static class FirstFactory implements MonitorFactory {
+    public static class ExampleMonitor2Factory implements MonitorFactory {
         @Override
         public Collection<MonitorView> getMonitorViews(Run<?, ?> build) {
             List<MonitorView> monitors = new ArrayList<>();
-            monitors.add(new First(build, "io.jenkins.plugins.monitoring.examples.First.View1"));
-            monitors.add(new First(build, "io.jenkins.plugins.monitoring.examples.First.View2"));
+            monitors.add(new ExampleMonitor2(build, "io.jenkins.plugins.monitoring.examples.ExampleMonitor2.View1"));
+            monitors.add(new ExampleMonitor2(build, "io.jenkins.plugins.monitoring.examples.ExampleMonitor2.View2"));
             return monitors;
         }
     }
