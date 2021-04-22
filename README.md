@@ -272,12 +272,12 @@ stage ('Pull Request Monitoring - Dashboard Configuration') {
 
 Therefore, each plugin needs at least the following keys:
 
-```
-    "<plugin-id>" : {
-        "width": 1, 2, 3, 4 or 5,
-        "height": 1, 2, 3, 4 or 5,
-        "color": "green", "red", "black" or "blue"
-    }
+```json
+"<plugin-id>": {
+    "width": < 1, 2, 3, 4 or 5 >,
+    "height": < 1, 2, 3, 4 or 5 >,
+    "color": < "green", "red", "black" or "blue" >
+}
 ```
 
 Then, if you open the build, the pre-defined plugins will be loaded:
