@@ -3,4 +3,4 @@
  https://github.com/jenkins-infra/pipeline-library/
 */
 
-buildPlugin(useAci: true)
+buildPlugin(configurations: buildPlugin.recommendedConfigurations())
