@@ -9,7 +9,7 @@
     </parent>
     <groupId>io.jenkins.plugins</groupId>
     <artifactId>pull-request-monitoring</artifactId>
-    <version>1.0.0-beta-2-SNAPSHOT</version>
+    <version>${revision}${changelist}</version>
     <packaging>hpi</packaging>
     <properties>
         <revision>1.0.0-beta-1</revision>
