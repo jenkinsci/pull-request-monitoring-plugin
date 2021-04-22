@@ -9,10 +9,18 @@
     </parent>
     <groupId>io.jenkins.plugins</groupId>
     <artifactId>pull-request-monitoring</artifactId>
-    <version>${revision}${changelist}</version>
     <packaging>hpi</packaging>
+    <name>Pull Request Monitoring</name>
+    <version>${revision}${changelist}</version>
+    <description>
+        This plugin offers a possibility to display and aggregate the results (in the form of individual views) of a pull
+        request in a configurable dashboard. Views can only be accessed or displayed if the corresponding plugin fulfils
+        certain requirements and already provides a view.
+    </description>
+    <url>https://github.com/jenkinsci/${project.artifactId}-plugin</url>
+
     <properties>
-        <revision>1.0.0-beta-1</revision>
+        <revision>1.0.1-beta</revision>
         <changelist>-SNAPSHOT</changelist>
         <jenkins.version>2.277.1</jenkins.version>
         <java.level>8</java.level>
@@ -26,8 +34,8 @@
         <echarts-api.version>5.0.2-1</echarts-api.version>
         <json.version>20210307</json.version>
     </properties>
-    <name>Pull Request Monitoring</name>
-    <url>https://github.com/simonsymhoven/${project.artifactId}-plugin</url>
+
+
 
     <dependencyManagement>
         <dependencies>
@@ -132,10 +140,12 @@
             <url>https://repo.jenkins-ci.org/public/</url>
         </repository>
     </repositories>
+
     <pluginRepositories>
         <pluginRepository>
             <id>repo.jenkins-ci.org</id>
             <url>https://repo.jenkins-ci.org/public/</url>
         </pluginRepository>
     </pluginRepositories>
+
 </project>

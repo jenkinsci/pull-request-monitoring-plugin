@@ -5,7 +5,6 @@
 ![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/simonsymhoven/pull-request-monitoring-plugin/GitHub%20CI/master)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/ccaf2a634a5b49a78262b5f2adba7ec1)](https://app.codacy.com/gh/simonsymhoven/pull-request-monitoring-plugin?utm_source=github.com&utm_medium=referral&utm_content=simonsymhoven/pull-request-monitoring-plugin&utm_campaign=Badge_Grade_Settings)
 
-
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
@@ -26,7 +25,6 @@
     <a href="https://github.com/simonsymhoven/pull-request-monitoring-plugin/issues">Request Feature</a>
   </p>
 </p>
-
 
 <!-- TABLE OF CONTENTS -->
 <details open="open">
@@ -62,9 +60,6 @@
   </ol>
 </details>
 
-
-
-<!-- ABOUT THE PROJECT -->
 ## About The Project
 
 Many software teams have changed their development processes to lightweight pull requests. 
@@ -81,17 +76,11 @@ This plugin offers a possibility to display and aggregate the results (in the fo
 request in a configurable dashboard. Views can only be accessed or displayed if the corresponding plugin fulfils 
 certain requirements and already provides a view.
 
-
-
 ### Built With
 
-* [Muuri](https://github.com/haltu/muuri)
+*  [Muuri](https://github.com/haltu/muuri)
 
-
-
-<!-- GETTING STARTED -->
 ## Getting Started
-
 
 ### Prerequisites
 
@@ -102,6 +91,7 @@ and connect to own of your SCM Repositories to use the **Pull Request Monitoring
 ### Provide a view
 
 #### The code behind
+
 The [MonitorView](src/main/java/io/jenkins/plugins/monitoring/MonitorView.java) interface defines the interface 
 for each view that is to be displayed.
 Each view needs at least one unique `id` and a `title`. In order to register the view for the plugin, 
@@ -150,8 +140,8 @@ public class ExampleMonitor implements MonitorView {
 
 The factory can also deliver several views of a class, but please careful with the unique id of each view.
 
-> **Unique View Id**:
-Usually the class name is used for the ID if only one view is delivered. If several views of the same class are created in the factory, it must be ensured that the ID is always unique!
+> **Unique View ID**:
+> Usually the class name is used for the ID if only one view is delivered. If several views of the same class are created in the factory, it must be ensured that the ID is always unique!
 
 Here is an example of a factory that delivers two instances of a class:
 
@@ -208,9 +198,10 @@ Each view have to have a corresponding `monitor.jelly` file, which is responsibl
 plugins view delivered on the dashboard later. Therefore you have to create a new `monitor.jelly` file 
 in the directory, which corresponds to the `MonitorView` class. 
 
-> **Example**: The code behind is defined in 
-`src/main/java/io/jenkins/plugins/sample/ExampleMonitor.java`. The related sources (e.g. the `monitor.jelly` file) have 
-to be defined in `src/main/resources/io/jenkins/plugins/sample/ExampleMonitor/monitory.jelly`. 
+> **Example**: 
+> The code behind is defined in `src/main/java/io/jenkins/plugins/sample/ExampleMonitor.java`. The related sources 
+> (e.g. the `monitor.jelly` file) have to be defined in 
+> `src/main/resources/io/jenkins/plugins/sample/ExampleMonitor/monitory.jelly`. 
 
 Now the view, which can be added later in the dashboard, can be filled individually.
 Of course, all obligatory functions of the Jelly files, such as [JEXL](https://commons.apache.org/proper/commons-jexl/) 
@@ -227,15 +218,13 @@ A minimal example:
 </j:jelly>
 ```
 
-
-<!-- USAGE EXAMPLES --> 
 ## Usage Of Monitoring
 
 ### Default Dashboard
 
 To get an empty dashboard, add the following stage to your Jenkinsfile:
 
-```json
+```
 stage ('Pull Request Monitoring - Dashboard Configuration') {
     monitoring ( )
 }
@@ -252,7 +241,7 @@ it is best to copy and paste it into the Jenkinsfile and overwrite the default d
 
 You can add your own pre-defined dashboard in the Jenkinsfile, e.g.:
 
-```json
+```
 stage ('Pull Request Monitoring - Dashboard Configuration') {
     monitoring (
         configuration:
@@ -295,45 +284,35 @@ Then, if you open the build, the pre-defined plugins will be loaded:
 
 ![Example Monitor 2](etc/gifs/example-monitor-with-config.png)
 
-
-<!-- ROADMAP -->
 ## Roadmap
 
-See the [open issues](https://github.com/simonsymhoven/pull-request-monitoring-plugin/issues) for a list of proposed features (and known issues).
+See the [open issues](https://github.com/simonsymhoven/pull-request-monitoring-plugin/issues) 
+for a list of proposed features (and known issues).
 
-
-
-<!-- CONTRIBUTING -->
 ## Contributing
 
-Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+Contributions are what make the open source community such an amazing place to be learn, 
+inspire, and create. Any contributions you make are **greatly appreciated**.
 
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+1.  Fork the Project
+2.  Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3.  Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4.  Push to the Branch (`git push origin feature/AmazingFeature`)
+5.  Open a Pull Request
 
-
-
-<!-- LICENSE -->
 ## License
 
 Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
 
-
-<!-- CREDITS -->
 ## Credits
 
 The following icons, which are used by this plugin 
 
-* [Line Graph Icon 32x32 px](src/main/webapp/icons/line-graph-32x32.png)
-* [Line Graph Icon 64x64 px](src/main/webapp/icons/line-graph-64x64.png)
+*  [Line Graph Icon 32x32 px](src/main/webapp/icons/line-graph-32x32.png)
+*  [Line Graph Icon 64x64 px](src/main/webapp/icons/line-graph-64x64.png)
 
 made by [Freepik](https://www.freepik.com) from [Flaticon](https://www.flaticon.com/).
 
-
-<!-- CONTACT -->
 ## Contact
 
 Simon Symhoven - post@simon-symhoven.de

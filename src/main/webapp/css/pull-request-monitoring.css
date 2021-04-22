@@ -330,6 +330,11 @@
   filter: opacity(1);
 }
 
+input::-moz-focus-inner,
+input::-moz-focus-outer {
+  border: 0;
+}
+
 .cc-selector-color input {
   margin: 0;
   padding: 0;
@@ -438,7 +443,7 @@ input:disabled {
   margin-left: 8px;
 }
 
-.range-slider-value:after {
+.range-slider-value::after {
   position: absolute;
   top: 8px;
   left: -7px;
@@ -452,10 +457,6 @@ input:disabled {
 
 ::-moz-range-track {
   background: #d7dcdf;
-  border: 0;
-}
-
-input::-moz-focus-inner, input::-moz-focus-outer {
   border: 0;
 }
 
@@ -482,7 +483,8 @@ input::-moz-focus-inner, input::-moz-focus-outer {
   color: #2c3e50;
 }
 
-.select .title, .select .placeholder {
+.select .title,
+.select .placeholder {
   position: relative;
   display: block;
   width: 100%;
@@ -530,7 +532,7 @@ input::-moz-focus-inner, input::-moz-focus-outer {
 .select label.option span.title:hover {
   color: #fff;
   background: #2c3e50;
-  box-shadow: inset 0px 1px 0px rgba(0, 0, 0, 0.1);
+  box-shadow: inset 0 1px 0 rgba(0, 0, 0, 0.1);
 }
 
 .select > input:not(:checked) ~ label.option > span.title {
