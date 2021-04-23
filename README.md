@@ -4,6 +4,7 @@
 ![Open GitHub issues](https://img.shields.io/github/issues/simonsymhoven/pull-request-monitoring-plugin)
 ![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/simonsymhoven/pull-request-monitoring-plugin/GitHub%20CI/master)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/ccaf2a634a5b49a78262b5f2adba7ec1)](https://app.codacy.com/gh/simonsymhoven/pull-request-monitoring-plugin?utm_source=github.com&utm_medium=referral&utm_content=simonsymhoven/pull-request-monitoring-plugin&utm_campaign=Badge_Grade_Settings)
+![Contributions](https://img.shields.io/badge/contributions-welcome-orange)
 
 <!-- PROJECT LOGO -->
 <br />
@@ -12,7 +13,7 @@
    <img src="src/main/webapp/icons/line-graph-64x64.png" alt="Logo" width="80" height="80">
   </a>
 
-  <h3 align="center">Pull Request Monitoring</h3>
+  <h1 align="center">Pull Request Monitoring</h1>
 
   <p align="center">
     Jenkins plugin to monitor pull requests with a customizable dashboard.
@@ -138,7 +139,7 @@ public class ExampleMonitor implements MonitorView {
 }
 ```
 
-The factory can also deliver several views of a class, but please careful with the unique id of each view.
+The factory can also deliver several views of a class, but please be careful with the unique id of each view.
 
 > **Unique View ID**:
 > Usually the class name is used for the ID if only one view is delivered. If several views of the same class are created in the factory, it must be ensured that the ID is always unique!
@@ -224,7 +225,7 @@ A minimal example:
 
 To get an empty dashboard, add the following stage to your Jenkinsfile:
 
-```
+```text
 stage ('Pull Request Monitoring - Dashboard Configuration') {
     monitoring ( )
 }
@@ -272,7 +273,7 @@ stage ('Pull Request Monitoring - Dashboard Configuration') {
 
 Therefore, each plugin needs at least the following keys:
 
-```json
+```text
 "<plugin-id>": {
     "width": < 1, 2, 3, 4 or 5 >,
     "height": < 1, 2, 3, 4 or 5 >,
