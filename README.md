@@ -5,6 +5,7 @@
 ![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/simonsymhoven/pull-request-monitoring-plugin/GitHub%20CI/master)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/ccaf2a634a5b49a78262b5f2adba7ec1)](https://app.codacy.com/gh/simonsymhoven/pull-request-monitoring-plugin?utm_source=github.com&utm_medium=referral&utm_content=simonsymhoven/pull-request-monitoring-plugin&utm_campaign=Badge_Grade_Settings)
 ![Contributions](https://img.shields.io/badge/contributions-welcome-orange)
+![Jenkins Plugins](https://img.shields.io/jenkins/plugin/v/pull-request-monitoring?label=latest%20version)
 
 <!-- PROJECT LOGO -->
 <br />
