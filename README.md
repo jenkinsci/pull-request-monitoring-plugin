@@ -5,6 +5,8 @@
 ![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/jenkinsci/pull-request-monitoring-plugin/GitHub%20CI/master)
 ![Contributions](https://img.shields.io/badge/contributions-welcome-orange)
 ![Jenkins Plugins](https://img.shields.io/jenkins/plugin/v/pull-request-monitoring?label=latest%20version)
+[![codecov](https://codecov.io/gh/jenkinsci/pull-request-monitoring-plugin/branch/master/graph/badge.svg?token=8tAFvX7eSJ)](https://codecov.io/gh/jenkinsci/pull-request-monitoring-plugin)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/07246f679cbc4bc280b92dabc4425a17)](https://www.codacy.com/gh/jenkinsci/pull-request-monitoring-plugin/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=jenkinsci/pull-request-monitoring-plugin&amp;utm_campaign=Badge_Grade)
 
 <!-- PROJECT LOGO -->
 <br />

@@ -31,11 +31,9 @@
         <bootstrap4-api.version>4.6.0-3</bootstrap4-api.version>
         <plugin-util-api.version>2.1.0</plugin-util-api.version>
         <popper-api.version>1.16.1-2</popper-api.version>
-        <echarts-api.version>5.1.0-2</echarts-api.version>
+        <junit-plugin.version>1.37</junit-plugin.version>
         <json.version>20210307</json.version>
     </properties>
-
-
 
     <dependencyManagement>
         <dependencies>
@@ -103,17 +101,19 @@
             <version>${popper-api.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.jenkins.plugins</groupId>
-            <artifactId>echarts-api</artifactId>
-            <version>${echarts-api.version}</version>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>${json.version}</version>
+        </dependency>
+
+        <!-- Workflow dependencies -->
+        <dependency>
+            <groupId>org.jenkins-ci.plugins.workflow</groupId>
+            <artifactId>workflow-multibranch</artifactId>
         </dependency>
         <dependency>
             <groupId>org.jenkins-ci.plugins.workflow</groupId>
             <artifactId>workflow-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jenkins-ci.plugins.workflow</groupId>
-            <artifactId>workflow-multibranch</artifactId>
         </dependency>
         <dependency>
             <groupId>org.jenkins-ci.plugins.workflow</groupId>
@@ -123,16 +123,45 @@
             <groupId>org.jenkins-ci.plugins.workflow</groupId>
             <artifactId>workflow-job</artifactId>
         </dependency>
+
+        <!-- Test scope dependencies -->
+
         <dependency>
             <groupId>org.jenkins-ci.plugins</groupId>
-            <artifactId>branch-api</artifactId>
+            <artifactId>junit</artifactId>
+            <version>${junit-plugin.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-            <version>${json.version}</version>
+            <groupId>org.jenkins-ci.plugins.workflow</groupId>
+            <artifactId>workflow-basic-steps</artifactId>
+            <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.jenkins-ci.plugins</groupId>
+            <artifactId>pipeline-stage-step</artifactId>
+            <version>2.3</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <configuration>
+                    <includes>
+                        <include>io/jenkins/plugins/**/*</include>
+                    </includes>
+                    <excludes>
+                        <exclude>**/*Action*</exclude>
+                        <exclude>**/*Factory*</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
     <repositories>
         <repository>
