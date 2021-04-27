@@ -31,7 +31,7 @@
         <bootstrap4-api.version>4.6.0-3</bootstrap4-api.version>
         <plugin-util-api.version>2.1.0</plugin-util-api.version>
         <popper-api.version>1.16.1-2</popper-api.version>
-        <junit-plugin.version>1.37</junit-plugin.version>
+        <junit-plugin.version>1.49</junit-plugin.version>
         <json.version>20210307</json.version>
     </properties>
 
