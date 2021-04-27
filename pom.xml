@@ -32,6 +32,7 @@
         <plugin-util-api.version>2.1.0</plugin-util-api.version>
         <popper-api.version>1.16.1-2</popper-api.version>
         <junit-plugin.version>1.49</junit-plugin.version>
+        <pipeline-stage-step.version>2.5</pipeline-stage-step.version>
         <json.version>20210307</json.version>
     </properties>
 
@@ -70,6 +71,7 @@
     </scm>
 
     <dependencies>
+
         <dependency>
             <groupId>io.jenkins.plugins</groupId>
             <artifactId>plugin-util-api</artifactId>
@@ -139,7 +141,7 @@
         <dependency>
             <groupId>org.jenkins-ci.plugins</groupId>
             <artifactId>pipeline-stage-step</artifactId>
-            <version>2.5</version>
+            <version>${pipeline-stage-step.version}</version>
             <scope>test</scope>
         </dependency>
 
