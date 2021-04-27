@@ -1,8 +1,0 @@
-<?jelly escape-by-default='true'?>
-
-<j:jelly xmlns:j="jelly:core" xmlns:c="/charts">
-
-    <c:pie-chart id="${it.chartId}" model="${it.model}" height="220" />
-
-</j:jelly>
-
