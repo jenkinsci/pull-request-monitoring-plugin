@@ -1,9 +1,8 @@
 [![Join the chat at https://gitter.im/pull-request-monitoring-plugin/community](https://badges.gitter.im/pull-request-monitoring-plugin/community.svg)](https://gitter.im/pull-request-monitoring-plugin/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-![GitHub](https://img.shields.io/github/license/simonsymhoven/pull-request-monitoring-plugin)
-![GitHub pull requests](https://img.shields.io/github/issues-pr/simonsymhoven/pull-request-monitoring-plugin)
-![Open GitHub issues](https://img.shields.io/github/issues/simonsymhoven/pull-request-monitoring-plugin)
-![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/simonsymhoven/pull-request-monitoring-plugin/GitHub%20CI/master)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/ccaf2a634a5b49a78262b5f2adba7ec1)](https://app.codacy.com/gh/simonsymhoven/pull-request-monitoring-plugin?utm_source=github.com&utm_medium=referral&utm_content=simonsymhoven/pull-request-monitoring-plugin&utm_campaign=Badge_Grade_Settings)
+![GitHub](https://img.shields.io/github/license/jenkinsci/pull-request-monitoring-plugin)
+![GitHub pull requests](https://img.shields.io/github/issues-pr/jenkinsci/pull-request-monitoring-plugin)
+![Open GitHub issues](https://img.shields.io/github/issues/jenkinsci/pull-request-monitoring-plugin)
+![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/jenkinsci/pull-request-monitoring-plugin/GitHub%20CI/master)
 ![Contributions](https://img.shields.io/badge/contributions-welcome-orange)
 ![Jenkins Plugins](https://img.shields.io/jenkins/plugin/v/pull-request-monitoring?label=latest%20version)
 
@@ -319,4 +318,4 @@ made by [Freepik](https://www.freepik.com) from [Flaticon](https://www.flaticon.
 
 Simon Symhoven - post@simon-symhoven.de
 
-Project Link: [https://github.com/simonsymhoven/pull-request-monitoring-plugin](https://github.com/simonsymhoven/pull-request-monitoring-plugin)
+Project Link: [https://github.com/jenkinsci/pull-request-monitoring-plugin](https://github.com/jenkinsci/pull-request-monitoring-plugin)

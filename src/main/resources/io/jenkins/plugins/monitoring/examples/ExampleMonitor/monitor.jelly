@@ -1,9 +1,0 @@
-<?jelly escape-by-default='true'?>
-
-<j:jelly xmlns:j="jelly:core" xmlns:c="/charts">
-
-    <c:progress-chart id="total-progress" model="${it.getProgressModel(80)}" height="150"
-                      value="80" tooltip="80% is very good"/>
-
-</j:jelly>
-
