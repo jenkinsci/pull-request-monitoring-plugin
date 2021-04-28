@@ -17,7 +17,9 @@ public interface MonitorView {
      * @return
      *          the id.
      */
-    String getId();
+    default String getId() {
+        return getClass().getName();
+    }
 
 
 }
