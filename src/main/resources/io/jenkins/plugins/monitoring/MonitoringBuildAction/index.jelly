@@ -227,7 +227,7 @@
                                             <input type="radio" name="plugin" value="${plugin.id}"/>
                                             <span class="title">
                                                 <i class="material-icons icon">&#xe433;</i>
-                                                ${plugin.id}</span>
+                                                ${plugin.title}</span>
                                         </label>
 
                                     </j:forEach>
