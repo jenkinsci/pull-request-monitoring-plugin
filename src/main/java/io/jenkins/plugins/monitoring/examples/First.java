@@ -33,7 +33,7 @@ public class First implements MonitorView {
 
     @Override
     public String getTitle() {
-        return "First Monitor " + this.build.getDisplayName();
+        return "First Monitor " + id.split("\\.")[id.split("\\.").length - 1];
     }
 
     @Override
