@@ -10,7 +10,7 @@
 
         <div class="container">
 
-            <button type="button" id="config-button" class="btn" data-toggle="modal" data-target="#configModal">
+            <button type="button" id="config-button" class="btn btn-success" data-toggle="modal" data-target="#configModal">
 
                 <i class="material-icons icon spin">&#xE8B8;</i>
 
@@ -70,7 +70,7 @@
                             <h5 class="modal-title" id="configModalLabel">
 
                                 <img src="${resURL}/plugin/pull-request-monitoring/icons/washington.png" width="15%" height="15%"/>
-                                Jenkinsfile Configuration
+                                Current Dashboard Configuration
 
                             </h5>
 
@@ -81,13 +81,6 @@
                         </div>
 
                         <div class="modal-body">
-
-                            <h4>
-                                <span class="badge badge-pill" id="badge-config"/>
-                                <span class="badge badge-pill" id="badge-config-type"/>
-                            </h4>
-
-                            <p id="config-text"/>
 
                             <div class="row">
 
@@ -211,28 +204,38 @@
 
                                 </div>
 
-                                <div class="select">
+                                <j:if test="${it.monitor.getAvailablePlugins(it.run).size() == 0}">
 
-                                    <input id="defaultInput" type="radio" name="plugin" value="default"/>
+                                    <p>No plugins were found that provide a view!</p>
 
-                                        <i class="material-icons toggle icon icon-plus">&#xe5c5;</i>
+                                </j:if>
 
-                                        <i class="material-icons toggle icon icon-minus">&#xe5c7;</i>
+                                <j:if test="${it.monitor.getAvailablePlugins(it.run).size() > 0}">
 
-                                    <span class="placeholder">Choose...</span>
+                                    <div class="select">
 
-                                    <j:forEach var="plugin" items="${it.monitor.getAvailablePlugins(it.run)}">
+                                        <input id="defaultInput" type="radio" name="plugin" value="default"/>
 
-                                        <label class="option">
-                                            <input type="radio" name="plugin" value="${plugin.id}"/>
-                                            <span class="title">
-                                                <i class="material-icons icon">&#xe433;</i>
-                                                ${plugin.title}</span>
-                                        </label>
+                                            <i class="material-icons toggle icon icon-plus">&#xe5c5;</i>
 
-                                    </j:forEach>
+                                            <i class="material-icons toggle icon icon-minus">&#xe5c7;</i>
 
-                                </div>
+                                        <span class="placeholder">Choose...</span>
+
+                                        <j:forEach var="plugin" items="${it.monitor.getAvailablePlugins(it.run)}">
+
+                                            <label class="option">
+                                                <input type="radio" name="plugin" value="${plugin.id}"/>
+                                                <span class="title">
+                                                    <i class="material-icons icon">&#xe433;</i>
+                                                    ${plugin.title}</span>
+                                            </label>
+
+                                        </j:forEach>
+
+                                    </div>
+
+                                </j:if>
 
 
                             </div>

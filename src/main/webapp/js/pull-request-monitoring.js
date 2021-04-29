@@ -22,13 +22,13 @@
     }
 
     /**
-     * Get the local storage id to store the configuration for based on selected build action.
+     * Get the view id to store the configuration for based on selected build action.
      *
      * @returns {string}
-     *          the local storage id of current build action.
+     *          the view id of current build action.
      */
-    function getLocalStorageId() {
-        const project = `${window.location.pathname.split('/').slice(3, 4)}.monitoring-grid-order`
+    function getViewId() {
+        const project = `${window.location.pathname.split('/').slice(3, 4)}`
             .toLowerCase();
         return decodeURI(project).replaceAll(" ", "-");
     }
@@ -45,8 +45,8 @@
             return item.isActive();
         }).map(function(item) {
             const id = item.getElement().getAttribute('data-id');
-            const width = Math.round(item.getWidth() / 120);
-            const height = Math.round(item.getHeight() / 120);
+            const width = Math.round(item.getWidth() / 100);
+            const height = Math.round(item.getHeight() / 100);
             const color = item.getElement().getAttribute('data-color');
 
             return `"${id}": {"width":${width},"height":${height},"color":"${color}"}`;
@@ -159,56 +159,21 @@
 
     /**
      * Updated the config panel on the right side of a build action
-     * with information about current configuration compared to the default
-     * configuration from Jenkinsfile.
+     * with information about current configuration.
      */
     function updateConfigPanel() {
-        let badge = document.getElementById('badge-config');
-        let badge2 = document.getElementById('badge-config-type');
-        let description = document.getElementById('config-text');
+
         let config = document.getElementById('config');
-        let configButton = document.getElementById('config-button');
-
-        if (Object.keys(configuration.plugins).length === 0) {
-            badge2.innerHTML = 'default';
-            badge2.classList.remove('badge-success');
-            badge2.classList.add('badge-danger');
-        } else {
-            badge2.innerHTML = 'custom';
-            badge2.classList.remove('badge-danger');
-            badge2.classList.add('badge-success');
-        }
-
-        if (isLocalConfigEqualsJenkinsfile()) {
-            localStorage.removeItem(getLocalStorageId());
-            badge.innerHTML = 'Jenkinsfile';
-            badge.classList.remove('badge-danger');
-            badge.classList.add('badge-success');
-            description.innerHTML = '<p>The configuration setting in your Jenkinsfile is up to date with local changes!</p>';
-            config.innerHTML = syntaxHighlight(JSON.stringify(configuration, null, 3));
-            configButton.classList.remove('btn-danger');
-            configButton.classList.add('btn-success');
-        } else {
-            badge.innerHTML = 'Local Storage';
-            badge.classList.remove('badge-success');
-            badge.classList.add('badge-danger');
-            description.innerHTML = '<p>The configuration setting in your Jenkinsfile will be overwritten ' +
-                'by your local changes. To save this permanently, copy the json below and replace the ' +
-                '<code>configuration</code> in the Jenkinsfile with it.</p>';
-            config.innerHTML = syntaxHighlight(JSON.stringify(getCurrentConfig(), null, 3));
-            configButton.classList.add('btn-success');
-            configButton.classList.remove('btn-success');
-            configButton.classList.add('btn-danger');
-        }
+        config.innerHTML = syntaxHighlight(JSON.stringify(getCurrentConfig(), null, 3));
 
     }
 
     /**
-     *  Updates the local storage with the current grid config form dashboard.
+     *  Updates the user property with the current grid config form dashboard.
      */
-    function updateLocalStorage() {
+    function updateConfig() {
 
-        localStorage.setItem(getLocalStorageId(), JSON.stringify(getCurrentConfig()));
+        run.updateUserConfiguration(getViewId() ,JSON.stringify(getCurrentConfig()));
         updateConfigPanel();
 
     }
@@ -253,7 +218,7 @@
 
         grid.hide(elemToRemove, {onFinish: () => {
                 changeInput(elem.getAttribute('data-id'), 'false');
-                updateLocalStorage();
+                updateConfig();
             }});
 
     }
@@ -330,7 +295,7 @@
                 docElem.classList.remove('dragging');
             })
             .on('layoutEnd', function () {
-                updateLocalStorage();
+                updateConfig();
                 resize();
             });
 
@@ -345,23 +310,9 @@
     }
 
     /**
-     * Checks if a configuration is stored with the local storage id in local storage.
-     *
-     * @returns {boolean}
-     *          if a configuration is stored, false else.
-     */
-    function isConfigStored() {
-        return localStorage.getItem(getLocalStorageId()) !== null;
-    }
-
-    /**
-     *  Load the grid slots either form default configuration or from local storage
-     *  if present.
+     *  Load the grid slots.
      */
     function loadGrid() {
-
-        let config = isConfigStored() ?
-            JSON.parse(localStorage.getItem(getLocalStorageId())).plugins : configuration.plugins;
 
         // Hide all elements
         grid.hide(grid.getItems(), {instant: true});
@@ -375,7 +326,7 @@
 
         let plugins = [];
 
-        Object.keys(config).forEach((id) => {
+        Object.keys(configuration.plugins).forEach((id) => {
             let plugin = grid.getItems().find(function (item) {
                 return item.getElement().getAttribute('data-id') === id;
             });
@@ -383,15 +334,15 @@
             const color = plugin.getElement().getAttribute('data-color');
             plugin.getElement().classList.remove(color);
 
-            const newColor = config[String(id)].color;
+            const newColor = configuration.plugins[String(id)].color;
             plugin.getElement().setAttribute('data-color', newColor);
             plugin.getElement().classList.add(newColor);
 
-            const width = config[String(id)].width;
+            const width = configuration.plugins[String(id)].width;
             plugin.getElement().classList.remove('w1', 'w2', 'w3', 'w4', 'w5');
             plugin.getElement().classList.add('w' + width);
 
-            const height = config[String(id)].height;
+            const height = configuration.plugins[String(id)].height;
             plugin.getElement().classList.remove('h1', 'h2', 'h3', 'h4', 'h5');
             plugin.getElement().classList.add('h' + height);
 
@@ -438,7 +389,7 @@
 
     }
 
-    run.getConfiguration(function(config) {
+    run.getConfiguration(getViewId(), function(config) {
         initDashboard(config.responseJSON);
     });
 
