@@ -141,48 +141,48 @@
 }
 
 .muuri-item.h1 {
-  height: 110px;
-  line-height: 110px;
+  height: 100px;
+  line-height: 100px;
 }
 
 .muuri-item.w1 {
-  width: 110px;
+  width: 100px;
 }
 
 .muuri-item.h2 {
-  height: 240px;
-  line-height: 240px;
+  height: 200px;
+  line-height: 200px;
 }
 
 .muuri-item.w2 {
-  width: 240px;
+  width: 200px;
 }
 
 .muuri-item.h3 {
-  height: 360px;
-  line-height: 360px;
+  height: 300px;
+  line-height: 300px;
 }
 
 .muuri-item.w3 {
-  width: 360px;
+  width: 300px;
 }
 
 .muuri-item.h4 {
+  height: 400px;
+  line-height: 400px;
+}
+
+.muuri-item.w4 {
+  width: 400px;
+}
+
+.muuri-item.h5 {
   height: 500px;
   line-height: 500px;
 }
 
-.muuri-item.w4 {
-  width: 500px;
-}
-
-.muuri-item.h5 {
-  height: 660px;
-  line-height: 660px;
-}
-
 .muuri-item.w5 {
-  width: 660px;
+  width: 500px;
 }
 
 .muuri-item-content {
