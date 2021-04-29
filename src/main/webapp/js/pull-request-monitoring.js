@@ -45,8 +45,8 @@
             return item.isActive();
         }).map(function(item) {
             const id = item.getElement().getAttribute('data-id');
-            const width = Math.round(item.getWidth() / 100);
-            const height = Math.round(item.getHeight() / 100);
+            const width = Math.floor(item.getWidth() / 150);
+            const height = Math.floor(item.getHeight() / 150);
             const color = item.getElement().getAttribute('data-color');
 
             return `"${id}": {"width":${width},"height":${height},"color":"${color}"}`;
