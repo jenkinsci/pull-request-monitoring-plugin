@@ -12,7 +12,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
-  <a href="https://github.com/simonsymhoven/pull-request-monitoring-plugin">
+  <a href="https://github.com/jenkinsci/pull-request-monitoring-plugin">
    <img src="src/main/webapp/icons/line-graph-64x64.png" alt="Logo" width="80" height="80">
   </a>
 
@@ -21,14 +21,16 @@
   <p align="center">
     Jenkins plugin to monitor pull requests with a customizable dashboard.
     <br />
-    <a href="https://github.com/simonsymhoven/pull-request-monitoring-plugin/blob/master/README.md"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/jenkinsci/pull-request-monitoring-plugin/blob/master/README.md"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/simonsymhoven/pull-request-monitoring-plugin/issues">Report Bug</a>
+    <a href="https://github.com/jenkinsci/pull-request-monitoring-plugin/issues">Report Bug</a>
     ·
-    <a href="https://github.com/simonsymhoven/pull-request-monitoring-plugin/issues">Request Feature</a>
+    <a href="https://github.com/jenkinsci/pull-request-monitoring-plugin/issues">Request Feature</a>
   </p>
 </p>
+
+At the [Jenkins UX SIG Meeting](https://www.youtube.com/watch?v=F1ISpA7K0YA) on 28. April 2021, there was a live demo of the first beta version (1.0.3-beta).
 
 <!-- TABLE OF CONTENTS -->
 <details open="open">
@@ -82,7 +84,7 @@ certain requirements and already provides a view.
 
 ### Built With
 
-*  [Muuri](https://github.com/haltu/muuri)
+*  [Muuri](https://github.com/haltu/muuri) wrapped in [Jenkins Muuri.js API Plugin](https://github.com/jenkinsci/muuri-api-plugin)
 
 ## Getting Started
 
@@ -290,7 +292,7 @@ Then, if you open the build, the pre-defined plugins will be loaded:
 
 ## Roadmap
 
-See the [open issues](https://github.com/simonsymhoven/pull-request-monitoring-plugin/issues) 
+See the [open issues](https://github.com/jenkinsci/pull-request-monitoring-plugin/issues) 
 for a list of proposed features (and known issues).
 
 ## Contributing
