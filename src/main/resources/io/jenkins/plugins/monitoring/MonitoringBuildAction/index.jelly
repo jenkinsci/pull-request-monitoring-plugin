@@ -256,8 +256,8 @@
 
         </div>
 
+        <st:adjunct includes="io.jenkins.plugins.muuri"/>
         <script>var run = <st:bind value="${it}"/></script>
-        <script src="${resURL}/plugin/pull-request-monitoring/js/muuri.min.js"/>
         <script type="text/javascript" src="${resURL}/plugin/pull-request-monitoring/js/pull-request-monitoring.js"/>
 
     </bs:page>
