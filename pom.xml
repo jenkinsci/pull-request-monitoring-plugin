@@ -34,6 +34,8 @@
         <popper-api.version>1.16.1-2</popper-api.version>
         <junit-plugin.version>1.49</junit-plugin.version>
         <pipeline-stage-step.version>2.5</pipeline-stage-step.version>
+        <scm-api.version>2.0.3</scm-api.version>
+        <mockito-core.version>1.8.5</mockito-core.version>
         <json.version>20210307</json.version>
     </properties>
 
@@ -104,6 +106,10 @@
             <version>${muuri-api.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.jenkins-ci.plugins</groupId>
+            <artifactId>scm-api</artifactId>
+        </dependency>
+        <dependency>
             <groupId>io.jenkins.plugins</groupId>
             <artifactId>popper-api</artifactId>
             <version>${popper-api.version}</version>
@@ -150,7 +156,19 @@
             <version>${pipeline-stage-step.version}</version>
             <scope>test</scope>
         </dependency>
-
+        <dependency>
+            <groupId>org.jenkins-ci.plugins</groupId>
+            <artifactId>scm-api</artifactId>
+            <version>${scm-api.version}</version>
+            <classifier>tests</classifier>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${mockito-core.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -165,7 +183,16 @@
                     <excludes>
                         <exclude>**/*Action*</exclude>
                         <exclude>**/*Factory*</exclude>
+                        <exclude>**/*Property*</exclude>
                     </excludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>9</source>
+                    <target>9</target>
                 </configuration>
             </plugin>
         </plugins>

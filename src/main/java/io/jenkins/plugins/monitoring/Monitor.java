@@ -4,10 +4,14 @@ import com.google.common.collect.ImmutableSet;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import hudson.Extension;
 import hudson.ExtensionList;
+import hudson.model.Job;
 import hudson.model.Run;
 import hudson.model.TaskListener;
+import jenkins.scm.api.SCMHead;
+import jenkins.scm.api.mixin.ChangeRequestSCMHead;
 import org.apache.commons.lang.IllegalClassException;
 import org.apache.commons.lang.StringUtils;
+import org.jenkinsci.plugins.workflow.multibranch.BranchJobProperty;
 import org.jenkinsci.plugins.workflow.steps.*;
 import org.json.JSONObject;
 import org.kohsuke.stapler.DataBoundConstructor;
@@ -35,7 +39,7 @@ public class Monitor extends Step implements Serializable {
     @DataBoundConstructor
     public Monitor() {
         super();
-        this.configuration = "{\"plugins\":{}}";
+        this.configuration = "{\"plugins\": {}}";
     }
 
     /**
@@ -113,7 +117,11 @@ public class Monitor extends Step implements Serializable {
             }
 
             final Run<?, ?> run = getContext().get(Run.class);
-            if (run.getParent().getPronoun().equals("Pull Request")) {
+            final Job<?, ?> job = run.getParent();
+            final BranchJobProperty branchJobProperty = job.getProperty(BranchJobProperty.class);
+            final SCMHead head = branchJobProperty.getBranch().getHead();
+
+            if (head instanceof ChangeRequestSCMHead) {
                 getContext().get(TaskListener.class).getLogger()
                         .println("Build is part of a pull request. Add monitor now.");
                 run.addAction(new MonitoringBuildAction(run, monitor));
