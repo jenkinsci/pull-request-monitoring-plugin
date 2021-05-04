@@ -1,6 +1,6 @@
 <?jelly escape-by-default='true'?>
 
-<j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout" xmlns:st="jelly:stapler" xmlns:bs="/bootstrap" xmlns:fa="/font-awesome">
+<j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout" xmlns:st="jelly:stapler">
 
     <l:layout title="Pull Request Monitoring">
 
@@ -19,13 +19,21 @@
             <div class="fluid-container">
 
                 <h1>
-                    Pull Request Monitoring: Overview
+                   ${%title}
                 </h1>
 
                 <div class="row">
 
                     <j:if test="${it.pullRequests.size() == 0}">
-                        <p>Found no open pull requests!</p>
+
+                        <div class="col-12 center">
+
+                            <img src="https://www.jenkins.io/images/logos/fire/fire.svg"/>
+
+                            <p>${%noPullRequest}</p>
+
+                        </div>
+
                     </j:if>
 
                     <j:forEach var="job" items="${it.pullRequests}">
@@ -46,22 +54,22 @@
 
                                     <p class="card-text">
 
-                                        <strong>Contributor:</strong> ${it.getContributorMetaData(job).getContributor()} <br/>
+                                        <strong>${%contributor}:</strong> ${it.getContributorMetaData(job).getContributor()} <br/>
 
-                                        <strong>Source:</strong> ${it.getBranch(job).getHead().getSourceBranch()} <br/>
+                                        <strong>${%source}:</strong> ${it.getBranch(job).getHead().getSourceBranch()} <br/>
 
-                                        <strong>Target:</strong> ${it.getBranch(job).getHead().getTarget().getName()}
+                                        <strong>${%target}:</strong> ${it.getBranch(job).getHead().getTarget().getName()}
 
                                     </p>
 
                                     <div class="row border-top"/>
 
                                     <button onclick="location.href='../../../${job.getLastBuild().getUrl()}/pull-request-monitoring'"
-                                            type="button" class="btn btn-outline-primary">Show Dashboard</button>
+                                            type="button" class="btn btn-outline-primary">${%dashboard}</button>
 
                                     <button onclick="location.href='${it.getObjectMetaData(job).getObjectUrl()}'"
                                             type="button" class="btn btn-outline-success">
-                                        Go To Pull Request
+                                        ${%goToPullRequest}
                                     </button>
 
                                 </div>

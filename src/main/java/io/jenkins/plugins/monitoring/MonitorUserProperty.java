@@ -1,13 +1,17 @@
 package io.jenkins.plugins.monitoring;
 
+import edu.hm.hafner.echarts.JacksonFacade;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import hudson.Extension;
 import hudson.model.User;
 import hudson.model.UserProperty;
 import hudson.model.UserPropertyDescriptor;
+import org.json.JSONObject;
+import org.kohsuke.stapler.DataBoundConstructor;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 /**
  * A {@link hudson.model.UserProperty} to store the json configuration per user as property.
@@ -20,6 +24,7 @@ public class MonitorUserProperty extends hudson.model.UserProperty {
 
     }
 
+    @DataBoundConstructor
     public MonitorUserProperty(MonitorProperty defaultProp) {
         this.properties = new ArrayList<>();
         this.properties.add(defaultProp);
@@ -29,7 +34,7 @@ public class MonitorUserProperty extends hudson.model.UserProperty {
         return properties;
     }
 
-    public MonitorProperty getView(String id) {
+    public MonitorProperty getProperty(String id) {
         return this.getProperties().stream()
                 .filter(monitorProperty -> monitorProperty.getId().equals(id))
                 .findFirst().orElse(null);
@@ -86,8 +91,9 @@ public class MonitorUserProperty extends hudson.model.UserProperty {
         @NonNull
         @Override
         public String getDisplayName() {
-            return "Monitoring Configuration";
+            return "Pull Request Monitoring";
         }
+
     }
 
 }

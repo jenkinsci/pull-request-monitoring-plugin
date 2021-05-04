@@ -77,10 +77,10 @@ public class MonitoringBuildAction implements RunAction2 {
             updateUserConfiguration("default", this.monitor.getConfiguration());
         }
 
-        MonitorUserProperty.MonitorProperty monitorProperty = property.getView(id);
+        MonitorUserProperty.MonitorProperty monitorProperty = property.getProperty(id);
 
         if (monitorProperty == null) {
-            monitorProperty = property.getView("default");
+            monitorProperty = property.getProperty("default");
         }
 
         return monitorProperty.getConfig();

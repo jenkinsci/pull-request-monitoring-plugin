@@ -49,10 +49,10 @@
             const height = Math.floor(item.getHeight() / 150);
             const color = item.getElement().getAttribute('data-color');
 
-            return `"${id}": {"width":${width},"height":${height},"color":"${color}"}`;
+            return `"${id}":{"width":${width},"height":${height},"color":"${color}"}`;
         }).join(', ');
 
-        const config = `{"plugins": { ${plugins} }}`;
+        const config = `{"plugins":{${plugins}}}`;
 
         return JSON.parse(config);
 

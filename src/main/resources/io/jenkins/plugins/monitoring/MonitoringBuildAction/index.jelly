@@ -70,7 +70,7 @@
                             <h5 class="modal-title" id="configModalLabel">
 
                                 <img src="${resURL}/plugin/pull-request-monitoring/icons/washington.png" width="15%" height="15%"/>
-                                Current Dashboard Configuration
+                                ${%configModal.title}
 
                             </h5>
 
@@ -118,7 +118,7 @@
 
                         <div class="modal-header">
 
-                            <h3 class="modal-title" id="itemsModalLabel">Add an item to your dashboard</h3>
+                            <h3 class="modal-title" id="itemsModalLabel">${%itemModal.title}</h3>
 
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <i class="material-icons icon">&#xe5cd;</i>
@@ -134,7 +134,8 @@
 
                                     <div class="col-sm-12">
 
-                                        <h5> Select your slot width: </h5>
+                                        <h5>${%itemModal.width}</h5>
+                                        <p><i class="material-icons icon">&#xe88e;</i> ${%itemModal.sizeDescription}</p>
 
                                         <div class="range-slider width">
 
@@ -151,7 +152,7 @@
 
                                     <div class="col-sm-12">
 
-                                        <h5> Select your slot height: </h5>
+                                        <h5>${%itemModal.height}</h5>
 
                                         <div class="range-slider height">
 
@@ -168,7 +169,7 @@
 
                                     <div class="col-sm-12">
 
-                                        <h5> Choose a color for the slot: </h5>
+                                        <h5>${%itemModal.color}</h5>
 
                                         <form>
 
@@ -198,7 +199,7 @@
 
                                     <div class="col-sm-12">
 
-                                        <h5> Choose a view to display: </h5>
+                                        <h5>${%itemModal.plugin}</h5>
 
                                     </div>
 
@@ -206,7 +207,7 @@
 
                                 <j:if test="${it.monitor.getAvailablePlugins(it.run).size() == 0}">
 
-                                    <p>No plugins were found that provide a view!</p>
+                                    <p>${%itemModal.empty}</p>
 
                                 </j:if>
 
@@ -220,7 +221,7 @@
 
                                             <i class="material-icons toggle icon icon-minus">&#xe5c7;</i>
 
-                                        <span class="placeholder">Choose...</span>
+                                        <span class="placeholder">${%itemModal.choose}</span>
 
                                         <j:forEach var="plugin" items="${it.monitor.getAvailablePlugins(it.run)}">
 
@@ -244,9 +245,10 @@
 
                         <div class="modal-footer">
 
-                            <button id="modalClose" type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            <button id="modalClose" type="button" class="btn btn-secondary" data-dismiss="modal">
+                                ${%itemModal.cancel}</button>
 
-                            <button type="button" id="submitButton" class="btn btn-primary add-more-items">Add item</button>
+                            <button type="button" id="submitButton" class="btn btn-primary add-more-items">${%itemModal.add}</button>
 
                         </div>
 
