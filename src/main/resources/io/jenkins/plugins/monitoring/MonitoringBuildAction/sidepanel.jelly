@@ -1,5 +1,7 @@
 <?jelly escape-by-default='true'?>
 
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler">
+
     <st:include it="${it.run}" page="sidepanel.jelly" />
+
 </j:jelly>
