@@ -1,0 +1,14 @@
+node {
+     stage ('Pull Request Monitoring - Dashboard Configuration') {
+         monitoring (
+                configuration:
+                '''
+                    {
+                        "plugins": {
+
+                        }
+                    }
+                '''
+         )
+     }
+}
