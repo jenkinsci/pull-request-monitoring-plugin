@@ -48,16 +48,29 @@ At the [Jenkins UX SIG Meeting](https://www.youtube.com/watch?v=F1ISpA7K0YA) on 
         <li><a href="#prerequisites">Prerequisites</a></li>
         <li><a href="#provide-a-view">Provide A View</a></li>
             <ul>
-                <li><a href="#the-code-behind">The code behind</a></li>
+                <li>
+                <a href="#the-code-behind">The Code behind</a>
+                <ul>
+                    <li><a href="#one-instance-of-one-view">One Instance Of One View</a></li>
+                    <li><a href="#multiple-instances-of-one-view">Multiple Instances Of One View</a></li>
+                </ul>
+                </li>
                 <li><a href="#the-corresponding-jelly-file">The corresponding jelly file</a></li>
             </ul>
       </ul>
     </li>
-    <li><a href="#usage">Usage</a></li>
+    <li><a href="#usage">Usage</a>
         <ul>
-            <li><a href="#default-dashboard">Default Dashboard</a></li>
-            <li><a href="#custom-dashboard">Custom Dashboard</a></li>
+            <li><a href="#">Introduction</a></li>
+            <li><a href="#project-level">Project Level</a></li>
+            <li><a href="#build-level">Build Level</a></li>
+            <ul>
+                <li><a href="#persistence">Persistence</a></li>
+                <li><a href="#default-dashboard">Default Dashboard</a></li>
+                <li><a href="#custom-dashboard">Custom Dashboard</a></li>
+            </ul>
         </ul>
+    </li>
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
@@ -96,6 +109,8 @@ and connect to own of your SCM Repositories to use the **Pull Request Monitoring
 
 ### Provide a view
 
+This plugin relies on other plugins to provide a view that aggregates and provides delta metrics for a pull request.
+
 #### The code behind
 
 The [MonitorView](src/main/java/io/jenkins/plugins/monitoring/MonitorView.java) interface defines the interface 
@@ -103,9 +118,11 @@ for each view that is to be displayed.
 Each view needs at least one unique `id` and a `title`. In order to register the view for the plugin, 
 a factory class is required, which must be provided with the annotation `@Extension`. 
 The factory have to implement the [MonitorFactory](src/main/java/io/jenkins/plugins/monitoring/MonitorFactory.java) 
-interface and delivers a set of `MonitorViews`.
+interface, receives the current `Run<?,?>` and delivers a set of `MonitorViews`.
 
-A minimal example could look as follows:
+##### One Instance Of One View
+
+Normally, one plugin delivers one view. A minimal example could look as follows:
 
 ```java
 public class ExampleMonitor implements MonitorView {
@@ -126,11 +143,6 @@ public class ExampleMonitor implements MonitorView {
         return "Example Monitor for build " + build.getDisplayName();
     }
 
-    @Override
-    public String getId() {
-        return getClass().getName();
-    }
-
     /**
      * Creates a new {@link ExampleMonitorFactory}.
      */
@@ -144,10 +156,14 @@ public class ExampleMonitor implements MonitorView {
 }
 ```
 
-The factory can also deliver several views of a class, but please be careful with the unique id of each view.
+#### Multiple Instances Of One View
+
+The factory can also deliver several views of a class.
 
 > **Unique View ID**:
-> Usually the class name is used for the ID if only one view is delivered. If several views of the same class are created in the factory, it must be ensured that the ID is always unique!
+> Usually the class name is used for the ID if only one view is delivered. If several views of the same 
+> class are created in the factory, it must be ensured that the ID is always unique! Therefore you have to override the 
+> default implementation of `String getId()`.
 
 Here is an example of a factory that delivers two instances of a class:
 
@@ -226,7 +242,39 @@ A minimal example:
 
 ## Usage Of Monitoring
 
-### Default Dashboard
+### Introduction
+This plugin offers the following monitoring options:
+
+* project level: [MonitoringMultibranchProjectAction](src/main/java/io/jenkins/plugins/monitoring/MonitoringMultibranchProjectAction.java)
+* build level: [MonitoringBuildAction](src/main/java/io/jenkins/plugins/monitoring/MonitoringBuildAction.java)
+
+### Project Level
+
+The monitoring on the project level very basic and is limited to the summary of all open pull requests of the associated SCM.
+From here, you can access the corresponding monitoring dashboards, view the pull request information and navigate
+to the respective pull request in the repository.
+
+![Example Overview](etc/images/example-monitor-overview.png)
+
+### Build Level
+
+The monitoring at build level is the core of the plugin and offers the possibility 
+to observe various delta metrics of a pull request.
+
+The dashboard is only added to those builds whose branch 
+[SCMHead](https://javadoc.jenkins.io/plugin/scm-api/jenkins/scm/api/SCMHead.html) of the parent job is an instance of 
+[ChangeRequestSCMHead](https://javadoc.jenkins.io/plugin/scm-api/jenkins/scm/api/mixin/ChangeRequestSCMHead.html).
+Otherwise, the corresponding [MonitoringBuildAction](src/main/java/io/jenkins/plugins/monitoring/MonitoringBuildAction.java) 
+will not be added and no dashboard will be provided for the build.
+For more details, please refer to the logging in the console output of the respective build.
+
+#### Persistence
+
+The configuration, which is set via the Jenkinsfile or via the Dahsboard, is saved per user as a 
+`hudson.model.UserProperty` and is browser independent. The plugin therefore requires that you are logged in 
+and have the appropriate permissions.
+
+#### Default Dashboard
 
 To get an empty dashboard, add the following stage to your Jenkinsfile:
 
@@ -241,9 +289,11 @@ Now you are able to add plugins to the dashboard, change the layout or remove it
 The configuration will be saved for each project locally. If you want to save the configuration permanently, 
 it is best to copy and paste it into the Jenkinsfile and overwrite the default dashboard.
 
+Demo (v1.0.3-beta): 
+
 ![Example Monitor](etc/gifs/example-monitor-without-config.gif)
 
-### Custom Dashboard
+#### Custom Dashboard
 
 You can add your own pre-defined dashboard in the Jenkinsfile, e.g.:
 
@@ -285,6 +335,8 @@ Therefore, each plugin needs at least the following keys:
     "color": < "green", "red", "black" or "blue" >
 }
 ```
+
+The height and width of the views can be selected in a range from 1 to 5. One unit corresponds to 150px.
 
 Then, if you open the build, the pre-defined plugins will be loaded:
 
