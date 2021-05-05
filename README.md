@@ -97,7 +97,7 @@ certain requirements and already provides a view.
 
 ### Built With
 
-*  [Muuri](https://github.com/haltu/muuri) wrapped in [Jenkins Muuri.js API Plugin](https://github.com/jenkinsci/muuri-api-plugin)
+*   [Muuri](https://github.com/haltu/muuri) wrapped in [Jenkins Muuri.js API Plugin](https://github.com/jenkinsci/muuri-api-plugin)
 
 ## Getting Started
 
@@ -245,8 +245,8 @@ A minimal example:
 ### Introduction
 This plugin offers the following monitoring options:
 
-* project level: [MonitoringMultibranchProjectAction](src/main/java/io/jenkins/plugins/monitoring/MonitoringMultibranchProjectAction.java)
-* build level: [MonitoringBuildAction](src/main/java/io/jenkins/plugins/monitoring/MonitoringBuildAction.java)
+*   project level: [MonitoringMultibranchProjectAction](src/main/java/io/jenkins/plugins/monitoring/MonitoringMultibranchProjectAction.java)
+*   build level: [MonitoringBuildAction](src/main/java/io/jenkins/plugins/monitoring/MonitoringBuildAction.java)
 
 ### Project Level
 
@@ -297,7 +297,7 @@ Demo (v1.0.3-beta):
 
 You can add your own pre-defined dashboard in the Jenkinsfile, e.g.:
 
-```
+```text
 stage ('Pull Request Monitoring - Dashboard Configuration') {
     monitoring (
         configuration:
@@ -366,8 +366,8 @@ Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
 
 The following icons, which are used by this plugin 
 
-*  [Line Graph Icon 32x32 px](src/main/webapp/icons/line-graph-32x32.png)
-*  [Line Graph Icon 64x64 px](src/main/webapp/icons/line-graph-64x64.png)
+*   [Line Graph Icon 32x32 px](src/main/webapp/icons/line-graph-32x32.png)
+*   [Line Graph Icon 64x64 px](src/main/webapp/icons/line-graph-64x64.png)
 
 made by [Freepik](https://www.freepik.com) from [Flaticon](https://www.flaticon.com/).
 
