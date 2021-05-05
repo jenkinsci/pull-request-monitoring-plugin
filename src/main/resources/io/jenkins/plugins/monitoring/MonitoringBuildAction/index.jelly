@@ -6,6 +6,7 @@
 
     <bs:page it="${it}">
 
+        <st:adjunct includes="io.jenkins.plugins.muuri"/>
         <link href="${resURL}/plugin/pull-request-monitoring/css/pull-request-monitoring.css" rel="stylesheet"/>
 
         <div class="container">
@@ -261,7 +262,6 @@
 
         </div>
 
-        <st:adjunct includes="io.jenkins.plugins.muuri"/>
         <script>var run = <st:bind value="${it}"/></script>
         <script type="text/javascript" src="${resURL}/plugin/pull-request-monitoring/js/pull-request-monitoring.js"/>
 
