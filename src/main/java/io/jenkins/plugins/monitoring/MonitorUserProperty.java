@@ -11,6 +11,7 @@ import org.kohsuke.stapler.DataBoundConstructor;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -19,16 +20,6 @@ import java.util.stream.Collectors;
 public class MonitorUserProperty extends hudson.model.UserProperty {
 
     private Collection<MonitorProperty> properties;
-
-    public MonitorUserProperty() {
-
-    }
-
-    @DataBoundConstructor
-    public MonitorUserProperty(MonitorProperty defaultProp) {
-        this.properties = new ArrayList<>();
-        this.properties.add(defaultProp);
-    }
 
     public Collection<MonitorProperty> getProperties() {
         return properties;
@@ -44,7 +35,7 @@ public class MonitorUserProperty extends hudson.model.UserProperty {
         this.properties = properties;
     }
 
-    public void createOrUpdate(String id, String config) {
+    public void update(String id, String config) {
         MonitorProperty property = this.getProperties().stream()
                 .filter(monitorProperty -> monitorProperty.getId().equals(id))
                 .findFirst().orElse(null);

@@ -37,7 +37,7 @@ public class MonitoringBuildAction implements RunAction2 {
     }
 
     @JavaScriptMethod
-    public void updateUserConfiguration(String id, String config) throws IOException {
+    public void updateUserConfiguration(String config) throws IOException {
         User user = User.current();
 
         if (user == null) {
@@ -45,26 +45,13 @@ public class MonitoringBuildAction implements RunAction2 {
         }
 
         MonitorUserProperty property = user.getProperty(MonitorUserProperty.class);
-        MonitorUserProperty.MonitorProperty defaultProp = new MonitorUserProperty.MonitorProperty("default",
-                this.monitor.getConfiguration());
-
-        if (property == null) {
-            property = new MonitorUserProperty(defaultProp);
-            user.addProperty(property);
-        }
-
-        if (property.getProperties() == null) {
-            List<MonitorUserProperty.MonitorProperty> views = new ArrayList<>();
-            views.add(defaultProp);
-            property.setProperties(views);
-        }
-
-        property.createOrUpdate(id, config);
+        property.update(getProjectId(), config);
         user.save();
+
     }
 
     @JavaScriptMethod
-    public String getConfiguration(String id) throws IOException {
+    public String getConfiguration() {
         User user = User.current();
 
         if (user == null) {
@@ -74,16 +61,23 @@ public class MonitoringBuildAction implements RunAction2 {
         MonitorUserProperty property = user.getProperty(MonitorUserProperty.class);
 
         if (property.getProperties() == null) {
-            updateUserConfiguration("default", this.monitor.getConfiguration());
+            List<MonitorUserProperty.MonitorProperty> views = new ArrayList<>();
+            views.add(new MonitorUserProperty.MonitorProperty("default", this.monitor.getConfiguration()));
+            property.setProperties(views);
         }
 
-        MonitorUserProperty.MonitorProperty monitorProperty = property.getProperty(id);
+        MonitorUserProperty.MonitorProperty monitorProperty = property.getProperty(getProjectId());
 
         if (monitorProperty == null) {
             monitorProperty = property.getProperty("default");
         }
 
         return monitorProperty.getConfig();
+    }
+
+    public String getProjectId() {
+        String id = this.owner.getParent().getParent().getDisplayName();
+        return id.toLowerCase().replaceAll(" ", "-");
     }
 
     @Override

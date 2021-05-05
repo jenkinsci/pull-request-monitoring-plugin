@@ -5,7 +5,7 @@
  */
 
 
-/* global jQuery3 */
+/* global jQuery3, run */
 (function ($) {
     let grid;
     let configuration;
@@ -19,18 +19,6 @@
             $(window).trigger('resize');
         });
 
-    }
-
-    /**
-     * Get the view id to store the configuration for based on selected build action.
-     *
-     * @returns {string}
-     *          the view id of current build action.
-     */
-    function getViewId() {
-        const project = `${window.location.pathname.split('/').slice(3, 4)}`
-            .toLowerCase();
-        return decodeURI(project).replaceAll(" ", "-");
     }
 
     /**
@@ -173,7 +161,7 @@
      */
     function updateConfig() {
 
-        run.updateUserConfiguration(getViewId() ,JSON.stringify(getCurrentConfig()));
+        run.updateUserConfiguration(JSON.stringify(getCurrentConfig()));
         updateConfigPanel();
 
     }
@@ -389,7 +377,7 @@
 
     }
 
-    run.getConfiguration(getViewId(), function(config) {
+    run.getConfiguration(function(config) {
         initDashboard(config.responseJSON);
     });
 
