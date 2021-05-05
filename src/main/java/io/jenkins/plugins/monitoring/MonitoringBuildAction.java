@@ -36,12 +36,21 @@ public class MonitoringBuildAction implements RunAction2 {
         this.monitor = monitor;
     }
 
+    /**
+     * Saves the actual dashboard configuration to {@link MonitorUserProperty}.
+     *
+     * @param config
+     *              the config string to update.
+     *
+     * @throws IOException
+     *              if config cannot be saved.
+     */
     @JavaScriptMethod
     public void updateUserConfiguration(String config) throws IOException {
         User user = User.current();
 
         if (user == null) {
-           return;
+            return;
         }
 
         MonitorUserProperty property = user.getProperty(MonitorUserProperty.class);
@@ -50,6 +59,14 @@ public class MonitoringBuildAction implements RunAction2 {
 
     }
 
+    /**
+     * Get the current dashboard configuration of user.
+     *
+     * @return
+     *          the config of the corresponding {@link MonitorUserProperty} of the actual project
+     *          or the default configuration of Jenkinsfile if no config exists in {@link MonitorUserProperty}
+     *          for actual project.
+     */
     @JavaScriptMethod
     public String getConfiguration() {
         User user = User.current();
@@ -75,6 +92,12 @@ public class MonitoringBuildAction implements RunAction2 {
         return monitorProperty.getConfig();
     }
 
+    /**
+     * Get the project it based on the current {@link Run}.
+     *
+     * @return
+     *          the display name of the current project as id.
+     */
     public String getProjectId() {
         String id = this.owner.getParent().getParent().getDisplayName();
         return id.toLowerCase().replaceAll(" ", "-");

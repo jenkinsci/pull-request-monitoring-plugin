@@ -25,11 +25,20 @@ import java.io.InputStream;
  */
 public class MonitorTest {
 
+    /**
+     * JUnit rule to allow test cases to fire up a Jenkins instance.
+     */
     @Rule
     public JenkinsRule jenkinsRule = new JenkinsRule();
 
+    /**
+     * Test if default monitor and {@link MonitoringBuildAction} is added if {@link hudson.model.Run} is a pull request.
+     *
+     * @throws Exception
+     *          if {@link JenkinsRule#waitUntilNoActivity()} fails.
+     */
     @Test
-    public void should_AddDefaultMonitor_When_BuildIsPr() throws Exception {
+    public void shouldAddDefaultMonitorWhenBuildIsPr() throws Exception {
         WorkflowMultiBranchProject project = createRepositoryWithPr("Jenkinsfile.default");
 
         project.scheduleBuild2(0);
@@ -40,13 +49,19 @@ public class MonitorTest {
         MonitoringBuildAction action = build.getAction(MonitoringBuildAction.class);
 
         jenkinsRule.assertBuildStatusSuccess(build);
-        jenkinsRule.assertLogContains("Build is part of a pull request. Add monitor now." , build);
+        jenkinsRule.assertLogContains("Build is part of a pull request. Add monitor now.", build);
         Assert.assertNotNull(action);
         Assert.assertEquals(action.getMonitor().getConfiguration(), "{\"plugins\": {}}");
     }
 
+    /**
+     * Test if nothing is added if {@link hudson.model.Run} is not a pull request.
+     *
+     * @throws Exception
+     *          if {@link JenkinsRule#waitUntilNoActivity()} fails.
+     */
     @Test
-    public void should_SkipAddDefaultMonitor_When_BuildIsNotPr() throws Exception {
+    public void shouldSkipAddDefaultMonitorWhenBuildIsNotPr() throws Exception {
         WorkflowMultiBranchProject project = createRepositoryWithoutPr("Jenkinsfile.default");
 
         project.scheduleBuild2(0);
@@ -57,12 +72,18 @@ public class MonitorTest {
         MonitoringBuildAction action = build.getAction(MonitoringBuildAction.class);
 
         jenkinsRule.assertBuildStatusSuccess(build);
-        jenkinsRule.assertLogContains("Build is not part of a pull request. Skip adding monitor." , build);
+        jenkinsRule.assertLogContains("Build is not part of a pull request. Skip adding monitor.", build);
         Assert.assertNull(action);
     }
 
+    /**
+     * Test if {@link hudson.model.Run} fails if unknown plugin id is used in monitoring configuration.
+     *
+     * @throws Exception
+     *              if {@link JenkinsRule#waitUntilNoActivity()} fails.
+     */
     @Test
-    public void should_ThrowException_When_AddingNotExistingView() throws Exception {
+    public void shouldThrowExceptionWhenAddingNotExistingView() throws Exception {
         WorkflowMultiBranchProject project = createRepositoryWithPr("Jenkinsfile.custom2");
 
         project.scheduleBuild2(0);
@@ -74,10 +95,23 @@ public class MonitorTest {
 
         jenkinsRule.assertBuildStatus(Result.FAILURE, build);
         jenkinsRule.assertLogContains(
-                "Can't find class 'io.jenkins.plugins.view' in list of available plugins!" , build);
+                "Can't find class 'io.jenkins.plugins.view' in list of available plugins!", build);
         Assert.assertNull(action);
     }
 
+    /**
+     * Creates an {@link WorkflowMultiBranchProject} with a sample pull request based on the given Jenkinsfile.
+     *
+     * @param jenkinsfile
+     *              the name of the Jenkinsfile to add to the repository.
+     *
+     * @return
+     *              the generated {@link WorkflowMultiBranchProject}.
+     *
+     * @throws IOException
+     *              if something went wrong with {@link MockSCMController}.
+     *
+     */
     private WorkflowMultiBranchProject createRepositoryWithPr(String jenkinsfile) throws IOException {
         MockSCMController controller = MockSCMController.create();
         controller.createRepository("scm-repo");
@@ -98,6 +132,19 @@ public class MonitorTest {
         return project;
     }
 
+    /**
+     * Creates an {@link WorkflowMultiBranchProject} without a sample pull request based on the given Jenkinsfile.
+     *
+     * @param jenkinsfile
+     *              the name of the Jenkinsfile to add to the repository.
+     *
+     * @return
+     *              the generated {@link WorkflowMultiBranchProject}.
+     *
+     * @throws IOException
+     *              if something went wrong with {@link MockSCMController}.
+     *
+     */
     private WorkflowMultiBranchProject createRepositoryWithoutPr(String jenkinsfile) throws IOException {
         MockSCMController controller = MockSCMController.create();
         controller.createRepository("scm-repo");

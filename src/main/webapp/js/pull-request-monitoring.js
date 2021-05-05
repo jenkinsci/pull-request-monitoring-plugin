@@ -5,7 +5,7 @@
  */
 
 
-/* global jQuery3, run */
+/* global jQuery3, run, Muuri */
 (function ($) {
     let grid;
     let configuration;
