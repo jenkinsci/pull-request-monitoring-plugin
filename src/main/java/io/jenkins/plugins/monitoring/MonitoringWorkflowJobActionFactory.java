@@ -4,7 +4,10 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import hudson.Extension;
 import hudson.model.Action;
 import jenkins.model.TransientActionFactory;
+import jenkins.scm.api.SCMHead;
+import jenkins.scm.api.mixin.ChangeRequestSCMHead;
 import org.jenkinsci.plugins.workflow.job.WorkflowJob;
+import org.jenkinsci.plugins.workflow.multibranch.BranchJobProperty;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -41,7 +44,10 @@ public class MonitoringWorkflowJobActionFactory extends TransientActionFactory<W
     @Override
     public Collection<? extends Action> createFor(@NonNull WorkflowJob workflowJob) {
 
-        if (workflowJob.getPronoun().equals("Pull Request")) {
+        final BranchJobProperty branchJobProperty = workflowJob.getProperty(BranchJobProperty.class);
+        final SCMHead head = branchJobProperty.getBranch().getHead();
+
+        if (head instanceof ChangeRequestSCMHead) {
             return Collections.singletonList(new MonitoringWorkflowJobAction(workflowJob));
         }
 

@@ -5,8 +5,10 @@ import hudson.model.Job;
 import hudson.model.ProminentProjectAction;
 import jenkins.branch.Branch;
 import jenkins.branch.MultiBranchProject;
+import jenkins.scm.api.SCMHead;
 import jenkins.scm.api.metadata.ContributorMetadataAction;
 import jenkins.scm.api.metadata.ObjectMetadataAction;
+import jenkins.scm.api.mixin.ChangeRequestSCMHead;
 import org.jenkinsci.plugins.workflow.multibranch.BranchJobProperty;
 
 import java.util.List;
@@ -66,17 +68,11 @@ public class MonitoringMultibranchProjectAction implements ProminentProjectActio
      *          filtered list of all {@link #getJobs() jobs} by "Pull Request".
      */
     public List<Job<?, ?>> getPullRequests() {
-        return filterJobs("Pull Request");
-    }
-
-    /**
-     * Filters all jobs of selected {@link MultiBranchProject} by "Branch".
-     *
-     * @return
-     *          filtered list of all {@link #getJobs() jobs} by "Branch".
-     */
-    public List<Job<?, ?>> getBranches() {
-        return filterJobs("Branch");
+        return getJobs().stream().filter(job -> {
+            BranchJobProperty branchJobProperty = job.getProperty(BranchJobProperty.class);
+            SCMHead head = branchJobProperty.getBranch().getHead();
+            return head instanceof ChangeRequestSCMHead;
+        }).collect(Collectors.toList());
     }
 
     /**
@@ -99,29 +95,6 @@ public class MonitoringMultibranchProjectAction implements ProminentProjectActio
      */
     private List<Job<?, ?>> getJobs() {
         return multiBranchProject.getItems().stream().map(item -> (Job<?, ?>) item).collect(Collectors.toList());
-    }
-
-    /**
-     * Filters all jobs of selected {@link MultiBranchProject} by given pronoun.
-     *
-     * @param pronounToFilter
-     *          the name of Job-Type, e.g. "Branch" or "Pull Request" to filter by.
-     *
-     * @return
-     *          filtered list of all {@link #getJobs() jobs}.
-     */
-    private List<Job<?, ?>> filterJobs(String pronounToFilter) {
-        return getJobs().stream().filter(job -> {
-            BranchJobProperty branchJobProperty = job.getProperty(BranchJobProperty.class);
-            String pronoun = branchJobProperty.getBranch().getHead().getPronoun();
-
-            if (pronoun == null) {
-                return false;
-            }
-
-            return pronoun.equals(pronounToFilter);
-
-        }).collect(Collectors.toList());
     }
 
     /**
