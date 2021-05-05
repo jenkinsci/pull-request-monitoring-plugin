@@ -3,6 +3,8 @@ package io.jenkins.plugins.monitoring;
 import hudson.model.Result;
 import jenkins.branch.BranchSource;
 import jenkins.scm.impl.mock.MockSCMController;
+import jenkins.scm.impl.mock.MockSCMDiscoverBranches;
+import jenkins.scm.impl.mock.MockSCMDiscoverChangeRequests;
 import jenkins.scm.impl.mock.MockSCMSource;
 import org.jenkinsci.plugins.workflow.job.WorkflowJob;
 import org.jenkinsci.plugins.workflow.job.WorkflowRun;
@@ -83,12 +85,14 @@ public class MonitorTest {
         final int num = controller.openChangeRequest("scm-repo", "master");
         final String crNum = "change-request/" + num;
         InputStream st = getClass().getResourceAsStream(String.format("/io/jenkins/plugins/monitoring/%s", jenkinsfile));
+        byte[] targetArray = new byte[st.available()];
+        st.read(targetArray);
         controller.addFile("scm-repo", crNum, "Jenkinsfile", "Jenkinsfile",
-                st.readAllBytes());
+                targetArray);
 
         WorkflowMultiBranchProject project = jenkinsRule.createProject(WorkflowMultiBranchProject.class);
-        project.getSourcesList().add(new BranchSource(new MockSCMSource("1", controller, "scm-repo",
-                false, false, true)));
+        project.getSourcesList().add(new BranchSource(new MockSCMSource(controller, "scm-repo",
+                new MockSCMDiscoverChangeRequests())));
 
 
         return project;
@@ -99,12 +103,14 @@ public class MonitorTest {
         controller.createRepository("scm-repo");
         controller.createBranch("scm-repo", "master");
         InputStream st = getClass().getResourceAsStream(String.format("/io/jenkins/plugins/monitoring/%s", jenkinsfile));
+        byte[] targetArray = new byte[st.available()];
+        st.read(targetArray);
         controller.addFile("scm-repo", "master", "Jenkinsfile", "Jenkinsfile",
-                st.readAllBytes());
+                targetArray);
 
         WorkflowMultiBranchProject project = jenkinsRule.createProject(WorkflowMultiBranchProject.class);
-        project.getSourcesList().add(new BranchSource(new MockSCMSource("1", controller, "scm-repo",
-                true, false, false)));
+        project.getSourcesList().add(new BranchSource(new MockSCMSource(controller, "scm-repo",
+                new MockSCMDiscoverBranches())));
 
         return project;
     }
