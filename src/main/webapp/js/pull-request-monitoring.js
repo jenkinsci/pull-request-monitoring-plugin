@@ -217,7 +217,7 @@
      */
     function addItem() {
 
-        const color = document.querySelector('input[name="color"]:checked').value;
+        const color = document.querySelector('input[name="color"]').value;
         const width = document.querySelector('input[name="width"]').value;
         const height = document.querySelector('input[name="height"]').value;
         const plugin = document.querySelector('input[name="plugin"]:checked').value;
@@ -225,11 +225,11 @@
         let plugins = grid.getItems().filter(function(item) {
             const dataId = item.getElement().getAttribute('data-id');
             if (dataId === plugin) {
-                const oldColor = item.getElement().getAttribute('data-color');
-                item.getElement().classList.remove(oldColor);
-
                 item.getElement().setAttribute('data-color', color);
-                item.getElement().classList.add(color);
+                item.getElement().style.color = color;
+                item.getElement().querySelector('.card').style.color = color;
+                item.getElement().querySelector('.plugin-link').style.color = color;
+                item.getElement().querySelector('.card').style.borderColor = color;
 
                 item.getElement().classList.remove('w1', 'w2', 'w3', 'w4', 'w5');
                 item.getElement().classList.add('w' + width);
@@ -318,12 +318,13 @@
                 return item.getElement().getAttribute('data-id') === id;
             });
 
-            const color = plugin.getElement().getAttribute('data-color');
-            plugin.getElement().classList.remove(color);
-
             const newColor = configuration.plugins[String(id)].color;
             plugin.getElement().setAttribute('data-color', newColor);
-            plugin.getElement().classList.add(newColor);
+            plugin.getElement().style.color = newColor;
+            plugin.getElement().querySelector('.card').style.color = newColor;
+            plugin.getElement().querySelector('.card').style.borderColor = newColor;
+
+            plugin.getElement().querySelector('.plugin-link').style.color = newColor;
 
             const width = configuration.plugins[String(id)].width;
             plugin.getElement().classList.remove('w1', 'w2', 'w3', 'w4', 'w5');
