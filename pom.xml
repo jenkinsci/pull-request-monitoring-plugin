@@ -28,7 +28,9 @@
         <gitHubRepo>jenkinsci/${project.artifactId}-plugin</gitHubRepo>
 
         <commons.lang.version>3.12.0</commons.lang.version>
-        <bootstrap4-api.version>4.6.0-3</bootstrap4-api.version>
+        <plugin-util-api.version>2.2.0</plugin-util-api.version>
+        <bootstrap5-api.version>5.0.0-1</bootstrap5-api.version>
+        <font-awesome-api.version>5.15.3-1</font-awesome-api.version>
         <jquery3-api.version>3.6.0-1</jquery3-api.version>
         <muuri-api.version>0.9.3-2</muuri-api.version>
         <popper-api.version>1.16.1-2</popper-api.version>
@@ -82,8 +84,18 @@
         </dependency>
         <dependency>
             <groupId>io.jenkins.plugins</groupId>
-            <artifactId>bootstrap4-api</artifactId>
-            <version>${bootstrap4-api.version}</version>
+            <artifactId>plugin-util-api</artifactId>
+            <version>${plugin-util-api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jenkins.plugins</groupId>
+            <artifactId>bootstrap5-api</artifactId>
+            <version>${bootstrap5-api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jenkins.plugins</groupId>
+            <artifactId>font-awesome-api</artifactId>
+            <version>${font-awesome-api.version}</version>
         </dependency>
         <dependency>
             <groupId>io.jenkins.plugins</groupId>

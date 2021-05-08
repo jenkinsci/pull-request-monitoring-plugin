@@ -14,7 +14,7 @@
 
         <l:main-panel>
 
-            <st:adjunct includes="io.jenkins.plugins.bootstrap4"/>
+            <st:adjunct includes="io.jenkins.plugins.bootstrap5"/>
 
             <div class="fluid-container">
 
