@@ -26,6 +26,23 @@
 
             <section class="grid-demo">
 
+                ${it.setUnavailableMonitors()}
+
+                <j:if test="${it.getUnavailableMonitors().size() != 0}">
+
+                    ${it.removeUnavailableMonitors()}
+
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                        <h4 class="alert-heading">Some monitors aren't available anymore!</h4>
+                        <p>It looks like the monitors with the ids
+                            <strong>${it.getUnavailableMonitors()}</strong>
+                            are no longer available. They were automatically removed from the current user configuration.</p>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true"><i class="material-icons icon">&#xE5CD;</i></span></button>
+                    </div>
+
+                </j:if>
+
                 <div class="grid">
 
                     <j:forEach var="plugin" items="${it.monitor.getAvailablePlugins(it.run)}">
