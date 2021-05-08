@@ -26,6 +26,14 @@ public interface MonitorView {
     }
 
     /**
+     * Defines the icon to show in the dropdown list of available plugins.
+     *
+     * @return
+     *          the icon url.
+     */
+    String getIconUrl();
+
+    /**
      * Defines the relative link to a detail view of showed plugin.
      *
      * @return
