@@ -35,7 +35,16 @@
 
                                 <div class="card">
 
-                                    <div class="plugin-card-id">${plugin.title}</div>
+                                    <div class="plugin-card-id">
+
+                                        <j:if test="${plugin.detailViewUrl.isPresent()}">
+                                            <a href="${plugin.detailViewUrl.get()}">${plugin.title}</a>
+                                        </j:if>
+                                        <j:if test="${!plugin.detailViewUrl.isPresent()}">
+                                            ${plugin.title}
+                                        </j:if>
+
+                                    </div>
 
                                     <div class="plugin-card-content">
 

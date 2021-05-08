@@ -234,17 +234,26 @@
   z-index: 9;
 }
 
-.muuri-item.red .card {
+.muuri-item.black .card,
+.muuri-item.black .card a {
+  color: #000000;
+}
+
+.muuri-item.red .card,
+.muuri-item.red .card a {
   color: #f94a7a;
 }
 
-.muuri-item.green .card {
+.muuri-item.green .card,
+.muuri-item.green .card a {
   color: #2ac06d;
 }
 
-.muuri-item.blue .card {
+.muuri-item.blue .card,
+.muuri-item.blue .card a {
   color: #4a9ff9;
 }
+
 
 .plugin-remove {
   position: absolute;
