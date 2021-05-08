@@ -177,7 +177,7 @@
      */
     function changeInput(id, disabled) {
 
-        let plugins = document.querySelectorAll('input[name="plugin"]');
+        let plugins = $("#monitor option")
         Array.from(plugins).filter(function(item) {
             return item.value === id;
         }).map(function(item) {
@@ -220,7 +220,7 @@
         const color = document.querySelector('input[name="color"]').value;
         const width = document.querySelector('input[name="width"]').value;
         const height = document.querySelector('input[name="height"]').value;
-        const plugin = document.querySelector('input[name="plugin"]:checked').value;
+        const plugin = $('#monitor').children("option:selected").val();
 
         let plugins = grid.getItems().filter(function(item) {
             const dataId = item.getElement().getAttribute('data-id');
@@ -387,11 +387,8 @@
     $(document).ready(function() {
         $('#submitButton').attr('disabled', 'disabled');
 
-        $('input[name=plugin]').on('change', function() {
-
-            const plugin = document.querySelector('input[name="plugin"]:checked');
-
-            if (plugin.value !== 'default') {
+        $('#monitor').on('change', function() {
+            if ($(this).val() !== "") {
                 $('#submitButton').removeAttr("disabled");
             }
             else {
@@ -420,5 +417,22 @@
             });
         });
     });
+
+    $(document).ready(function() {
+        $('.monitor-selection').select2({
+            dropdownParent: $('#itemsModal'),
+            templateResult: formatState
+        });
+    });
+
+    function formatState(state) {
+        if (!state.id) {
+            return state.text;
+        }
+
+        return $(
+            '<span><img width="25px;" src="' + state.element.getAttribute('icon') + '" class="img-flag" /> ' + state.text + '</span>'
+        );
+    }
 
 })(jQuery3);

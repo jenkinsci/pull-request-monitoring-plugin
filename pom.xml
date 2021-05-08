@@ -33,6 +33,7 @@
         <font-awesome-api.version>5.15.3-1</font-awesome-api.version>
         <jquery3-api.version>3.6.0-1</jquery3-api.version>
         <muuri-api.version>0.9.3-2</muuri-api.version>
+        <select2-api.version>4.0.13-2</select2-api.version>
         <popper-api.version>1.16.1-2</popper-api.version>
         <json.version>20210307</json.version>
 
@@ -106,6 +107,11 @@
             <groupId>io.jenkins.plugins</groupId>
             <artifactId>muuri-api</artifactId>
             <version>${muuri-api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jenkins.plugins</groupId>
+            <artifactId>select2-api</artifactId>
+            <version>${select2-api.version}</version>
         </dependency>
         <dependency>
             <groupId>io.jenkins.plugins</groupId>
