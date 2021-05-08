@@ -29,17 +29,20 @@
 
                     <j:forEach var="plugin" items="${it.monitor.getAvailablePlugins(it.run)}">
                         
-                        <div class="muuri-item hidden h4 height w4 width black" data-id="${plugin.id}" data-color="black" data-title="${plugin.title}">
+                        <div class="muuri-item hidden h4 height w4 width" data-id="${plugin.id}"
+                             data-color="#000000" data-title="${plugin.title}">
 
                             <div class="muuri-item-content">
 
-                                <div class="card">
+                                <div class="card" style="color: #000000">
 
                                     <div class="plugin-card-id">
 
                                         <j:if test="${plugin.detailViewUrl.isPresent()}">
-                                            <a href="${plugin.detailViewUrl.get()}">${plugin.title}</a>
+                                            <a class="plugin-link" style="color: #000000" href="${plugin.detailViewUrl.get()}">
+                                                ${plugin.title}</a>
                                         </j:if>
+
                                         <j:if test="${!plugin.detailViewUrl.isPresent()}">
                                             ${plugin.title}
                                         </j:if>
@@ -181,25 +184,7 @@
 
                                         <h5>${%itemModal.color}</h5>
 
-                                        <form>
-
-                                            <div class="cc-selector-color">
-
-                                                <input checked="checked" id="black" type="radio" name="color" value="black" />
-                                                <label class="color color-black" for="black"/>
-
-                                                <input id="blue" type="radio" name="color" value="blue" />
-                                                <label class="color color-blue" for="blue"/>
-
-                                                <input id="green" type="radio" name="color" value="green" />
-                                                <label class="color color-green" for="green"/>
-
-                                                <input id="red" type="radio" name="color" value="red" />
-                                                <label class="color color-red" for="red"/>
-
-                                            </div>
-
-                                        </form>
+                                        <input type="color" name="color" value="#000000"/>
 
                                     </div>
 
