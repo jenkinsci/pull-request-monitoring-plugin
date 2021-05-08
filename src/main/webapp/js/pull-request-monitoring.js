@@ -268,10 +268,9 @@
             dragEnabled: true,
             dragSortInterval: 50,
             dragContainer: document.body,
-            dragStartPredicate: (item, event) => {
-                const isDraggable = true;
-                const isRemoveAction = elementMatches(event.target, '.plugin-remove, .plugin-remove i');
-                return isDraggable && !isRemoveAction ? Muuri.ItemDrag.defaultStartPredicate(item, event) : false;
+            dragStartPredicate: {
+                distance: 100,
+                delay: 100
             },
             dragReleaseDuration: 400,
             dragReleaseEasing: 'ease'
