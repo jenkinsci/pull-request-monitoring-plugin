@@ -3,7 +3,13 @@ package io.jenkins.plugins.monitoring;
 import hudson.model.Run;
 import hudson.model.User;
 import jenkins.model.RunAction2;
+import org.apache.commons.collections.CollectionUtils;
+import org.json.JSONObject;
 import org.kohsuke.stapler.bind.JavaScriptMethod;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * This action displays a link on the side panel of a {@link Run}. The action is only displayed if the parent job
@@ -17,6 +23,7 @@ import org.kohsuke.stapler.bind.JavaScriptMethod;
 public class MonitoringBuildAction implements RunAction2 {
     private final Monitor monitor;
     private transient Run<?, ?> owner;
+    private transient List<String> unavailableMonitors;
 
     /**
      * Creates a new instance of {@link MonitoringBuildAction}.
@@ -134,4 +141,36 @@ public class MonitoringBuildAction implements RunAction2 {
         return monitor;
     }
 
+    public List<String> getUnavailableMonitors() {
+        return unavailableMonitors;
+    }
+
+    /**
+     * Calculates the difference between all available monitors and those currently used by the user.
+     */
+    public void setUnavailableMonitors() {
+        JSONObject actualConfig = new JSONObject(this.getConfiguration());
+        JSONObject plugins = actualConfig.getJSONObject("plugins");
+
+        List<String> usedPlugins = new ArrayList<>(plugins.keySet());
+        List<String> availablePlugins = this.monitor.getAvailablePlugins(this.owner)
+                .stream().map(MonitorView::getId).collect(Collectors.toList());
+
+        this.unavailableMonitors = new ArrayList<String>(CollectionUtils.removeAll(usedPlugins, availablePlugins));
+    }
+
+    /**
+     * Removes the unavailable monitors from the current user configuration.
+     *
+     * @throws Exception
+     *              if update fails.
+     */
+    public void removeUnavailableMonitors() throws Exception {
+        JSONObject actualConfig = new JSONObject(this.getConfiguration());
+        JSONObject plugins = actualConfig.getJSONObject("plugins");
+        this.unavailableMonitors.forEach(plugins::remove);
+        actualConfig.put("plugins", plugins);
+        this.updateUserConfiguration(actualConfig.toString());
+        this.unavailableMonitors.clear();
+    }
 }
