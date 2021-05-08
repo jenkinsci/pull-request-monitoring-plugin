@@ -1,7 +1,0 @@
-<?jelly escape-by-default='true'?>
-
-<j:jelly xmlns:j="jelly:core">
-
-    <p>Content</p>
-
-</j:jelly>
