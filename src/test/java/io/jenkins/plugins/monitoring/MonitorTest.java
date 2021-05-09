@@ -51,7 +51,7 @@ public class MonitorTest {
         jenkinsRule.assertBuildStatusSuccess(build);
         jenkinsRule.assertLogContains("Build is part of a pull request. Add monitor now.", build);
         Assert.assertNotNull(action);
-        Assert.assertEquals(action.getMonitor().getConfiguration(), "{\"plugins\": {}}");
+        Assert.assertEquals(action.getMonitor().getConfiguration(), "{\"plugins\":{}}");
     }
 
     /**

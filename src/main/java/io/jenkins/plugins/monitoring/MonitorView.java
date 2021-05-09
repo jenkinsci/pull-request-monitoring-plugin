@@ -26,6 +26,22 @@ public interface MonitorView {
     }
 
     /**
+     * Defines the preferred width of the view.
+     *
+     * @return
+     *          the width in pixels.
+     */
+    int getPreferredWidth();
+
+    /**
+     * Defines the preferred height of the view.
+     *
+     * @return
+     *          the height in pixels.
+     */
+    int getPreferredHeight();
+
+    /**
      * Defines the icon to show in the dropdown list of available plugins.
      *
      * @return

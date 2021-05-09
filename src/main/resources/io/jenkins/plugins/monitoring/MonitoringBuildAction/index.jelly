@@ -30,8 +30,9 @@
 
                     <j:forEach var="plugin" items="${it.monitor.getAvailablePlugins(it.run)}">
                         
-                        <div class="muuri-item hidden h4 height w4 width" data-id="${plugin.id}"
-                             data-color="#000000" data-title="${plugin.title}">
+                        <div class="muuri-item hidden" data-id="${plugin.id}"
+                             data-color="#000000" data-title="${plugin.title}" default-width="${plugin.preferredWidth}"
+                             default-height="${plugin.preferredHeight}" default-color="#000000">
 
                             <div class="muuri-item-content">
 
@@ -148,12 +149,41 @@
 
                                     <div class="col-sm-12">
 
+                                        <h5>${%itemModal.plugin}</h5>
+
+                                        <j:if test="${it.monitor.getAvailablePlugins(it.run).size() == 0}">
+
+                                            <p>${%itemModal.empty}</p>
+
+                                        </j:if>
+
+                                        <j:if test="${it.monitor.getAvailablePlugins(it.run).size() > 0}">
+
+                                            <select class="monitor-selection" id="monitor" name="monitor-selection" style="width: 100%">
+
+                                                <option value="">${%itemModal.choose}</option>
+                                                <j:forEach var="plugin" items="${it.monitor.getAvailablePlugins(it.run)}">
+                                                    <option value="${plugin.id}" icon="${resURL}${plugin.iconUrl}"
+                                                            width="${plugin.preferredWidth}" height="${plugin.preferredHeight}">${plugin.title}</option>
+                                                </j:forEach>
+
+                                            </select>
+
+                                        </j:if>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="row">
+
+                                    <div class="col-sm-12">
+
                                         <h5>${%itemModal.width}</h5>
-                                        <p><i class="material-icons icon">&#xe88e;</i> ${%itemModal.sizeDescription}</p>
 
                                         <div class="range-slider width">
 
-                                            <input class="range-slider-range width" type="range" name="width" value="4" min="1" max="5" step="1"/>
+                                            <input class="range-slider-range width" type="range" name="width" value="300" min="100" max="1000" step="10"/>
                                             <span id="pluginWidth" class="range-slider-value width">0</span>
 
                                         </div>
@@ -170,7 +200,7 @@
 
                                         <div class="range-slider height">
 
-                                            <input class="range-slider-range height" type="range" name="height" value="3" min="1" max="5" step="1"/>
+                                            <input class="range-slider-range height" type="range" name="height" value="300" min="100" max="1000" step="10"/>
                                             <span id="pluginHeight" class="range-slider-value height">0</span>
 
                                         </div>
@@ -190,36 +220,6 @@
                                     </div>
 
                                 </div>
-
-                                <div class="row">
-
-                                    <div class="col-sm-12">
-
-                                        <h5>${%itemModal.plugin}</h5>
-
-                                    </div>
-
-                                </div>
-
-                                <j:if test="${it.monitor.getAvailablePlugins(it.run).size() == 0}">
-
-                                    <p>${%itemModal.empty}</p>
-
-                                </j:if>
-
-                                <j:if test="${it.monitor.getAvailablePlugins(it.run).size() > 0}">
-
-                                    <select class="monitor-selection" id="monitor" name="monitor-selection" style="width: 100%">
-
-                                        <option value="">${%itemModal.choose}</option>
-                                        <j:forEach var="plugin" items="${it.monitor.getAvailablePlugins(it.run)}">
-                                            <option value="${plugin.id}" icon="${resURL}${plugin.iconUrl}">${plugin.title}</option>
-                                        </j:forEach>
-
-                                    </select>
-
-                                </j:if>
-
 
                             </div>
 
