@@ -140,51 +140,6 @@
   z-index: 0;
 }
 
-.muuri-item.h1 {
-  height: 150px;
-  line-height: 150px;
-}
-
-.muuri-item.w1 {
-  width: 150px;
-}
-
-.muuri-item.h2 {
-  height: 320px;
-  line-height: 320px;
-}
-
-.muuri-item.w2 {
-  width: 320px;
-}
-
-.muuri-item.h3 {
-  height: 490px;
-  line-height: 490px;
-}
-
-.muuri-item.w3 {
-  width: 490px;
-}
-
-.muuri-item.h4 {
-  height: 660px;
-  line-height: 660px;
-}
-
-.muuri-item.w4 {
-  width: 660px;
-}
-
-.muuri-item.h5 {
-  height: 830px;
-  line-height: 830px;
-}
-
-.muuri-item.w5 {
-  width: 830px;
-}
-
 .muuri-item-content {
   position: relative;
   width: 100%;

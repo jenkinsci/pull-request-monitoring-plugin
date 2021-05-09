@@ -43,7 +43,7 @@ public class Monitor extends Step implements Serializable {
     @DataBoundConstructor
     public Monitor() {
         super();
-        this.configuration = "{\"plugins\": {}}";
+        this.configuration = "{\"plugins\":{}}";
     }
 
     /**
@@ -54,7 +54,7 @@ public class Monitor extends Step implements Serializable {
      */
     @DataBoundSetter
     public void setConfiguration(final String configuration) {
-        this.configuration = configuration;
+        this.configuration = new JSONObject(configuration).toString();
     }
 
     public String getConfiguration() {

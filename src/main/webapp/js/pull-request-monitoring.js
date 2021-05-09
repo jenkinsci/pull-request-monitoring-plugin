@@ -33,30 +33,30 @@
             return item.isActive();
         }).map(function(item) {
             const id = item.getElement().getAttribute('data-id');
-            const width = Math.floor(item.getWidth() / 150);
-            const height = Math.floor(item.getHeight() / 150);
-            const color = item.getElement().getAttribute('data-color');
+            let pluginConfig = `"${id}":{`
 
-            return `"${id}":{"width":${width},"height":${height},"color":"${color}"}`;
+            const width = Math.round(item.getWidth());
+            if (String(width) !== item.getElement().getAttribute('default-width')) {
+                pluginConfig += `"width":${width},`
+            }
+
+            const height = Math.round(item.getHeight());
+            if (String(height) !== item.getElement().getAttribute('default-height')) {
+                pluginConfig += `"height":${height},`
+            }
+
+            const color = item.getElement().getAttribute('data-color');
+            if (color !== item.getElement().getAttribute('default-color')) {
+                pluginConfig += `"color":"${color}"`
+            }
+            pluginConfig += "}";
+
+            return pluginConfig;
         }).join(', ');
 
         const config = `{"plugins":{${plugins}}}`;
 
         return JSON.parse(config);
-
-    }
-
-    /**
-     * Check if the current dashboard configuration is equal the the configuration
-     * from Jenkinsfile.
-     *
-     * @returns {boolean}
-     *          true, if current dashboard configuration equals configuration from
-     *          Jenkinsfile, false else.
-     */
-    function isLocalConfigEqualsJenkinsfile() {
-
-        return JSON.stringify(configuration) === JSON.stringify(getCurrentConfig());
 
     }
 
@@ -227,15 +227,15 @@
             if (dataId === plugin) {
                 item.getElement().setAttribute('data-color', color);
                 item.getElement().style.color = color;
+                item.getElement().style.width = `${width}px`;
+                item.getElement().style.height = `${height}px`;
+                item.getElement().style.lineHeihgt = `${height}px`;
                 item.getElement().querySelector('.card').style.color = color;
-                item.getElement().querySelector('.plugin-link').style.color = color;
+
+                const link = item.getElement().querySelector('.plugin-link')
+                link !== null ? link.style.color = color : link;
+
                 item.getElement().querySelector('.card').style.borderColor = color;
-
-                item.getElement().classList.remove('w1', 'w2', 'w3', 'w4', 'w5');
-                item.getElement().classList.add('w' + width);
-
-                item.getElement().classList.remove('h1', 'h2', 'h3', 'h4', 'h5');
-                item.getElement().classList.add('h' + height);
 
                 return true;
             }
@@ -318,21 +318,40 @@
                 return item.getElement().getAttribute('data-id') === id;
             });
 
-            const newColor = configuration.plugins[String(id)].color;
-            plugin.getElement().setAttribute('data-color', newColor);
-            plugin.getElement().style.color = newColor;
-            plugin.getElement().querySelector('.card').style.color = newColor;
-            plugin.getElement().querySelector('.card').style.borderColor = newColor;
+            let color;
+            let width;
+            let height;
 
-            plugin.getElement().querySelector('.plugin-link').style.color = newColor;
+            if (configuration.plugins[String(id)].hasOwnProperty("color")) {
+                color = configuration.plugins[String(id)].color;
+            } else {
+                color = plugin.getElement().getAttribute('default-color');
+            }
 
-            const width = configuration.plugins[String(id)].width;
-            plugin.getElement().classList.remove('w1', 'w2', 'w3', 'w4', 'w5');
-            plugin.getElement().classList.add('w' + width);
+            if (configuration.plugins[String(id)].hasOwnProperty("width")) {
+                width = configuration.plugins[String(id)].width;
+            } else {
+                width = plugin.getElement().getAttribute('default-width');
+            }
 
-            const height = configuration.plugins[String(id)].height;
-            plugin.getElement().classList.remove('h1', 'h2', 'h3', 'h4', 'h5');
-            plugin.getElement().classList.add('h' + height);
+            if (configuration.plugins[String(id)].hasOwnProperty("height")) {
+                height = configuration.plugins[String(id)].height;
+            } else {
+                height = plugin.getElement().getAttribute('default-height');
+            }
+
+            plugin.getElement().style.width = `${width}px`;
+
+            plugin.getElement().style.height = `${height}px`;
+            plugin.getElement().style.lineHeihgt = `${height}px`;
+
+            plugin.getElement().setAttribute('data-color', color);
+            plugin.getElement().style.color = color;
+            plugin.getElement().querySelector('.card').style.color = color;
+            plugin.getElement().querySelector('.card').style.borderColor = color;
+
+            const link = plugin.getElement().querySelector('.plugin-link');
+            link !== null ? link.style.color = color : link
 
             changeInput(id, 'true');
             plugins.push(plugin);
@@ -389,6 +408,17 @@
 
         $('#monitor').on('change', function() {
             if ($(this).val() !== "") {
+
+                const selected = $("#monitor option:selected");
+
+                const width = selected.attr('width');
+                const height =  selected.attr('height');
+
+                $('.range-slider-range.width').val(width);
+                $('.range-slider-range.height').val(height);
+                $('.range-slider-value.width').html(width);
+                $('.range-slider-value.height').html(height);
+
                 $('#submitButton').removeAttr("disabled");
             }
             else {
@@ -408,12 +438,13 @@
         slider.each(function(){
 
             value.each(function(){
-                let value = jQuery3(this).prev().attr('value');
-                jQuery3(this).html(value);
+                let value = $(this).prev().attr('value');
+                $(this).html(value);
+
             });
 
             range.on('input', function(){
-                jQuery3(this).next(value).html(this.value);
+                $(this).next(value).html(this.value);
             });
         });
     });

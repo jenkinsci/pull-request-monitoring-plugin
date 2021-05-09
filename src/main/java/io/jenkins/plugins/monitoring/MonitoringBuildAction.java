@@ -5,10 +5,6 @@ import hudson.model.User;
 import jenkins.model.RunAction2;
 import org.kohsuke.stapler.bind.JavaScriptMethod;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * This action displays a link on the side panel of a {@link Run}. The action is only displayed if the parent job
  * is a pull request.
@@ -31,9 +27,23 @@ public class MonitoringBuildAction implements RunAction2 {
      * @param monitor
      *          the {@link Monitor} to be add.
      */
-    public MonitoringBuildAction(Run<?, ?> run, Monitor monitor) throws IOException {
+    public MonitoringBuildAction(Run<?, ?> run, Monitor monitor) {
         this.owner = run;
         this.monitor = monitor;
+    }
+
+    /**
+     * Sets the default for {@link MonitorUserProperty}.
+     */
+    private void setDefaultUserProperty() {
+        User user = User.current();
+
+        if (user == null) {
+            return;
+        }
+
+        MonitorUserProperty property = user.getProperty(MonitorUserProperty.class);
+        property.update("default", this.monitor.getConfiguration());
     }
 
     /**
@@ -42,11 +52,9 @@ public class MonitoringBuildAction implements RunAction2 {
      * @param config
      *              the config string to update.
      *
-     * @throws IOException
-     *              if config cannot be saved.
      */
     @JavaScriptMethod
-    public void updateUserConfiguration(String config) throws IOException {
+    public void updateUserConfiguration(String config) {
         User user = User.current();
 
         if (user == null) {
@@ -55,8 +63,6 @@ public class MonitoringBuildAction implements RunAction2 {
 
         MonitorUserProperty property = user.getProperty(MonitorUserProperty.class);
         property.update(getProjectId(), config);
-        user.save();
-
     }
 
     /**
@@ -69,6 +75,9 @@ public class MonitoringBuildAction implements RunAction2 {
      */
     @JavaScriptMethod
     public String getConfiguration() {
+        //todo: Work around, because no user is available when the action is added, so can not do this in ctor.
+        setDefaultUserProperty();
+
         User user = User.current();
 
         if (user == null) {
@@ -76,20 +85,9 @@ public class MonitoringBuildAction implements RunAction2 {
         }
 
         MonitorUserProperty property = user.getProperty(MonitorUserProperty.class);
-
-        if (property.getProperties() == null) {
-            List<MonitorUserProperty.MonitorProperty> views = new ArrayList<>();
-            views.add(new MonitorUserProperty.MonitorProperty("default", this.monitor.getConfiguration()));
-            property.setProperties(views);
-        }
-
         MonitorUserProperty.MonitorProperty monitorProperty = property.getProperty(getProjectId());
 
-        if (monitorProperty == null) {
-            monitorProperty = property.getProperty("default");
-        }
-
-        return monitorProperty.getConfig();
+        return (monitorProperty != null) ? monitorProperty.getConfig() : property.getProperty("default").getConfig();
     }
 
     /**

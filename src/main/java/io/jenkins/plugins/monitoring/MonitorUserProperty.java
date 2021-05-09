@@ -6,6 +6,7 @@ import hudson.model.User;
 import hudson.model.UserProperty;
 import hudson.model.UserPropertyDescriptor;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -15,14 +16,17 @@ import java.util.Collection;
  */
 public class MonitorUserProperty extends UserProperty {
 
-    private Collection<MonitorProperty> properties;
+    private final Collection<MonitorProperty> properties;
+
+    /**
+     * Creates a new {@link MonitorUserProperty}.
+     */
+    public MonitorUserProperty() {
+        this.properties = new ArrayList<>();
+    }
 
     public Collection<MonitorProperty> getProperties() {
         return properties;
-    }
-
-    public void setProperties(Collection<MonitorProperty> properties) {
-        this.properties = properties;
     }
 
     /**
