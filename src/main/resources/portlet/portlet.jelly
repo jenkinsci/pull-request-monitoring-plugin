@@ -1,0 +1,50 @@
+<?jelly escape-by-default='true'?>
+
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler">
+    <st:documentation>
+        A portlet for the dashboard.
+
+        <st:attribute name="portlet" use="required">
+            The portlet (instance of MonitorPortlet).
+        </st:attribute>
+    </st:documentation>
+
+    <st:header name="Content-Type" value="text/html;charset=UTF-8"/>
+
+    <div class="muuri-item hidden" data-id="${portlet.id}"
+         data-color="#000000" data-title="${portlet.title}" default-width="${portlet.preferredWidth}"
+         default-height="${portlet.preferredHeight}" default-color="#000000">
+
+        <div class="muuri-item-content">
+
+            <div class="card" style="color: #000000">
+
+                <div class="plugin-card-id">
+
+                    <j:if test="${portlet.detailViewUrl.isPresent()}">
+                        <a class="plugin-link" style="color: #000000" href="${portlet.detailViewUrl.get()}">
+                            ${portlet.title}</a>
+                    </j:if>
+
+                    <j:if test="${!portlet.detailViewUrl.isPresent()}">
+                        ${portlet.title}
+                    </j:if>
+
+                </div>
+
+                <div class="plugin-card-content">
+
+                    <st:include page="monitor.jelly" it="${portlet}"/>
+
+                </div>
+
+                <div class="plugin-remove">
+                    <i class="material-icons icon">&#xE5CD;</i></div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</j:jelly>

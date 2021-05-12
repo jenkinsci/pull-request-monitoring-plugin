@@ -61,22 +61,4 @@ public interface MonitorPortlet {
      *          if no link should be added to portlet.
      */
     Optional<String> getDetailViewUrl();
-
-    /**
-     * Factory for {@link MonitorPortlet}.
-     */
-    interface MonitorPortletFactory extends ExtensionPoint {
-
-        /**
-         * Get a collection of {@link MonitorPortlet} to display.
-         *
-         * @param build
-         *              the reference {@link Run}.
-         *
-         * @return
-         *              a collection of {@link MonitorPortlet}.
-         */
-        Collection<MonitorPortlet> getPortlets(Run<?, ?> build);
-
-    }
 }

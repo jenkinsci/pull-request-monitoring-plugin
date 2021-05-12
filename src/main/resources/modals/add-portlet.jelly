@@ -1,0 +1,130 @@
+<?jelly escape-by-default='true'?>
+
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler">
+
+    <st:documentation>
+        The configuration modal.
+
+        <st:attribute name="portlets" use="required">
+            The list of portlets (instances of MonitorPortlet).
+        </st:attribute>
+    </st:documentation>
+
+    <st:header name="Content-Type" value="text/html;charset=UTF-8"/>
+
+    <div class="modal fade" id="portletModal" tabindex="-1" aria-labelledby="itemsModalLabel" aria-hidden="true">
+
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+
+            <div class="modal-content">
+
+                <div class="modal-header">
+
+                    <h3 class="modal-title" id="itemsModalLabel">${%itemModal.title}</h3>
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <i class="material-icons icon">&#xe5cd;</i>
+                    </button>
+
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="container-fluid">
+
+                        <div class="row">
+
+                            <div class="col-sm-12">
+
+                                <h5>${%itemModal.plugin}</h5>
+
+                                <j:if test="${portlets.size() == 0}">
+
+                                    <p>${%itemModal.empty}</p>
+
+                                </j:if>
+
+                                <j:if test="${portlets.size() > 0}">
+
+                                    <select class="monitor-selection" id="monitor" name="monitor-selection" style="width: 100%">
+
+                                        <option value="">${%itemModal.choose}</option>
+                                        <j:forEach var="portlet" items="${portlets}">
+                                            <option value="${portlet.id}" icon="${resURL}${portlet.iconUrl}"
+                                                    width="${portlet.preferredWidth}" height="${portlet.preferredHeight}">${portlet.title}</option>
+                                        </j:forEach>
+
+                                    </select>
+
+                                </j:if>
+
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-sm-12">
+
+                                <h5>${%itemModal.width}</h5>
+
+                                <div class="range-slider width">
+
+                                    <input class="range-slider-range width" type="range" name="width" value="300" min="100" max="1000" step="10"/>
+                                    <span id="pluginWidth" class="range-slider-value width">0</span>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-sm-12">
+
+                                <h5>${%itemModal.height}</h5>
+
+                                <div class="range-slider height">
+
+                                    <input class="range-slider-range height" type="range" name="height" value="300" min="100" max="1000" step="10"/>
+                                    <span id="pluginHeight" class="range-slider-value height">0</span>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-sm-12">
+
+                                <h5>${%itemModal.color}</h5>
+
+                                <input type="color" name="color" value="#000000"/>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button id="modalClose" type="button" class="btn btn-secondary" data-dismiss="modal">
+                        ${%itemModal.cancel}</button>
+
+                    <button type="button" id="submitButton" class="btn btn-primary add-more-items">${%itemModal.add}</button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</j:jelly>
