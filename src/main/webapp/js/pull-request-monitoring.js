@@ -235,8 +235,7 @@
     function initGrid() {
 
         let docElem = document.documentElement;
-        let demo = document.querySelector('.grid-demo');
-        let gridElement = demo.querySelector('.grid');
+        let gridElement = document.querySelector('.grid');
         let copy = document.getElementById('copy');
         let addItemsElement = document.querySelector('.add-more-items');
 
@@ -293,28 +292,30 @@
         configuration.forEach((portlet) => {
             let plugin = grid.getItems().find(item => item.getElement().getAttribute('data-id') === portlet.id);
 
-            const color = portlet.hasOwnProperty("color") ?
-                portlet.color : plugin.getElement().getAttribute('default-color');
+            if (plugin !== undefined) {
+                const color = portlet.hasOwnProperty("color") ?
+                    portlet.color : plugin.getElement().getAttribute('default-color');
 
-           const width = portlet.hasOwnProperty("width") ?
-               portlet.width : plugin.getElement().getAttribute('default-width');
+                const width = portlet.hasOwnProperty("width") ?
+                    portlet.width : plugin.getElement().getAttribute('default-width');
 
-           const height = portlet.hasOwnProperty("height") ?
-                portlet.height : plugin.getElement().getAttribute('default-height');
+                const height = portlet.hasOwnProperty("height") ?
+                    portlet.height : plugin.getElement().getAttribute('default-height');
 
-            plugin.getElement().style.width = `${width}px`;
-            plugin.getElement().style.height = `${height}px`;
-            plugin.getElement().style.lineHeihgt = `${height}px`;
-            plugin.getElement().setAttribute('data-color', color);
-            plugin.getElement().style.color = color;
-            plugin.getElement().querySelector('.card').style.color = color;
-            plugin.getElement().querySelector('.card').style.borderColor = color;
+                plugin.getElement().style.width = `${width}px`;
+                plugin.getElement().style.height = `${height}px`;
+                plugin.getElement().style.lineHeihgt = `${height}px`;
+                plugin.getElement().setAttribute('data-color', color);
+                plugin.getElement().style.color = color;
+                plugin.getElement().querySelector('.card').style.color = color;
+                plugin.getElement().querySelector('.card').style.borderColor = color;
 
-            const link = plugin.getElement().querySelector('.plugin-link');
-            link !== null ? link.style.color = color : link
+                const link = plugin.getElement().querySelector('.plugin-link');
+                link !== null ? link.style.color = color : link
 
-            changeInput(portlet.id, 'true');
-            plugins.push(plugin);
+                changeInput(portlet.id, 'true');
+                plugins.push(plugin);
+            }
 
         });
 
@@ -347,6 +348,7 @@
         configuration = JSON.parse(config);
         initGrid();
         loadGrid();
+        updateConfig();
 
     }
 
@@ -408,7 +410,7 @@
      */
     $(document).ready(function() {
         $('.monitor-selection').select2({
-            dropdownParent: $('#itemsModal'),
+            dropdownParent: $('#portletModal'),
             templateResult: formatState
         });
     });

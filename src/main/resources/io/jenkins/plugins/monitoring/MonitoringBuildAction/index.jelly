@@ -1,6 +1,7 @@
 <?jelly escape-by-default='true'?>
 
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:bs="/bootstrap">
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:bs="/bootstrap"
+         xmlns:modals="/modals" xmlns:portlet="/portlet" xmlns:alerts="/alerts">
 
     <st:header name="Content-Type" value="text/html;charset=UTF-8"/>
 
@@ -10,260 +11,38 @@
         <st:adjunct includes="io.jenkins.plugins.select2"/>
         <link href="${resURL}/plugin/pull-request-monitoring/css/pull-request-monitoring.css" rel="stylesheet"/>
 
-        <div class="container">
+        <!-- The data toggle for <modals:config> -->
+        <button type="button" id="config-button" class="btn btn-success" data-toggle="modal" data-target="#configModal">
 
-            <button type="button" id="config-button" class="btn btn-success" data-toggle="modal" data-target="#configModal">
+            <i class="material-icons icon spin">&#xE8B8;</i>
 
-                <i class="material-icons icon spin">&#xE8B8;</i>
+        </button>
 
-            </button>
+        <!-- The data toggle for <modals:add-portlet> -->
+        <button type="button" class="btn btn-primary" id="add-item-button" data-toggle="modal" data-target="#portletModal">
 
-            <button type="button" class="btn btn-primary" id="add-item-button" data-toggle="modal" data-target="#itemsModal">
+            <i class="material-icons icon">&#xE145;</i>
 
-                <i class="material-icons icon">&#xE145;</i>
+        </button>
 
-            </button>
+        <alerts:warning it="${it}"/>
 
-            <section class="grid-demo">
+        <div class="grid">
 
-                ${it.setUnavailablePortlets()}
+            <j:set var="portlets" value="${it.monitor.getAvailablePortlets(it.run)}"/>
 
-                <j:set var="unavailablePortlets" value="${it.getUnavailablePortlets()}"/>
+            <j:forEach var="portlet" items="${portlets}">
 
-                <j:if test="${unavailablePortlets.size() > 0}">
+                <portlet:portlet portlet="${portlet}"/>
 
-                    ${it.removeUnavailablePortlets()}
-
-                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                        <h4 class="alert-heading">Some monitors aren't available anymore!</h4>
-                        <p>It looks like the monitors with the ids
-                            <strong>${unavailablePortlets}</strong>
-                            are no longer available. They were automatically removed from the current user configuration.</p>
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true"><i class="material-icons icon">&#xE5CD;</i></span></button>
-                    </div>
-
-                </j:if>
-
-                <div class="grid">
-
-                    <j:set var="portlets" value="${it.monitor.getAvailablePortlets(it.run)}"/>
-
-                    <j:forEach var="portlet" items="${portlets}">
-                        
-                        <div class="muuri-item hidden" data-id="${portlet.id}"
-                             data-color="#000000" data-title="${portlet.title}" default-width="${portlet.preferredWidth}"
-                             default-height="${portlet.preferredHeight}" default-color="#000000">
-
-                            <div class="muuri-item-content">
-
-                                <div class="card" style="color: #000000">
-
-                                    <div class="plugin-card-id">
-
-                                        <j:if test="${portlet.detailViewUrl.isPresent()}">
-                                            <a class="plugin-link" style="color: #000000" href="${portlet.detailViewUrl.get()}">
-                                                ${portlet.title}</a>
-                                        </j:if>
-
-                                        <j:if test="${!portlet.detailViewUrl.isPresent()}">
-                                            ${portlet.title}
-                                        </j:if>
-
-                                    </div>
-
-                                    <div class="plugin-card-content">
-
-                                        <st:include page="monitor.jelly" it="${portlet}"/>
-
-                                    </div>
-
-                                    <div class="plugin-remove">
-                                        <i class="material-icons icon">&#xE5CD;</i></div>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                    </j:forEach>
-
-                </div>
-
-            </section>
-
-            <!-- MODALS -->
-
-            <!-- Config Modal -->
-            <div class="modal right fade" id="configModal" tabindex="-1" aria-labelledby="configModalLabel">
-
-                <div class="modal-dialog">
-
-                    <div class="modal-content">
-
-                        <div class="modal-header">
-
-                            <h5 class="modal-title" id="configModalLabel">
-
-                                <img src="${resURL}/plugin/pull-request-monitoring/icons/washington.png" width="15%" height="15%"/>
-                                ${%configModal.title}
-
-                            </h5>
-
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <i class="material-icons icon">&#xe5cd;</i>
-                            </button>
-
-                        </div>
-
-                        <div class="modal-body">
-
-                            <div class="row">
-
-                                <div class="col-9">
-
-                                    <pre id="config"/>
-
-                                </div>
-
-                                <div class="col-3">
-
-                                    <button id="copy" type="button" class="btn btn-light float-right"
-                                            data-toggle="tooltip" data-placement="bottom" title="Copy to clipboard">
-                                        <i class="material-icons icon">&#xe14d;</i>
-                                    </button>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            <!--  Add Item Modal -->
-            <div class="modal fade" id="itemsModal" tabindex="-1" aria-labelledby="itemsModalLabel" aria-hidden="true">
-
-                <div class="modal-dialog modal-lg modal-dialog-centered">
-
-                    <div class="modal-content">
-
-                        <div class="modal-header">
-
-                            <h3 class="modal-title" id="itemsModalLabel">${%itemModal.title}</h3>
-
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <i class="material-icons icon">&#xe5cd;</i>
-                            </button>
-
-                        </div>
-
-                        <div class="modal-body">
-
-                            <div class="container-fluid">
-
-                                <div class="row">
-
-                                    <div class="col-sm-12">
-
-                                        <h5>${%itemModal.plugin}</h5>
-
-                                        <j:if test="${portlets.size() == 0}">
-
-                                            <p>${%itemModal.empty}</p>
-
-                                        </j:if>
-
-                                        <j:if test="${portlets.size() > 0}">
-
-                                            <select class="monitor-selection" id="monitor" name="monitor-selection" style="width: 100%">
-
-                                                <option value="">${%itemModal.choose}</option>
-                                                <j:forEach var="portlet" items="${portlets}">
-                                                    <option value="${portlet.id}" icon="${resURL}${portlet.iconUrl}"
-                                                            width="${portlet.preferredWidth}" height="${portlet.preferredHeight}">${portlet.title}</option>
-                                                </j:forEach>
-
-                                            </select>
-
-                                        </j:if>
-
-                                    </div>
-
-                                </div>
-
-                                <div class="row">
-
-                                    <div class="col-sm-12">
-
-                                        <h5>${%itemModal.width}</h5>
-
-                                        <div class="range-slider width">
-
-                                            <input class="range-slider-range width" type="range" name="width" value="300" min="100" max="1000" step="10"/>
-                                            <span id="pluginWidth" class="range-slider-value width">0</span>
-
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-                                <div class="row">
-
-                                    <div class="col-sm-12">
-
-                                        <h5>${%itemModal.height}</h5>
-
-                                        <div class="range-slider height">
-
-                                            <input class="range-slider-range height" type="range" name="height" value="300" min="100" max="1000" step="10"/>
-                                            <span id="pluginHeight" class="range-slider-value height">0</span>
-
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-                                <div class="row">
-
-                                    <div class="col-sm-12">
-
-                                        <h5>${%itemModal.color}</h5>
-
-                                        <input type="color" name="color" value="#000000"/>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                        <div class="modal-footer">
-
-                            <button id="modalClose" type="button" class="btn btn-secondary" data-dismiss="modal">
-                                ${%itemModal.cancel}</button>
-
-                            <button type="button" id="submitButton" class="btn btn-primary add-more-items">${%itemModal.add}</button>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-            <!-- MODALS -->
+            </j:forEach>
 
         </div>
+
+        <!-- MODALS -->
+        <modals:config/>
+
+        <modals:add-portlet portlets="${portlets}"/>
 
         <script>var run = <st:bind value="${it}"/></script>
         <script type="text/javascript" src="${resURL}/plugin/pull-request-monitoring/js/pull-request-monitoring.js"/>

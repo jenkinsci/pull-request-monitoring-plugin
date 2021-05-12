@@ -1,0 +1,61 @@
+<?jelly escape-by-default='true'?>
+
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler">
+
+    <st:documentation>
+        The configuration modal.
+    </st:documentation>
+
+    <st:header name="Content-Type" value="text/html;charset=UTF-8"/>
+
+    <div class="modal right fade" id="configModal" tabindex="-1" aria-labelledby="configModalLabel">
+
+        <div class="modal-dialog">
+
+            <div class="modal-content">
+
+                <div class="modal-header">
+
+                    <h5 class="modal-title" id="configModalLabel">
+
+                        <img src="${resURL}/plugin/pull-request-monitoring/icons/washington.png" width="15%" height="15%"/>
+                        ${%configModal.title}
+
+                    </h5>
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <i class="material-icons icon">&#xe5cd;</i>
+                    </button>
+
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="row">
+
+                        <div class="col-9">
+
+                            <pre id="config"/>
+
+                        </div>
+
+                        <div class="col-3">
+
+                            <button id="copy" type="button" class="btn btn-light float-right"
+                                    data-toggle="tooltip" data-placement="bottom" title="Copy to clipboard">
+                                <i class="material-icons icon">&#xe14d;</i>
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</j:jelly>

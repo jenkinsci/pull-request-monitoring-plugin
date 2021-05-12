@@ -1,0 +1,34 @@
+<?jelly escape-by-default='true'?>
+
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler">
+    <st:documentation>
+        Creates a warning if portlets are not available anymore.
+
+        <st:attribute name="it" use="required">
+            Owner of the page.
+        </st:attribute>
+
+    </st:documentation>
+
+    <st:header name="Content-Type" value="text/html;charset=UTF-8"/>
+
+    <j:set var="unavailablePortlets" value="${it.getUnavailablePortlets()}"/>
+
+    <j:if test="${unavailablePortlets.size() > 0}">
+
+        <div class="alert alert-warning alert-dismissible fade show" role="alert" style="width: 95%">
+
+            <h4 class="alert-heading">${%title}</h4>
+
+            <p>${%description} <br/>
+                <strong>${unavailablePortlets}</strong> </p>
+
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true"><i class="material-icons icon">&#xE5CD;</i></span>
+            </button>
+
+        </div>
+
+    </j:if>
+
+</j:jelly>

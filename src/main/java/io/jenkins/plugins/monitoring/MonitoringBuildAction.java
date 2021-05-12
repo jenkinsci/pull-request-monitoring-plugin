@@ -25,7 +25,6 @@ import java.util.stream.Collectors;
 public class MonitoringBuildAction implements RunAction2 {
     private final Monitor monitor;
     private transient Run<?, ?> owner;
-    private transient List<String> unavailablePortlets;
 
     /**
      * Creates a new instance of {@link MonitoringBuildAction}.
@@ -146,14 +145,16 @@ public class MonitoringBuildAction implements RunAction2 {
         return monitor;
     }
 
-    public List<String> getUnavailablePortlets() {
-        return unavailablePortlets;
-    }
-
     /**
-     * Calculates the difference between all available monitors and those currently used by the user.
+     * Get all portlets, which are not available anymore.
+     *
+     * @return
+     *          a list of all unavailable portlet ids.
+     *
+     * @throws IOException
+     *          {@link MonitoringBuildAction#getConfiguration()} throws an error.
      */
-    public void setUnavailablePortlets() throws IOException {
+    public List<String> getUnavailablePortlets() throws IOException {
         JSONArray portlets = new JSONArray(this.getConfiguration());
 
         List<String> usedPlugins = new ArrayList<>();
@@ -165,30 +166,6 @@ public class MonitoringBuildAction implements RunAction2 {
 
         List<String> availablePlugins = this.monitor.getAvailablePortlets(this.owner)
                 .stream().map(MonitorPortlet::getId).collect(Collectors.toList());
-
-        this.unavailablePortlets = new ArrayList<String>(CollectionUtils.removeAll(usedPlugins, availablePlugins));
-    }
-
-    /**
-     * Removes the unavailable monitors from the current user configuration.
-     *
-     * @throws Exception
-     *              if update fails.
-     */
-    public void removeUnavailablePortlets() throws Exception {
-        JSONArray portlets = new JSONArray(this.getConfiguration());
-        JSONArray updatedPortlets = new JSONArray();
-
-        for (Object o : portlets) {
-            JSONObject portlet = (JSONObject) o;
-            String id = portlet.getString("id");
-
-            if (!this.unavailablePortlets.contains(id)) {
-                updatedPortlets.put(portlet);
-            }
-        }
-
-        this.updateUserConfiguration(updatedPortlets.toString());
-        this.unavailablePortlets.clear();
+        return new ArrayList<String>(CollectionUtils.removeAll(usedPlugins, availablePlugins));
     }
 }
