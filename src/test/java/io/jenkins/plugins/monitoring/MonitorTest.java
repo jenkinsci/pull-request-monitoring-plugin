@@ -21,7 +21,7 @@ import java.io.InputStream;
 /**
  * Unit tests for the {@link Monitor} step.
  *
- * @author simonsymhoven
+ * @author Simon Symhoven
  */
 public class MonitorTest {
 
@@ -49,9 +49,11 @@ public class MonitorTest {
         MonitoringBuildAction action = build.getAction(MonitoringBuildAction.class);
 
         jenkinsRule.assertBuildStatusSuccess(build);
+        jenkinsRule.assertLogContains("Portlets: []", build);
+        jenkinsRule.assertLogContains("Classes that implement 'MonitorView' interface: []", build);
         jenkinsRule.assertLogContains("Build is part of a pull request. Add monitor now.", build);
         Assert.assertNotNull(action);
-        Assert.assertEquals(action.getMonitor().getConfiguration(), "{\"plugins\":{}}");
+        Assert.assertEquals(action.getMonitor().getPortlets(), "[]");
     }
 
     /**
@@ -94,8 +96,9 @@ public class MonitorTest {
         MonitoringBuildAction action = build.getAction(MonitoringBuildAction.class);
 
         jenkinsRule.assertBuildStatus(Result.FAILURE, build);
+        jenkinsRule.assertLogContains("Classes that implement 'MonitorView' interface: []", build);
         jenkinsRule.assertLogContains(
-                "Can't find class 'io.jenkins.plugins.view' in list of available plugins!", build);
+                "Can't find the following portlet classes [io.jenkins.plugins.view] in list of available plugins!", build);
         Assert.assertNull(action);
     }
 

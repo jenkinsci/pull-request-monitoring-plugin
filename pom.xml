@@ -35,6 +35,7 @@
         <muuri-api.version>0.9.3-3</muuri-api.version>
         <select2-api.version>4.0.13-2</select2-api.version>
         <popper-api.version>1.16.1-2</popper-api.version>
+        <json-schema.version>1.5.1</json-schema.version>
         <json.version>20210307</json.version>
 
         <junit-plugin.version>1.49</junit-plugin.version>
@@ -127,6 +128,11 @@
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
             <version>${json.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.everit.json</groupId>
+            <artifactId>org.everit.json.schema</artifactId>
+            <version>${json-schema.version}</version>
         </dependency>
 
         <!-- Workflow dependencies -->

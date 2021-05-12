@@ -4,9 +4,11 @@ import hudson.model.Run;
 import hudson.model.User;
 import jenkins.model.RunAction2;
 import org.apache.commons.collections.CollectionUtils;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.kohsuke.stapler.bind.JavaScriptMethod;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,7 +25,7 @@ import java.util.stream.Collectors;
 public class MonitoringBuildAction implements RunAction2 {
     private final Monitor monitor;
     private transient Run<?, ?> owner;
-    private transient List<String> unavailableMonitors;
+    private transient List<String> unavailablePortlets;
 
     /**
      * Creates a new instance of {@link MonitoringBuildAction}.
@@ -42,7 +44,7 @@ public class MonitoringBuildAction implements RunAction2 {
     /**
      * Sets the default for {@link MonitorUserProperty}.
      */
-    private void setDefaultUserProperty() {
+    private void setDefaultUserProperty() throws IOException {
         User user = User.current();
 
         if (user == null) {
@@ -50,7 +52,9 @@ public class MonitoringBuildAction implements RunAction2 {
         }
 
         MonitorUserProperty property = user.getProperty(MonitorUserProperty.class);
-        property.update("default", this.monitor.getConfiguration());
+        property.update("default", this.monitor.getPortlets());
+
+        user.save();
     }
 
     /**
@@ -61,7 +65,7 @@ public class MonitoringBuildAction implements RunAction2 {
      *
      */
     @JavaScriptMethod
-    public void updateUserConfiguration(String config) {
+    public void updateUserConfiguration(String config) throws IOException {
         User user = User.current();
 
         if (user == null) {
@@ -70,6 +74,7 @@ public class MonitoringBuildAction implements RunAction2 {
 
         MonitorUserProperty property = user.getProperty(MonitorUserProperty.class);
         property.update(getProjectId(), config);
+        user.save();
     }
 
     /**
@@ -81,14 +86,14 @@ public class MonitoringBuildAction implements RunAction2 {
      *          for actual project.
      */
     @JavaScriptMethod
-    public String getConfiguration() {
+    public String getConfiguration() throws IOException {
         //todo: Work around, because no user is available when the action is added, so can not do this in ctor.
         setDefaultUserProperty();
 
         User user = User.current();
 
         if (user == null) {
-            return this.monitor.getConfiguration();
+            return this.monitor.getPortlets();
         }
 
         MonitorUserProperty property = user.getProperty(MonitorUserProperty.class);
@@ -141,22 +146,27 @@ public class MonitoringBuildAction implements RunAction2 {
         return monitor;
     }
 
-    public List<String> getUnavailableMonitors() {
-        return unavailableMonitors;
+    public List<String> getUnavailablePortlets() {
+        return unavailablePortlets;
     }
 
     /**
      * Calculates the difference between all available monitors and those currently used by the user.
      */
-    public void setUnavailableMonitors() {
-        JSONObject actualConfig = new JSONObject(this.getConfiguration());
-        JSONObject plugins = actualConfig.getJSONObject("plugins");
+    public void setUnavailablePortlets() throws IOException {
+        JSONArray portlets = new JSONArray(this.getConfiguration());
 
-        List<String> usedPlugins = new ArrayList<>(plugins.keySet());
-        List<String> availablePlugins = this.monitor.getAvailablePlugins(this.owner)
-                .stream().map(MonitorView::getId).collect(Collectors.toList());
+        List<String> usedPlugins = new ArrayList<>();
 
-        this.unavailableMonitors = new ArrayList<String>(CollectionUtils.removeAll(usedPlugins, availablePlugins));
+        for (Object o : portlets) {
+            JSONObject portlet = (JSONObject) o;
+            usedPlugins.add(portlet.getString("id"));
+        }
+
+        List<String> availablePlugins = this.monitor.getAvailablePortlets(this.owner)
+                .stream().map(MonitorPortlet::getId).collect(Collectors.toList());
+
+        this.unavailablePortlets = new ArrayList<String>(CollectionUtils.removeAll(usedPlugins, availablePlugins));
     }
 
     /**
@@ -165,12 +175,20 @@ public class MonitoringBuildAction implements RunAction2 {
      * @throws Exception
      *              if update fails.
      */
-    public void removeUnavailableMonitors() throws Exception {
-        JSONObject actualConfig = new JSONObject(this.getConfiguration());
-        JSONObject plugins = actualConfig.getJSONObject("plugins");
-        this.unavailableMonitors.forEach(plugins::remove);
-        actualConfig.put("plugins", plugins);
-        this.updateUserConfiguration(actualConfig.toString());
-        this.unavailableMonitors.clear();
+    public void removeUnavailablePortlets() throws Exception {
+        JSONArray portlets = new JSONArray(this.getConfiguration());
+        JSONArray updatedPortlets = new JSONArray();
+
+        for (Object o : portlets) {
+            JSONObject portlet = (JSONObject) o;
+            String id = portlet.getString("id");
+
+            if (!this.unavailablePortlets.contains(id)) {
+                updatedPortlets.put(portlet);
+            }
+        }
+
+        this.updateUserConfiguration(updatedPortlets.toString());
+        this.unavailablePortlets.clear();
     }
 }

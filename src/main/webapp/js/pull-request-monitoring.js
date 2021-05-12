@@ -24,39 +24,37 @@
     /**
      * Gets the current dashboard configuration as json.
      *
-     * @returns {json}
-     *          the dashboard configuration as json.
+     * @returns {string}
+     *          the dashboard configuration as json string.
      */
     function getCurrentConfig() {
 
-        let plugins = grid.getItems().filter(function(item) {
-            return item.isActive();
-        }).map(function(item) {
-            const id = item.getElement().getAttribute('data-id');
-            let pluginConfig = `"${id}":{`
+        let plugins = grid.getItems()
+            .filter(item => item.isActive())
+            .map(function(item) {
+                const id = item.getElement().getAttribute('data-id');
+                let pluginConfig = `{"id":"${id}"`
 
-            const width = Math.round(item.getWidth());
-            if (String(width) !== item.getElement().getAttribute('default-width')) {
-                pluginConfig += `"width":${width},`
-            }
+                const width = Math.round(item.getWidth());
+                if (String(width) !== item.getElement().getAttribute('default-width')) {
+                    pluginConfig += `,"width":${width}`
+                }
 
-            const height = Math.round(item.getHeight());
-            if (String(height) !== item.getElement().getAttribute('default-height')) {
-                pluginConfig += `"height":${height},`
-            }
+                const height = Math.round(item.getHeight());
+                if (String(height) !== item.getElement().getAttribute('default-height')) {
+                    pluginConfig += `,"height":${height}`
+                }
 
-            const color = item.getElement().getAttribute('data-color');
-            if (color !== item.getElement().getAttribute('default-color')) {
-                pluginConfig += `"color":"${color}"`
-            }
-            pluginConfig += "}";
+                const color = item.getElement().getAttribute('data-color');
+                if (color !== item.getElement().getAttribute('default-color')) {
+                    pluginConfig += `,"color":"${color}"`
+                }
+                pluginConfig += "}";
 
-            return pluginConfig;
-        }).join(', ');
+                return pluginConfig;
+            }).join(', ');
 
-        const config = `{"plugins":{${plugins}}}`;
-
-        return JSON.parse(config);
+        return `[${plugins}]`;
 
     }
 
@@ -127,9 +125,8 @@
      */
     function syntaxHighlight(json) {
         json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-        const reg = /("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g;
-        return json.replace(reg, function (match) {
-            let cls = 'number';
+        return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+            var cls = 'number';
             if (/^"/.test(match)) {
                 if (/:$/.test(match)) {
                     cls = 'key';
@@ -146,23 +143,13 @@
     }
 
     /**
-     * Updated the config panel on the right side of a build action
-     * with information about current configuration.
-     */
-    function updateConfigPanel() {
-
-        let config = document.getElementById('config');
-        config.innerHTML = syntaxHighlight(JSON.stringify(getCurrentConfig(), null, 3));
-
-    }
-
-    /**
      *  Updates the user property with the current grid config form dashboard.
      */
     function updateConfig() {
 
-        run.updateUserConfiguration(JSON.stringify(getCurrentConfig()));
-        updateConfigPanel();
+        const config = getCurrentConfig();
+        run.updateUserConfiguration(config);
+        $('#config').html(syntaxHighlight(config));
 
     }
 
@@ -177,18 +164,10 @@
      */
     function changeInput(id, disabled) {
 
-        let plugins = $("#monitor option")
-        Array.from(plugins).filter(function(item) {
-            return item.value === id;
-        }).map(function(item) {
+        let plugin = $('#monitor option[value="' + id + '"]');
 
-            if (disabled === 'true') {
-                item.setAttribute('disabled', disabled);
-            } else {
-                item.removeAttribute('disabled');
-            }
-
-        });
+        disabled === 'true' ?
+            plugin.attr('disabled', disabled) : plugin.removeAttr('disabled');
 
     }
 
@@ -206,7 +185,6 @@
 
         grid.hide(elemToRemove, {onFinish: () => {
                 changeInput(elem.getAttribute('data-id'), 'false');
-                updateConfig();
             }});
 
     }
@@ -306,45 +284,27 @@
 
         // Remove html .hidden class
         let pluginsToHide = document.getElementsByClassName('muuri-item');
-
         for (let plugin of pluginsToHide) {
             plugin.classList.remove('hidden');
         }
 
         let plugins = [];
 
-        Object.keys(configuration.plugins).forEach((id) => {
-            let plugin = grid.getItems().find(function (item) {
-                return item.getElement().getAttribute('data-id') === id;
-            });
+        configuration.forEach((portlet) => {
+            let plugin = grid.getItems().find(item => item.getElement().getAttribute('data-id') === portlet.id);
 
-            let color;
-            let width;
-            let height;
+            const color = portlet.hasOwnProperty("color") ?
+                portlet.color : plugin.getElement().getAttribute('default-color');
 
-            if (configuration.plugins[String(id)].hasOwnProperty("color")) {
-                color = configuration.plugins[String(id)].color;
-            } else {
-                color = plugin.getElement().getAttribute('default-color');
-            }
+           const width = portlet.hasOwnProperty("width") ?
+               portlet.width : plugin.getElement().getAttribute('default-width');
 
-            if (configuration.plugins[String(id)].hasOwnProperty("width")) {
-                width = configuration.plugins[String(id)].width;
-            } else {
-                width = plugin.getElement().getAttribute('default-width');
-            }
-
-            if (configuration.plugins[String(id)].hasOwnProperty("height")) {
-                height = configuration.plugins[String(id)].height;
-            } else {
-                height = plugin.getElement().getAttribute('default-height');
-            }
+           const height = portlet.hasOwnProperty("height") ?
+                portlet.height : plugin.getElement().getAttribute('default-height');
 
             plugin.getElement().style.width = `${width}px`;
-
             plugin.getElement().style.height = `${height}px`;
             plugin.getElement().style.lineHeihgt = `${height}px`;
-
             plugin.getElement().setAttribute('data-color', color);
             plugin.getElement().style.color = color;
             plugin.getElement().querySelector('.card').style.color = color;
@@ -353,19 +313,17 @@
             const link = plugin.getElement().querySelector('.plugin-link');
             link !== null ? link.style.color = color : link
 
-            changeInput(id, 'true');
+            changeInput(portlet.id, 'true');
             plugins.push(plugin);
 
         });
 
         // Merge DOM elements with elements to show and sort it
         let pluginsToSort = [...plugins];
-        grid.getItems().forEach(function(item) {
+        grid.getItems().forEach((item) => {
             const dataId = item.getElement().getAttribute('data-id');
 
-            let plugin = plugins.find(function (item) {
-                return item.getElement().getAttribute('data-id') === dataId;
-            });
+            let plugin = plugins.find(item => item.getElement().getAttribute('data-id') === dataId);
 
             if (!plugin) {
                 pluginsToSort.push(item);
@@ -387,12 +345,8 @@
     function initDashboard(config) {
 
         configuration = JSON.parse(config);
-
         initGrid();
-
         loadGrid();
-
-        updateConfigPanel();
 
     }
 
@@ -449,6 +403,9 @@
         });
     });
 
+    /**
+     * Select2 initialisation.
+     */
     $(document).ready(function() {
         $('.monitor-selection').select2({
             dropdownParent: $('#itemsModal'),
@@ -456,13 +413,24 @@
         });
     });
 
+    /**
+     * Formats the dropdown list.
+     *
+     * @param state
+     *          the actual state of dropdown list element.
+     *
+     * @returns {jQuery|HTMLElement|*}
+     *          the formatted dropdown element.
+     */
     function formatState(state) {
         if (!state.id) {
             return state.text;
         }
 
         return $(
-            '<span><img width="25px;" src="' + state.element.getAttribute('icon') + '" class="img-flag" /> ' + state.text + '</span>'
+            '<span>' +
+                '<img width="25px;" src="' + state.element.getAttribute('icon') + '" class="img-flag" /> '
+            + state.text + '</span>'
         );
     }
 

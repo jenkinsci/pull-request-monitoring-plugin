@@ -9,19 +9,26 @@ import hudson.model.Run;
 import hudson.model.TaskListener;
 import jenkins.scm.api.SCMHead;
 import jenkins.scm.api.mixin.ChangeRequestSCMHead;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.IllegalClassException;
 import org.apache.commons.lang.StringUtils;
+import org.everit.json.schema.Schema;
+import org.everit.json.schema.loader.SchemaLoader;
 import org.jenkinsci.plugins.workflow.multibranch.BranchJobProperty;
 import org.jenkinsci.plugins.workflow.steps.Step;
 import org.jenkinsci.plugins.workflow.steps.StepContext;
 import org.jenkinsci.plugins.workflow.steps.StepExecution;
 import org.jenkinsci.plugins.workflow.steps.SynchronousStepExecution;
 import org.jenkinsci.plugins.workflow.steps.StepDescriptor;
+import org.json.JSONArray;
 import org.json.JSONObject;
+import org.json.JSONTokener;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 
+import java.io.InputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -35,7 +42,7 @@ import java.util.stream.Collectors;
  */
 public class Monitor extends Step implements Serializable {
     private static final long serialVersionUID = -1329798203887148860L;
-    private String configuration;
+    private String portlets;
 
     /**
      * Creates a new instance of {@link Monitor}.
@@ -43,37 +50,43 @@ public class Monitor extends Step implements Serializable {
     @DataBoundConstructor
     public Monitor() {
         super();
-        this.configuration = "{\"plugins\":{}}";
+        this.portlets = "[]";
     }
 
     /**
-     * Sets the configuration for the dashboard.
+     * Sets the portlets for the dashboard.
      *
-     * @param configuration
+     * @param portlets
      *         the configuration as json
      */
     @DataBoundSetter
-    public void setConfiguration(final String configuration) {
-        this.configuration = new JSONObject(configuration).toString();
+    public void setPortlets(final String portlets) {
+        InputStream schemaStream = getClass().getResourceAsStream("/json-schema/schema.json");
+        JSONObject jsonSchema = new JSONObject(new JSONTokener(schemaStream));
+        JSONArray jsonSubject = new JSONArray(portlets);
+        Schema schema = SchemaLoader.load(jsonSchema);
+        schema.validate(jsonSubject);
+
+        this.portlets = jsonSubject.toString();
     }
 
-    public String getConfiguration() {
-        return configuration;
+    public String getPortlets() {
+        return portlets;
     }
 
     /**
-     * Gets all {@link MonitorView} for corresponding {@link MonitorFactory}.
+     * Gets all {@link MonitorPortlet} for corresponding {@link MonitorPortlet.MonitorPortletFactory}.
      *
      * @param build
      *          the reference build.
      *
      * @return
-     *          all available {@link MonitorView}.
+     *          all available {@link MonitorPortlet}.
      */
-    public List<? extends MonitorView> getAvailablePlugins(Run<?, ?> build) {
-        return ExtensionList.lookup(MonitorFactory.class)
+    public List<? extends MonitorPortlet> getAvailablePortlets(Run<?, ?> build) {
+        return ExtensionList.lookup(MonitorPortlet.MonitorPortletFactory.class)
                 .stream()
-                .map(monitorFactory -> monitorFactory.getMonitorViews(build))
+                .map(factory -> factory.getPortlets(build))
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
     }
@@ -98,26 +111,44 @@ public class Monitor extends Step implements Serializable {
 
         @Override
         public Void run() throws Exception {
-            JSONObject configuration = new JSONObject(monitor.getConfiguration());
+            JSONArray portlets = new JSONArray(monitor.getPortlets());
             getContext().get(TaskListener.class).getLogger()
-                    .println("Configuration: " + configuration.toString(3));
+                    .println("Portlets: " + portlets.toString(3));
 
-            List<String> classes = monitor.getAvailablePlugins(getContext().get(Run.class))
+            List<String> classes = monitor.getAvailablePortlets(getContext().get(Run.class))
                     .stream()
-                    .map(MonitorView::getId)
+                    .map(MonitorPortlet::getId)
                     .collect(Collectors.toList());
 
             getContext().get(TaskListener.class).getLogger()
-                    .println("Classes that implement 'MonitorView' interface: "
-                            + StringUtils.join(classes, ","));
+                    .println("Classes that implement 'MonitorView' interface: ["
+                            + StringUtils.join(classes, ",") + "]");
 
-            for (String key : ((JSONObject) configuration.get("plugins")).keySet()) {
-                if (!classes.contains(key)) {
+            List<String> usedPortlets = new ArrayList<>();
+
+            for (Object o : portlets) {
+                JSONObject portlet = (JSONObject) o;
+                String id = portlet.getString("id");
+
+                if (usedPortlets.contains(id)) {
                     getContext().get(TaskListener.class).getLogger()
-                            .println("Can't find class '" + key + "' in list of available plugins!");
-
-                    throw new IllegalClassException(String.format("Can't find class '%s' in list of available plugins!", key));
+                            .println("Portlet with ID '" + id
+                                    + "' already defined in list of portlets! Will remove all duplicates.");
                 }
+                else {
+                    usedPortlets.add(id);
+                }
+            }
+
+            List<String> missedPortletIds = new ArrayList<String>(CollectionUtils.removeAll(usedPortlets, classes));
+
+            if (missedPortletIds.size() > 0) {
+                getContext().get(TaskListener.class).getLogger()
+                        .println("Can't find the following portlet classes "
+                                + missedPortletIds + " in list of available plugins!");
+
+                throw new IllegalClassException("Can't find the following portlet classes "
+                        + missedPortletIds + " in list of available plugins!");
             }
 
             final Run<?, ?> run = getContext().get(Run.class);
@@ -162,4 +193,5 @@ public class Monitor extends Step implements Serializable {
             return "Configure Monitoring Dashboard";
         }
     }
+
 }

@@ -1,13 +1,9 @@
 node {
      stage ('Pull Request Monitoring - Dashboard Configuration') {
          monitoring (
-                configuration:
+                portlets:
                 '''
-                    {
-                        "plugins": {
-
-                        }
-                    }
+                   []
                 '''
          )
      }
