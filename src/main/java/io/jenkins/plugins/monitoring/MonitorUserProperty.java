@@ -6,13 +6,13 @@ import hudson.model.User;
 import hudson.model.UserProperty;
 import hudson.model.UserPropertyDescriptor;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 
 /**
  * A {@link UserProperty} to store the json configuration per user as property.
  *
- * @author simonsymhoven
+ * @author Simon Symhoven
  */
 public class MonitorUserProperty extends UserProperty {
 
@@ -22,7 +22,7 @@ public class MonitorUserProperty extends UserProperty {
      * Creates a new {@link MonitorUserProperty}.
      */
     public MonitorUserProperty() {
-        this.properties = new ArrayList<>();
+        this.properties = Collections.emptyList();
     }
 
     public Collection<MonitorProperty> getProperties() {

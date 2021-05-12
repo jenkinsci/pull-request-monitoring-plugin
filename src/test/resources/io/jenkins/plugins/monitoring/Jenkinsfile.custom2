@@ -1,17 +1,16 @@
 node {
      stage ('Pull Request Monitoring - Dashboard Configuration') {
          monitoring (
-                configuration:
+                portlets:
                 '''
-                    {
-                        "plugins": {
-                            "io.jenkins.plugins.view": {
-                                "width": 4,
-                                "height": 4,
-                                "color": "black"
-                            }
+                    [
+                        {
+                            "id": "io.jenkins.plugins.view",
+                            "width": 400,
+                            "height": 400,
+                            "color": "#000000"
                         }
-                    }
+                    ]
                 '''
          )
      }

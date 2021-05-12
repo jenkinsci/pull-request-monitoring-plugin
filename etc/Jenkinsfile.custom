@@ -1,27 +1,16 @@
 node {
      stage ('Pull Request Monitoring - Dashboard Configuration') {
          monitoring (
-                configuration:
+                portlets:
                 '''
-                    {
-                        "plugins": {
-                            "io.jenkins.plugins.monitoring.examples.First.View1": {
-                                "width": 4,
-                                "height": 4,
-                                "color": "black"
-                            },
-                            "io.jenkins.plugins.monitoring.examples.First.View2": {
-                                "width": 2,
-                                "height": 4,
-                                "color": "red"
-                            },
-                            "io.jenkins.plugins.monitoring.examples.Second": {
-                                "width": 4,
-                                "height": 2,
-                                "color": "green"
-                            }
+                    [
+                        {
+                            "id": "io.jenkins.plugins.monitoring.examples.First.View1",
+                            "width": 400,
+                            "height": 400,
+                            "color": "#000000"
                         }
-                    }
+                    ]
                 '''
          )
      }

@@ -1,0 +1,34 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string",
+        "description": "The unique identifier for the portlet."
+      },
+      "width": {
+        "type": "integer",
+        "minimum": 100,
+        "maximum": 1000,
+        "description": "The width of the portlet."
+      },
+      "height": {
+        "type": "integer",
+        "minimum": 100,
+        "maximum": 1000,
+        "description": "The height of the portlet."
+      },
+      "color": {
+        "type": "string",
+        "description": "The color of the portlet."
+      }
+    },
+    "required": [
+      "id"
+    ],
+    "additionalProperties": false
+  },
+  "additionalItems": false
+}
