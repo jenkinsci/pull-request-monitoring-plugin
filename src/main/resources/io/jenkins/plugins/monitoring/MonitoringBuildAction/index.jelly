@@ -42,7 +42,8 @@
         <!-- MODALS -->
         <modals:config/>
 
-        <modals:add-portlet portlets="${portlets}"/>
+        <j:set var="factories" value="${it.monitor.getFactories()}"/>
+        <modals:add-portlet factories="${factories}" it="${it}"/>
 
         <script>var run = <st:bind value="${it}"/></script>
         <script type="text/javascript" src="${resURL}/plugin/pull-request-monitoring/js/pull-request-monitoring.js"/>
