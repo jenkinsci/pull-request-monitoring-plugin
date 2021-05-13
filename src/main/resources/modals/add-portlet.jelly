@@ -5,8 +5,12 @@
     <st:documentation>
         The configuration modal.
 
-        <st:attribute name="portlets" use="required">
-            The list of portlets (instances of MonitorPortlet).
+        <st:attribute name="factories" use="required">
+            The list of factories (instances of MonitorPortletFactory).
+        </st:attribute>
+
+        <st:attribute name="it" use="required">
+            Owner fo the run.
         </st:attribute>
     </st:documentation>
 
@@ -38,20 +42,30 @@
 
                                 <h5>${%itemModal.plugin}</h5>
 
-                                <j:if test="${portlets.size() == 0}">
+                                <j:if test="${factories.size() == 0}">
 
                                     <p>${%itemModal.empty}</p>
 
                                 </j:if>
 
-                                <j:if test="${portlets.size() > 0}">
+                                <j:if test="${factories.size() > 0}">
 
                                     <select class="monitor-selection" id="monitor" name="monitor-selection" style="width: 100%">
 
                                         <option value="">${%itemModal.choose}</option>
-                                        <j:forEach var="portlet" items="${portlets}">
-                                            <option value="${portlet.id}" icon="${resURL}${portlet.iconUrl}"
-                                                    width="${portlet.preferredWidth}" height="${portlet.preferredHeight}">${portlet.title}</option>
+
+                                        <j:forEach var="factory" items="${factories}">
+
+                                            <optgroup label="${factory.getDisplayName()}"/>
+
+                                            <j:set var="portlets" value="${it.monitor.getAvailablePortletsForFactory(it.run, factory)}"/>
+
+                                            <j:forEach var="portlet" items="${portlets}">
+                                                <option value="${portlet.id}" icon="${resURL}${portlet.iconUrl}"
+                                                        width="${portlet.preferredWidth}" height="${portlet.preferredHeight}">${portlet.title}</option>
+                                            </j:forEach>
+
+
                                         </j:forEach>
 
                                     </select>

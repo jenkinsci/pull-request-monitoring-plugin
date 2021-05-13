@@ -21,4 +21,11 @@ interface MonitorPortletFactory extends ExtensionPoint {
      */
     Collection<MonitorPortlet> getPortlets(Run<?, ?> build);
 
+    /**
+     * Defines the name of the factory.
+     *
+     * @return
+     *              the name to display for the factory.
+     */
+    String getDisplayName();
 }

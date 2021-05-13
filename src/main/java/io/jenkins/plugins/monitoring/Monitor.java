@@ -84,9 +84,23 @@ public class Monitor extends Step implements Serializable {
      *          all available {@link MonitorPortlet}.
      */
     public List<? extends MonitorPortlet> getAvailablePortlets(Run<?, ?> build) {
-        return ExtensionList.lookup(MonitorPortletFactory.class)
+        return getFactories()
                 .stream()
                 .map(factory -> factory.getPortlets(build))
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
+    }
+
+    public List<? extends MonitorPortletFactory> getFactories() {
+        return ExtensionList.lookup(MonitorPortletFactory.class);
+    }
+
+    public List<? extends MonitorPortlet> getAvailablePortletsForFactory(
+            Run<?, ?> build, MonitorPortletFactory factory) {
+        return getFactories()
+                .stream()
+                .filter(fac -> fac.equals(factory))
+                .map(fac -> fac.getPortlets(build))
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
     }
