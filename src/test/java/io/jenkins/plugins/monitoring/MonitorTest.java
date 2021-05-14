@@ -1,6 +1,6 @@
 package io.jenkins.plugins.monitoring;
 
-import hudson.model.Result;
+import hudson.ExtensionList;
 import jenkins.branch.BranchSource;
 import jenkins.scm.impl.mock.MockSCMController;
 import jenkins.scm.impl.mock.MockSCMDiscoverBranches;
@@ -9,6 +9,7 @@ import jenkins.scm.impl.mock.MockSCMSource;
 import org.jenkinsci.plugins.workflow.job.WorkflowJob;
 import org.jenkinsci.plugins.workflow.job.WorkflowRun;
 import org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject;
+import org.json.JSONArray;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -32,7 +33,7 @@ public class MonitorTest {
     public JenkinsRule jenkinsRule = new JenkinsRule();
 
     /**
-     * Test if default monitor and {@link MonitoringBuildAction} is added if {@link hudson.model.Run} is a pull request.
+     * Test if default monitor and {@link MonitoringDefaultAction} is added if {@link hudson.model.Run} is a pull request.
      *
      * @throws Exception
      *          if {@link JenkinsRule#waitUntilNoActivity()} fails.
@@ -46,12 +47,12 @@ public class MonitorTest {
 
         final WorkflowJob job = project.getItems().iterator().next();
         final WorkflowRun build = job.getLastBuild();
-        MonitoringBuildAction action = build.getAction(MonitoringBuildAction.class);
+        MonitoringDefaultAction action = build.getAction(MonitoringDefaultAction.class);
 
         jenkinsRule.assertBuildStatusSuccess(build);
-        jenkinsRule.assertLogContains("Portlets: []", build);
-        jenkinsRule.assertLogContains("Classes that implement 'MonitorPortlet' interface: []", build);
-        jenkinsRule.assertLogContains("Build is part of a pull request. Add 'MonitoringBuildAction' now.", build);
+        jenkinsRule.assertLogContains("[Monitor] Portlets: []", build);
+        jenkinsRule.assertLogContains("[Monitor] Classes that implement 'MonitorPortlet' interface: []", build);
+        jenkinsRule.assertLogContains("[Monitor] Build is part of a pull request. Add 'MonitoringBuildAction' now.", build);
         Assert.assertNotNull(action);
         Assert.assertEquals(action.getMonitor().getPortlets(), "[]");
     }
@@ -71,10 +72,10 @@ public class MonitorTest {
 
         final WorkflowJob job = project.getItems().iterator().next();
         final WorkflowRun build = job.getLastBuild();
-        MonitoringBuildAction action = build.getAction(MonitoringBuildAction.class);
+        MonitoringDefaultAction action = build.getAction(MonitoringDefaultAction.class);
 
         jenkinsRule.assertBuildStatusSuccess(build);
-        jenkinsRule.assertLogContains("Build is not part of a pull request. Skip adding 'MonitoringBuildAction'.", build);
+        jenkinsRule.assertLogContains("[Monitor] Build is not part of a pull request. Skip adding 'MonitoringBuildAction'.", build);
         Assert.assertNull(action);
     }
 
@@ -93,14 +94,14 @@ public class MonitorTest {
 
         final WorkflowJob job = project.getItems().iterator().next();
         final WorkflowRun build = job.getLastBuild();
-        MonitoringBuildAction action = build.getAction(MonitoringBuildAction.class);
+        MonitoringDefaultAction action = build.getAction(MonitoringDefaultAction.class);
 
         jenkinsRule.assertBuildStatusSuccess(build);
-        jenkinsRule.assertLogContains("Classes that implement 'MonitorPortlet' interface: []", build);
+        jenkinsRule.assertLogContains("[Monitor] Classes that implement 'MonitorPortlet' interface: []", build);
         jenkinsRule.assertLogContains(
-                "Can't find the following portlet classes [io.jenkins.plugins.view] in list of available portlets!", build);
+                "[Monitor] Can't find the following portlet classes [io.jenkins.plugins.view] in list of available portlets!", build);
         jenkinsRule.assertLogContains(
-                "Cleaned Portlets: []", build);
+                "[Monitor] Cleaned Portlets: []", build);
         Assert.assertEquals(action.getMonitor().getPortlets(), "[]");
     }
 
@@ -118,6 +119,7 @@ public class MonitorTest {
      *
      */
     private WorkflowMultiBranchProject createRepositoryWithPr(String jenkinsfile) throws IOException {
+
         MockSCMController controller = MockSCMController.create();
         controller.createRepository("scm-repo");
         controller.createBranch("scm-repo", "master");

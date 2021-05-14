@@ -5,8 +5,8 @@
     <st:documentation>
         The configuration modal.
 
-        <st:attribute name="factories" use="required">
-            The list of factories (instances of MonitorPortletFactory).
+        <st:attribute name="portlets" use="required">
+            All available portlets.
         </st:attribute>
 
         <st:attribute name="it" use="required">
@@ -42,35 +42,39 @@
 
                                 <h5>${%itemModal.plugin}</h5>
 
-                                <j:if test="${factories.size() == 0}">
+                                <j:choose>
 
-                                    <p>${%itemModal.empty}</p>
+                                    <j:when test="${portlets.size() == 0}">
 
-                                </j:if>
+                                        <p>${%itemModal.empty}</p>
 
-                                <j:if test="${factories.size() > 0}">
+                                    </j:when>
 
-                                    <select class="monitor-selection" id="monitor" name="monitor-selection" style="width: 100%">
+                                    <j:otherwise>
 
-                                        <option value="">${%itemModal.choose}</option>
+                                        <select class="monitor-selection" id="monitor" name="monitor-selection" style="width: 100%">
 
-                                        <j:forEach var="factory" items="${factories}">
+                                            <option value="">${%itemModal.choose}</option>
 
-                                            <optgroup label="${factory.getDisplayName()}"/>
+                                            <j:forEach var="factory" items="${it.monitor.getFactories()}">
 
-                                            <j:set var="portlets" value="${it.monitor.getAvailablePortletsForFactory(it.run, factory)}"/>
+                                                <optgroup label="${factory.getDisplayName()}"/>
 
-                                            <j:forEach var="portlet" items="${portlets}">
-                                                <option value="${portlet.id}" icon="${resURL}${portlet.iconUrl}"
-                                                        width="${portlet.preferredWidth}" height="${portlet.preferredHeight}">${portlet.title}</option>
+                                                <j:set var="portlets" value="${it.monitor.getAvailablePortletsForFactory(it.run, factory)}"/>
+
+                                                <j:forEach var="portlet" items="${portlets}">
+                                                    <option value="${portlet.id}" icon="${resURL}${portlet.iconUrl}"
+                                                            width="${portlet.preferredWidth}" height="${portlet.preferredHeight}">${portlet.title}</option>
+                                                </j:forEach>
+
+
                                             </j:forEach>
 
+                                        </select>
 
-                                        </j:forEach>
+                                    </j:otherwise>
 
-                                    </select>
-
-                                </j:if>
+                                </j:choose>
 
                             </div>
 
