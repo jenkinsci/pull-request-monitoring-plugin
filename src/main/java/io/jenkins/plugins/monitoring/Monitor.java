@@ -26,6 +26,7 @@ import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 
 import java.io.InputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -38,8 +39,8 @@ import java.util.stream.Collectors;
  *
  * @author Simon Symhoven
  */
-public class Monitor extends Step {
-
+public class Monitor extends Step implements Serializable {
+    private static final long serialVersionUID = -1329798203887148860L;
     private String portlets;
 
     /**
