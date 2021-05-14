@@ -135,7 +135,7 @@ public class Monitor extends Step implements Serializable {
                     .collect(Collectors.toList());
 
             getContext().get(TaskListener.class).getLogger()
-                    .println("Classes that implement 'MonitorView' interface: ["
+                    .println("Classes that implement 'MonitorPortlet' interface: ["
                             + StringUtils.join(classes, ",") + "]");
 
             List<String> usedPortlets = new ArrayList<>();
@@ -147,7 +147,7 @@ public class Monitor extends Step implements Serializable {
                 if (usedPortlets.contains(id)) {
                     getContext().get(TaskListener.class).getLogger()
                             .println("Portlet with ID '" + id
-                                    + "' already defined in list of portlets! Will remove all duplicates.");
+                                    + "' already defined in list of portlets. Skip adding this portlet!");
                 }
                 else {
                     usedPortlets.add(id);
@@ -159,10 +159,20 @@ public class Monitor extends Step implements Serializable {
             if (missedPortletIds.size() > 0) {
                 getContext().get(TaskListener.class).getLogger()
                         .println("Can't find the following portlet classes "
-                                + missedPortletIds + " in list of available plugins!");
+                                + missedPortletIds + " in list of available portlets! Will remove from current configuration.");
 
-                throw new IllegalClassException("Can't find the following portlet classes "
-                        + missedPortletIds + " in list of available plugins!");
+                JSONArray cleanedPortlets = new JSONArray();
+                for (Object o : portlets) {
+                    JSONObject portlet = (JSONObject) o;
+                    if (!missedPortletIds.contains(portlet.getString("id"))) {
+                        cleanedPortlets.put(portlet);
+                    }
+                }
+
+                monitor.setPortlets(cleanedPortlets.toString(3));
+
+                getContext().get(TaskListener.class).getLogger()
+                        .println("Cleaned Portlets: " + cleanedPortlets.toString(3));
             }
 
             final Run<?, ?> run = getContext().get(Run.class);
@@ -172,12 +182,12 @@ public class Monitor extends Step implements Serializable {
 
             if (head instanceof ChangeRequestSCMHead) {
                 getContext().get(TaskListener.class).getLogger()
-                        .println("Build is part of a pull request. Add monitor now.");
+                        .println("Build is part of a pull request. Add 'MonitoringBuildAction' now.");
                 run.addAction(new MonitoringBuildAction(run, monitor));
             }
             else {
                 getContext().get(TaskListener.class).getLogger()
-                        .println("Build is not part of a pull request. Skip adding monitor.");
+                        .println("Build is not part of a pull request. Skip adding 'MonitoringBuildAction'.");
             }
 
             return null;
