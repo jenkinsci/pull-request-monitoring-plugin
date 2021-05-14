@@ -5,81 +5,73 @@
     view.getId(function(id) {
         const chartDom = document.getElementById(id.responseObject());
         const myChart = echarts.init(chartDom);
+        const sunburstData = JSON.parse(chartDom.getAttribute('data'));
+        console.log(sunburstData.new.total);
 
         const data = [{
-            name: 'All Severeties',
+            name: 'All\nIssues',
+            itemStyle: {
+                color:  '#70a1d7'
+            },
             children: [{
-                name: 'Low-Prio\nWarning',
-                value: 15,
+                name: 'New',
+                itemStyle: {
+                    color: '#EF9A9A'
+                },
+                value: sunburstData.new.total,
                 children: [{
-                    name: 'New',
-                    value: 1
+                    name: 'Low-Prio',
+                    value: sunburstData.new.low,
+                    itemStyle: {
+                        color: '#e9e2d0'
+                    }
                 }, {
-                    name: 'Outstanding',
-                    value: 10
+                    name: 'Normal-Prio',
+                    value: sunburstData.new.normal,
+                    itemStyle: {
+                        color: '#ffcda3'
+                    }
                 }, {
-                    name: 'Fixed',
-                    value: 4
+                    name: 'High-Prio',
+                    value: sunburstData.new.high,
+                    itemStyle: {
+                        color: '#ee9595'
+                    }
+                },  {
+                    name: 'Error',
+                    value: sunburstData.new.error,
+                    itemStyle: {
+                        color: '#f05454'
+                    }
                 }]
             }, {
-                name: 'Normal-Prio\nWarning',
-                value: 20,
-                children: [{
-                    name: 'New',
-                    value: 1
-                }, {
-                    name: 'Outstanding',
-                    value: 10
-                }, {
-                    name: 'Fixed',
-                    value: 9
-                }]
+                name: 'Outstanding',
+                value: sunburstData.outstanding,
+                itemStyle: {
+                    color: '#FFF59D'
+                }
             }, {
-                name: 'High-Prio\nWarning',
-                value: 15,
-                children: [{
-                    name: 'New',
-                    value: 10
-                }, {
-                    name: 'Outstanding',
-                    value: 3
-                }, {
-                    name: 'Fixed',
-                    value: 2
-                }]
-            }, {
-                name: 'Errors',
-                value: 10,
-                children: [{
-                    name: 'New',
-                    value: 5
-                }, {
-                    name: 'Outstanding',
-                    value: 3
-                }, {
-                    name: 'Fixed',
-                    value: 2
-                }]
+                name: 'Fixed',
+                value: sunburstData.fixed,
+                itemStyle: {
+                    color: '#A5D6A7'
+                }
             }]
         }];
 
         const option = {
-            visualMap: {
-                type: 'continuous',
-                min: 0,
-                max: 20,
-                inRange: {
-                    color: ['#A5D6A7', '#FFF59D', '#EF9A9A']
-                }
-            },
             series: {
+                sort: null,
                 type: 'sunburst',
                 data: data,
-                radius: [0, '90%'],
+                radius: ['15%', '80%'],
+                itemStyle: {
+                    color: '#ddd',
+                    borderWidth: 2
+                },
                 label: {
                     rotate: 'horizontal',
-
-                }
+                },
             },
             tooltip: {
                 trigger: 'item',
