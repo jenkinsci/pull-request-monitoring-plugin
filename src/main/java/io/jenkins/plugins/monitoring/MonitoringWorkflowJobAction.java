@@ -9,7 +9,7 @@ import java.io.File;
  * This action displays a link on the side panel of a {@link WorkflowJob}. The action is only displayed if the job
  * is a pull request, which is described in the associated {@link MonitoringWorkflowJobActionFactory}.
  * The action is responsible to reference the latest build of the job and navigates to the corresponding
- * {@link MonitoringBuildAction}.
+ * {@link MonitoringDefaultAction}.
  *
  * @author Simon Symhoven
  */

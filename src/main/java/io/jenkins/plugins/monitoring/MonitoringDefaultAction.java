@@ -22,12 +22,12 @@ import java.util.stream.Collectors;
  *
  * @author Simon Symhoven
  */
-public class MonitoringBuildAction implements RunAction2 {
+public class MonitoringDefaultAction implements RunAction2 {
     private final Monitor monitor;
-    private transient Run<?, ?> owner;
+    private transient Run<?, ?> run;
 
     /**
-     * Creates a new instance of {@link MonitoringBuildAction}.
+     * Creates a new instance of {@link MonitoringDefaultAction}.
      *
      * @param run
      *          the run that owns this action.
@@ -35,8 +35,8 @@ public class MonitoringBuildAction implements RunAction2 {
      * @param monitor
      *          the {@link Monitor} to be add.
      */
-    public MonitoringBuildAction(Run<?, ?> run, Monitor monitor) {
-        this.owner = run;
+    public MonitoringDefaultAction(Run<?, ?> run, Monitor monitor) {
+        this.run = run;
         this.monitor = monitor;
     }
 
@@ -51,8 +51,7 @@ public class MonitoringBuildAction implements RunAction2 {
         }
 
         MonitorUserProperty property = user.getProperty(MonitorUserProperty.class);
-        property.update("default", this.monitor.getPortlets());
-
+        property.update("default", resolvePortlets());
         user.save();
     }
 
@@ -92,7 +91,7 @@ public class MonitoringBuildAction implements RunAction2 {
         User user = User.current();
 
         if (user == null) {
-            return this.monitor.getPortlets();
+            return resolvePortlets();
         }
 
         MonitorUserProperty property = user.getProperty(MonitorUserProperty.class);
@@ -108,7 +107,7 @@ public class MonitoringBuildAction implements RunAction2 {
      *          the display name of the current project as id.
      */
     public String getProjectId() {
-        String id = this.owner.getParent().getParent().getDisplayName();
+        String id = getRun().getParent().getParent().getDisplayName();
         return id.toLowerCase().replaceAll(" ", "-");
     }
 
@@ -119,7 +118,7 @@ public class MonitoringBuildAction implements RunAction2 {
 
     @Override
     public String getDisplayName() {
-        return String.format("%s '%s'", MonitoringMultibranchProjectAction.getName(), owner.getDisplayName());
+        return String.format("%s '%s'", MonitoringMultibranchProjectAction.getName(), getRun().getDisplayName());
     }
 
     @Override
@@ -129,20 +128,35 @@ public class MonitoringBuildAction implements RunAction2 {
 
     @Override
     public void onAttached(Run<?, ?> run) {
-        this.owner = run;
+        this.run = run;
     }
 
     @Override
     public void onLoad(Run<?, ?> run) {
-        this.owner = run;
+        this.run = run;
     }
 
     public Run<?, ?> getRun() {
-        return owner;
+        return run;
     }
 
     public Monitor getMonitor() {
         return monitor;
+    }
+
+    /**
+     * Resolves the portlet string of the {@link Monitor}.
+     *
+     * @return
+     *          the portlet string of {@link MonitoringCustomAction} if exists,
+     *          else the one of {@link MonitoringDefaultAction}.
+     */
+    public String resolvePortlets() {
+        MonitoringCustomAction action = getRun().getAction(MonitoringCustomAction.class);
+        if (action != null) {
+            return  action.getMonitor().getPortlets();
+        }
+        return getMonitor().getPortlets();
     }
 
     /**
@@ -152,7 +166,7 @@ public class MonitoringBuildAction implements RunAction2 {
      *          a list of all unavailable portlet ids.
      *
      * @throws IOException
-     *          {@link MonitoringBuildAction#getConfiguration()} throws an error.
+     *          {@link MonitoringDefaultAction#getConfiguration()} throws an error.
      */
     public List<String> getUnavailablePortlets() throws IOException {
         JSONArray portlets = new JSONArray(this.getConfiguration());
@@ -164,7 +178,7 @@ public class MonitoringBuildAction implements RunAction2 {
             usedPlugins.add(portlet.getString("id"));
         }
 
-        List<String> availablePlugins = this.monitor.getAvailablePortlets(this.owner)
+        List<String> availablePlugins = getMonitor().getAvailablePortlets(getRun())
                 .stream().map(MonitorPortlet::getId).collect(Collectors.toList());
         return new ArrayList<String>(CollectionUtils.removeAll(usedPlugins, availablePlugins));
     }
