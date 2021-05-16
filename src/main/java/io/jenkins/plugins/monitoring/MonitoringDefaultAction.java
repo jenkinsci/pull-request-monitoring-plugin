@@ -1,9 +1,12 @@
 package io.jenkins.plugins.monitoring;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import hudson.model.Run;
-import hudson.model.User;
 import jenkins.model.RunAction2;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.kohsuke.stapler.bind.JavaScriptMethod;
@@ -40,77 +43,6 @@ public class MonitoringDefaultAction implements RunAction2 {
         this.monitor = monitor;
     }
 
-    /**
-     * Sets the default for {@link MonitorUserProperty}.
-     */
-    private void setDefaultUserProperty() throws IOException {
-        User user = User.current();
-
-        if (user == null) {
-            return;
-        }
-
-        MonitorUserProperty property = user.getProperty(MonitorUserProperty.class);
-        property.update("default", resolvePortlets());
-        user.save();
-    }
-
-    /**
-     * Saves the actual dashboard configuration to {@link MonitorUserProperty}.
-     *
-     * @param config
-     *              the config string to update.
-     *
-     */
-    @JavaScriptMethod
-    public void updateUserConfiguration(String config) throws IOException {
-        User user = User.current();
-
-        if (user == null) {
-            return;
-        }
-
-        MonitorUserProperty property = user.getProperty(MonitorUserProperty.class);
-        property.update(getProjectId(), config);
-        user.save();
-    }
-
-    /**
-     * Get the current dashboard configuration of user.
-     *
-     * @return
-     *          the config of the corresponding {@link MonitorUserProperty} of the actual project
-     *          or the default configuration of Jenkinsfile if no config exists in {@link MonitorUserProperty}
-     *          for actual project.
-     */
-    @JavaScriptMethod
-    public String getConfiguration() throws IOException {
-        //todo: Work around, because no user is available when the action is added, so can not do this in ctor.
-        setDefaultUserProperty();
-
-        User user = User.current();
-
-        if (user == null) {
-            return resolvePortlets();
-        }
-
-        MonitorUserProperty property = user.getProperty(MonitorUserProperty.class);
-        MonitorUserProperty.MonitorProperty monitorProperty = property.getProperty(getProjectId());
-
-        return (monitorProperty != null) ? monitorProperty.getConfig() : property.getProperty("default").getConfig();
-    }
-
-    /**
-     * Get the project it based on the current {@link Run}.
-     *
-     * @return
-     *          the display name of the current project as id.
-     */
-    public String getProjectId() {
-        String id = getRun().getParent().getParent().getDisplayName();
-        return id.toLowerCase().replaceAll(" ", "-");
-    }
-
     @Override
     public String getIconFileName() {
         return MonitoringMultibranchProjectAction.getIconSmall();
@@ -145,18 +77,24 @@ public class MonitoringDefaultAction implements RunAction2 {
     }
 
     /**
-     * Resolves the portlet string of the {@link Monitor}.
+     * Get the project it based on the current {@link Run}.
      *
      * @return
-     *          the portlet string of {@link MonitoringCustomAction} if exists,
-     *          else the one of {@link MonitoringDefaultAction}.
+     *          the display name of the current project as id.
      */
-    public String resolvePortlets() {
-        MonitoringCustomAction action = getRun().getAction(MonitoringCustomAction.class);
-        if (action != null) {
-            return  action.getMonitor().getPortlets();
-        }
-        return getMonitor().getPortlets();
+    public String getConfigurationId() {
+        String id = getRun().getParent().getParent().getDisplayName();
+        return id.toLowerCase().replaceAll(" ", "-");
+    }
+
+    /**
+     * Sets the default for {@link MonitorConfigurationProperty}.
+     */
+    private void setDefaultMonitorConfiguration() {
+        MonitorConfigurationProperty
+                .forCurrentUser()
+                .ifPresent(monitorConfigurationProperty -> monitorConfigurationProperty
+                        .createOrUpdateConfiguration(MonitorConfigurationProperty.DEFAULT_ID, resolvePortlets()));
     }
 
     /**
@@ -169,7 +107,7 @@ public class MonitoringDefaultAction implements RunAction2 {
      *          {@link MonitoringDefaultAction#getConfiguration()} throws an error.
      */
     public List<String> getUnavailablePortlets() throws IOException {
-        JSONArray portlets = new JSONArray(this.getConfiguration());
+        JSONArray portlets = new JSONArray(getConfiguration());
 
         List<String> usedPlugins = new ArrayList<>();
 
@@ -182,4 +120,151 @@ public class MonitoringDefaultAction implements RunAction2 {
                 .stream().map(MonitorPortlet::getId).collect(Collectors.toList());
         return new ArrayList<String>(CollectionUtils.removeAll(usedPlugins, availablePlugins));
     }
+
+    /**
+     * Checks if there are changes in the configuration since the last build.
+     *
+     * @return
+     *          true if both configurations are equal, else false.
+     */
+    public boolean hasChanges() {
+        MonitoringCustomAction action = getRun().getAction(MonitoringCustomAction.class);
+
+        if (action == null) {
+            return false;
+        }
+
+        Run<?, ?> previous = getRun().getPreviousBuild();
+
+        if (previous == null) {
+            return false;
+        }
+
+        MonitoringCustomAction prevAction = previous.getAction(MonitoringCustomAction.class);
+
+        if (prevAction == null) {
+            return false;
+        }
+
+        return !areJsonNodesEquals(action.getMonitor().getPortlets(), prevAction.getMonitor().getPortlets());
+    }
+
+    /**
+     * Compares to json nodes, if they are equals.
+     *
+     * @param s1
+     *          the first json node as string.
+     *
+     * @param s2
+     *          the second json node as string.
+     *
+     * @return
+     *          true, if both are equals, else false.
+     */
+    public boolean areJsonNodesEquals(String s1, String s2) {
+
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode node1 = mapper.readTree(s1);
+            JsonNode node2 = mapper.readTree(s2);
+            return node1.equals(node2);
+        }
+        catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    /*
+        JavaScriptMethod block. All methods are called from a jelly file.
+     */
+
+    /**
+     * Saves the actual dashboard configuration to {@link MonitorConfigurationProperty}.
+     *
+     * @param config
+     *              the config string to update.
+     *
+     */
+    @JavaScriptMethod
+    public void updateMonitorConfiguration(String config) {
+        MonitorConfigurationProperty
+                .forCurrentUser()
+                .ifPresent(monitorConfigurationProperty ->
+                        monitorConfigurationProperty.createOrUpdateConfiguration(getConfigurationId(), config));
+    }
+
+    /**
+     * Get the current dashboard configuration of user.
+     *
+     * @return
+     *          the config of the corresponding {@link MonitorConfigurationProperty} of the actual project
+     *          or the default configuration of Jenkinsfile if no config exists in {@link MonitorConfigurationProperty}
+     *          for actual project.
+     */
+    @JavaScriptMethod
+    public String getConfiguration() throws IOException {
+        //todo: Work around, because no user is available when the action is added, so can not do this in ctor.
+        setDefaultMonitorConfiguration();
+
+        MonitorConfigurationProperty monitorConfigurationProperty = MonitorConfigurationProperty
+                .forCurrentUser().orElse(null);
+
+        return monitorConfigurationProperty == null
+                ? StringUtils.EMPTY : monitorConfigurationProperty.getConfiguration(getConfigurationId()).getConfig();
+    }
+
+    /**
+     * Checks if the actual configuration is synced with the default one (Jenkinsfile or empty one).
+     *
+     * @return
+     *              true, if synced, else false.
+     */
+    @JavaScriptMethod
+    public boolean isMonitorConfigurationSynced() {
+
+        MonitorConfigurationProperty monitorConfigurationProperty = MonitorConfigurationProperty
+                .forCurrentUser().orElse(null);
+
+        if (monitorConfigurationProperty == null) {
+            return true;
+        }
+
+        MonitorConfigurationProperty.MonitorConfiguration projectConfiguration =
+                monitorConfigurationProperty.getConfiguration(getConfigurationId());
+
+        MonitorConfigurationProperty.MonitorConfiguration defaultConfiguration =
+                monitorConfigurationProperty.getConfiguration(MonitorConfigurationProperty.DEFAULT_ID);
+
+        if (projectConfiguration == null) {
+            return true;
+        }
+
+        return areJsonNodesEquals(projectConfiguration.getConfig(), defaultConfiguration.getConfig());
+    }
+
+    /**
+     * Resolves the portlet string of the {@link Monitor}.
+     *
+     * @return
+     *          the portlet string of {@link MonitoringCustomAction} if exists,
+     *          else the one of {@link MonitoringDefaultAction}.
+     */
+    @JavaScriptMethod
+    public String resolvePortlets() {
+        MonitoringCustomAction action = getRun().getAction(MonitoringCustomAction.class);
+        return action != null ? action.getMonitor().getPortlets() : getMonitor().getPortlets();
+    }
+
+    /**
+     * Reset the current project configuration to default.
+     */
+    @JavaScriptMethod
+    public void resetMonitorConfiguration() {
+        MonitorConfigurationProperty
+                .forCurrentUser()
+                .ifPresent(monitorConfigurationProperty -> monitorConfigurationProperty.removeConfiguration(getConfigurationId()));
+    }
+
 }

@@ -59,15 +59,6 @@
     }
 
     /**
-     * Copies the current dashboard configuration to clipboard.
-     */
-    function copyConfig() {
-
-        navigator.clipboard.writeText(document.getElementById('config').innerText);
-
-    }
-
-    /**
      * Checks if an element matches a specific selector (e.g. class selector).
      *
      * @param element
@@ -148,9 +139,28 @@
     function updateConfig() {
 
         const config = getCurrentConfig();
-        run.updateUserConfiguration(config);
+        run.updateMonitorConfiguration(config);
         $('#config').html(syntaxHighlight(config));
 
+        run.isMonitorConfigurationSynced(function(result) {
+            $('#resetDescription').html(result.responseText);
+
+            if (result.responseText === 'true') {
+                $('#sourceDescription').html('Default');
+            } else {
+                $('#sourceDescription').html('User-Specific');
+            }
+
+        });
+    }
+
+    /**
+     * Set the default configuration in config modal.
+     */
+    function setDefaultConfig() {
+        run.resolvePortlets(function(defaultConfig) {
+            $('#defaultConfig').html(syntaxHighlight(defaultConfig.responseJSON));
+        });
     }
 
     /**
@@ -237,6 +247,8 @@
         let docElem = document.documentElement;
         let gridElement = document.querySelector('.grid');
         let copy = document.getElementById('copy');
+        let copyDefault = document.getElementById('copyDefault');
+        let reset = document.getElementById('reset');
         let addItemsElement = document.querySelector('.add-more-items');
 
         grid = new Muuri(gridElement, {
@@ -267,9 +279,19 @@
         gridElement.addEventListener('click', function (e) {
             if (elementMatches(e.target, '.plugin-remove, .plugin-remove i')) {
                 removeItem(e);
+                updateConfig();
             }
         });
-        copy.addEventListener('click', copyConfig);
+
+        copy.addEventListener('click', function() {
+            navigator.clipboard.writeText(document.getElementById('config').innerText)
+        });
+
+        copyDefault.addEventListener('click',function() {
+            navigator.clipboard.writeText(document.getElementById('defaultConfig').innerText)
+        });
+
+        reset.addEventListener('click', resetConfiguration);
 
     }
 
@@ -349,6 +371,7 @@
         initGrid();
         loadGrid();
         updateConfig();
+        setDefaultConfig();
 
     }
 
@@ -434,6 +457,19 @@
                 '<img width="25px;" src="' + state.element.getAttribute('icon') + '" class="img-flag" /> '
             + state.text + '</span>'
         );
+    }
+
+    /**
+     * Resets the current project configuration to the default one.
+     */
+    function resetConfiguration() {
+        run.resetMonitorConfiguration(function() {
+            run.getConfiguration(function(config) {
+                configuration = JSON.parse(config.responseJSON);
+                loadGrid();
+                updateConfig();
+            });
+        });
     }
 
 })(jQuery3);

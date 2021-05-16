@@ -4,12 +4,18 @@
   position: fixed;
   top: 320px;
   right: 0;
+  z-index: 11;
 }
 
 #add-item-button {
   position: fixed;
   top: 275px;
   right: 0;
+  z-index: 11;
+}
+
+#configModal {
+  z-index: 9999;
 }
 
 .spin {
