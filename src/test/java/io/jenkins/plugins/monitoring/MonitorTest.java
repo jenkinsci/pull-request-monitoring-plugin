@@ -51,7 +51,6 @@ public class MonitorTest {
 
         jenkinsRule.assertBuildStatusSuccess(build);
         jenkinsRule.assertLogContains("[Monitor] Portlets: []", build);
-        jenkinsRule.assertLogContains("[Monitor] Classes that implement 'MonitorPortlet' interface: []", build);
         jenkinsRule.assertLogContains("[Monitor] Build is part of a pull request. Add 'MonitoringBuildAction' now.", build);
         Assert.assertNotNull(action);
         Assert.assertEquals(action.getMonitor().getPortlets(), "[]");
@@ -97,7 +96,6 @@ public class MonitorTest {
         MonitoringDefaultAction action = build.getAction(MonitoringDefaultAction.class);
 
         jenkinsRule.assertBuildStatusSuccess(build);
-        jenkinsRule.assertLogContains("[Monitor] Classes that implement 'MonitorPortlet' interface: []", build);
         jenkinsRule.assertLogContains(
                 "[Monitor] Can't find the following portlet classes [io.jenkins.plugins.view] in list of available portlets!", build);
         jenkinsRule.assertLogContains(
