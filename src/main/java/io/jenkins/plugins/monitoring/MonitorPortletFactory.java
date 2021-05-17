@@ -8,7 +8,7 @@ import java.util.Collection;
 /**
  * Factory for {@link MonitorPortlet}.
  */
-interface MonitorPortletFactory extends ExtensionPoint {
+public interface MonitorPortletFactory extends ExtensionPoint {
 
     /**
      * Get a collection of {@link MonitorPortlet} to display.
