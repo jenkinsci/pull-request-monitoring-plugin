@@ -1,0 +1,10 @@
+addReviewers: false
+addAssignees: true
+
+assignees:
+  - simonsymhoven
+
+skipKeywords:
+  - wip
+
+numberOfAssignees: 0

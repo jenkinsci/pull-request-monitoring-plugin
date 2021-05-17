@@ -11,7 +11,7 @@
     <artifactId>pull-request-monitoring</artifactId>
     <packaging>hpi</packaging>
     <name>Pull Request Monitoring</name>
-    <version>1.3.1-beta-SNAPSHOT</version>
+    <version>${revision}${changelist}</version>
     <description>
         This plugin offers a possibility to display and aggregate the results (in the form of individual views) of a pull
         request in a configurable dashboard. Views can only be accessed or displayed if the corresponding plugin fulfils
@@ -20,7 +20,7 @@
     <url>https://github.com/jenkinsci/${project.artifactId}-plugin</url>
 
     <properties>
-        <revision>1.2.1-beta</revision>
+        <revision>1.3.1</revision>
         <changelist>-SNAPSHOT</changelist>
         <jenkins.baseline>2.249</jenkins.baseline>
         <jenkins.version>${jenkins.baseline}.1</jenkins.version>
