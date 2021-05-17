@@ -46,13 +46,13 @@ At the [Jenkins UX SIG Meeting](https://www.youtube.com/watch?v=F1ISpA7K0YA) on 
       <a href="#getting-started">Getting Started</a>
       <ul>
         <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#provide-a-view">Provide A View</a></li>
+        <li><a href="#provide-a-portlet">Provide A Portlet</a></li>
             <ul>
                 <li>
                 <a href="#the-code-behind">The Code behind</a>
                 <ul>
-                    <li><a href="#one-instance-of-one-view">One Instance Of One View</a></li>
-                    <li><a href="#multiple-instances-of-one-view">Multiple Instances Of One View</a></li>
+                    <li><a href="#one-instance-of-one-portlet">One Instance Of One Portlet</a></li>
+                    <li><a href="#multiple-instances-of-one-portlet">Multiple Instances Of One Portlet</a></li>
                 </ul>
                 </li>
                 <li><a href="#the-corresponding-jelly-file">The corresponding jelly file</a></li>
@@ -68,9 +68,11 @@ At the [Jenkins UX SIG Meeting](https://www.youtube.com/watch?v=F1ISpA7K0YA) on 
                 <li><a href="#persistence">Persistence</a></li>
                 <li><a href="#default-dashboard">Default Dashboard</a></li>
                 <li><a href="#custom-dashboard">Custom Dashboard</a></li>
+                <li><a href="#settings">Settings</a></li>
             </ul>
         </ul>
     </li>
+    <li><a href="#demo">Demo</a>
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
@@ -98,6 +100,7 @@ certain requirements and already provides a view.
 ### Built With
 
 *   [Muuri](https://github.com/haltu/muuri) wrapped in [Jenkins Muuri.js API Plugin](https://github.com/jenkinsci/muuri-api-plugin)
+*   [Select2](https://select2.org) wrapped in [Jenkins Select2.js API Plugin](https://github.com/jenkinsci/select2-api-plugin)
 
 ## Getting Started
 
@@ -105,63 +108,133 @@ certain requirements and already provides a view.
 
 Currently, only **multibranch pipelines** projects are supported to use this plugin. Therefore, you have to 
 install the corresponding Jenkins plugin [Multibranch: Pipeline](https://plugins.jenkins.io/workflow-multibranch/) 
-and connect to own of your SCM Repositories to use the **Pull Request Monitoring** Jenkins plugin.
+and connect to own of your SCM Repositories to use the **Pull Request Monitoring** Jenkins plugin. 
 
-### Provide a view
+### Provide a portlet
 
 This plugin relies on other plugins to provide a view that aggregates and provides delta metrics for a pull request.
 
 #### The code behind
 
-The [MonitorView](src/main/java/io/jenkins/plugins/monitoring/MonitorView.java) interface defines the interface 
-for each view that is to be displayed.
-Each view needs at least one unique `id` and a `title`. In order to register the view for the plugin, 
+The [MonitorPortlet](src/main/java/io/jenkins/plugins/monitoring/MonitorPortlet.java) interface defines the interface 
+for each portlet that is to be displayed. In order to register the portlet for the plugin, 
 a factory class is required, which must be provided with the annotation `@Extension`. 
-The factory have to implement the [MonitorFactory](src/main/java/io/jenkins/plugins/monitoring/MonitorFactory.java) 
-interface, receives the current `Run<?,?>` and delivers a set of `MonitorViews`.
+The factory have to implement the [MonitorPortletFactory](src/main/java/io/jenkins/plugins/monitoring/MonitorPortletFactory.java) 
+interface, receives the current `Run<?,?>`, delivers a set of `MonitorPortlets` and defines a `displayedName`, 
+which appears as `optgroup` in the dashboard in the dropdown list of all available portlets and their corresponding 
+factory.
 
-##### One Instance Of One View
+![Add portlet](etc/images/add-portlet.png)
 
-Normally, one plugin delivers one view. A minimal example could look as follows:
+##### One Instance Of One Portlet
+
+Normally, one plugin delivers one portlet. Therefore you do not have to override the default implementiation of
+`String getId()` of the interface `MonitorPortlet`. A minimal example could look as follows:
 
 ```java
-public class ExampleMonitor implements MonitorView {
+import io.jenkins.plugins.monitoring.MonitorPortlet;
+
+/**
+ *  An example Monitor Portlet implementation with one portlet delivered by factory.
+ */
+public class ExamplePortlet implements MonitorPortlet {
     private final Run<?, ?> build;
 
     /**
-     * Create a new {@link ExampleMonitor}.
+     * Create a new {@link MonitorPortlet}.
      *
      * @param run
      *          the {@link Run}
      */
-    public ExampleMonitor(Run<?, ?> run) {
+    public MonitorPortlet(Run<?, ?> run) {
         this.build = run;
     }
 
+    /**
+     * Defines the title of portlet. It will be shown in the 
+     * upper left corner of the portlet.
+     *
+     * @return
+     *          the title as string.
+     */
     @Override
     public String getTitle() {
-        return "Example Monitor for build " + build.getDisplayName();
+        return "Example Portlet";
     }
 
     /**
-     * Creates a new {@link ExampleMonitorFactory}.
+     * Defines the preferred width of the portlet. It's 
+     * possible to override the default width by user.
+     *
+     * @return
+     *          the width as int. (range from 100 to 1000)
+     */
+    @Override
+    public int getPreferredWidth() {
+        return 300;
+    }
+
+    /**
+     * Defines the preferred height of the portlet. It's 
+     * possible to override the default height by user.
+     *
+     * @return
+     *          the height as int. (range from 100 to 1000)
+     */
+    @Override
+    public int getPreferredHeight() {
+        return 200;
+    }
+
+    /**
+     * Defines the icon, which will be shown in the dropdown of 
+     * all available portlets in the dashboard.
+     *
+     * @return
+     *          the icon url as string.
+     */
+    @Override
+    public String getIconUrl() {
+        return "</path-to-icon/icon.png>";
+    }
+
+    /**
+     * Defines a link to a detail view, if its needed. Links the title
+     * of the portlet to this url.
+     *
+     * @return
+     *          {@link java.util.Optional} of the url, or an empty Optional,
+     *          if no link should be provided by portlet.
+     */
+    @Override
+    public Optional<String> getDetailViewUrl() {
+        return Optional.of("<link-to-detail-view>");
+    }
+
+    /**
+     * Creates a new {@link ExamplePortletFactory}.
      */
     @Extension
-    public static class ExampleMonitorFactory implements MonitorFactory {
+    public static class ExamplePortletFactory implements MonitorPortletFactory {
         @Override
-        public Collection<MonitorView> getMonitorViews(Run<?, ?> build) {
-            return Collections.singleton(new ExampleMonitor(build));
+        public Collection<MonitorPortlet> getPortlets(Run<?, ?> build) {
+            return Collections.singleton(new ExamplePortlet(build));
+        }
+
+        @Override
+        public String getDisplayName() {
+            return "Example Portlet Factory";
         }
     }
 }
 ```
 
-#### Multiple Instances Of One View
+#### Multiple Instances Of One Portlet
 
-The factory can also deliver several views of a class.
+The factory can also deliver several portlets of one class.
 
-> **Unique View ID**:
-> Usually the class name is used for the ID if only one view is delivered. If several views of the same 
+> ⚠️ WARNING: **Unique portlet ID**:
+> Usually the class name is used for the ID if only one portlet is delivered. If several portlets of the same 
 > class are created in the factory, it must be ensured that the ID is always unique! Therefore you have to override the 
 > default implementation of `String getId()`.
 
@@ -169,28 +242,28 @@ Here is an example of a factory that delivers two instances of a class:
 
 ```java
 /**
- * An example Monitor View.
+ * An example Monitor Portlet implementation with multiple portlets delivered by factory.
  */
-public class ExampleMonitor2 implements MonitorView {
-    private final Run<?, ?> build;
+public class ExamplePortlet implements MonitorPortlet {
+    private final Run<?, ?> run;
     private final String id;
 
     /**
-     * Create a new {@link ExampleMonitor2}.
+     * Create a new {@link ExamplePortlet}.
      *
      * @param run
      *          the {@link Run}
-     * @param viewId
+     * @param id
      *          the id.
      */
-    public First(Run<?, ?> run, String viewId) {
-        this.build = run;
-        this.id = viewId;
+    public ExamplePortlet(Run<?, ?> run, String id) {
+        this.run = run;
+        this.id = id;
     }
 
     @Override
     public String getTitle() {
-        return "Example Monitor 2 for build " + this.build.getDisplayName();
+        return "Example Portlet " + getId();
     }
 
     @Override
@@ -198,17 +271,24 @@ public class ExampleMonitor2 implements MonitorView {
         return id;
     }
     
+    // other interface methods, see example above. 
+    
     /**
-     * Creates a new {@link ExampleMonitor2Factory}.
+     * Creates a new {@link ExamplePortletFactory}.
      */
     @Extension
-    public static class ExampleMonitor2Factory implements MonitorFactory {
+    public static class ExamplePortletFactory implements MonitorPortletFactory {
         @Override
-        public Collection<MonitorView> getMonitorViews(Run<?, ?> build) {
-            List<MonitorView> monitors = new ArrayList<>();
-            monitors.add(new ExampleMonitor2(build, "io.jenkins.plugins.monitoring.examples.ExampleMonitor2.View1"));
-            monitors.add(new ExampleMonitor2(build, "io.jenkins.plugins.monitoring.examples.ExampleMonitor2.View2"));
+        public Collection<MonitorPortlet> getPortlets(Run<?, ?> build) {
+            List<MonitorPortlet> portlets = new ArrayList<>();
+            portlets.add(new ExamplePortlet(build, "io.jenkins.plugins.monitoring.ExamplePortlet.portlet1"));
+            portlets.add(new ExamplePortlet(build, "io.jenkins.plugins.monitoring.ExamplePortlet.portlet2"));
             return monitors;
+        }
+
+        @Override
+        public String getDisplayName() {
+            return "Example Portlet Factory";
         }
     }
 }
@@ -216,16 +296,16 @@ public class ExampleMonitor2 implements MonitorView {
 
 #### The corresponding jelly file
 
-Each view have to have a corresponding `monitor.jelly` file, which is responsible for the content of the 
-plugins view delivered on the dashboard later. Therefore you have to create a new `monitor.jelly` file 
+Each portlet have to have a corresponding `monitor.jelly` file, which is responsible for the content of the 
+plugins portlet delivered on the dashboard later. Therefore you have to create a new `monitor.jelly` file 
 in the directory, which corresponds to the `MonitorView` class. 
 
 > **Example**: 
-> The code behind is defined in `src/main/java/io/jenkins/plugins/sample/ExampleMonitor.java`. The related sources 
+> The code behind is defined in `src/main/java/io/jenkins/plugins/sample/ExamplePortlet.java`. The related sources 
 > (e.g. the `monitor.jelly` file) have to be defined in 
-> `src/main/resources/io/jenkins/plugins/sample/ExampleMonitor/monitory.jelly`. 
+> `src/main/resources/io/jenkins/plugins/sample/ExamplePortlet/monitory.jelly`. 
 
-Now the view, which can be added later in the dashboard, can be filled individually.
+Now the portlet, which can be added later in the dashboard, can be filled individually.
 Of course, all obligatory functions of the Jelly files, such as [JEXL](https://commons.apache.org/proper/commons-jexl/) 
 calls, can be used. To do this, please refer to the official Jenkins documentation.
 A minimal example:
@@ -235,7 +315,7 @@ A minimal example:
 
 <j:jelly xmlns:j="jelly:core">
 
-    <p>Plugin content goes here!</p>
+    <p>Portlet content goes here!</p>
 
 </j:jelly>
 ```
@@ -250,7 +330,7 @@ This plugin offers the following monitoring options:
 
 ### Project Level
 
-The monitoring on the project level very basic and is limited to the summary of all open pull requests of the associated SCM.
+The monitoring on the project level is very basic and is limited to the summary of all open pull requests of the associated SCM.
 From here, you can access the corresponding monitoring dashboards, view the pull request information and navigate
 to the respective pull request in the repository.
 
@@ -259,7 +339,7 @@ to the respective pull request in the repository.
 ### Build Level
 
 The monitoring at build level is the core of the plugin and offers the possibility 
-to observe various delta metrics of a pull request.
+to observe various delta metrics of a pull request provided by other portlets.
 
 The dashboard is only added to those builds whose branch 
 [SCMHead](https://javadoc.jenkins.io/plugin/scm-api/jenkins/scm/api/SCMHead.html) of the parent job is an instance of 
@@ -276,71 +356,101 @@ and have the appropriate permissions.
 
 #### Default Dashboard
 
-To get an empty dashboard, add the following stage to your Jenkinsfile:
+To start with an empty dashboard, there are two ways, which are provided by the plugin:
 
-```text
-stage ('Pull Request Monitoring - Dashboard Configuration') {
-    monitoring ( )
-}
-```
+1. Do nothing. If the run is part of a pull request, the corresponding 
+   [MonitoringDefaultAction](src/main/java/io/jenkins/plugins/monitoring/MonitoringDefaultAction.java) is automatically 
+   added to the `Run` and later available on the sidepanel of the run. 
+   
+2. Another to get an empty dashboard, add the following stage to your Jenkinsfile:
+   It is recommended to add the monitoring at the end of your pipeline, to ensure that other
+   plugins such as static code analysis are performed first and that the actions that may be required are
+   available.
+    ```text
+    stage ('Pull Request Monitoring - Dashboard Configuration') {
+        monitoring ( )
+    }
+    ```
 
 The dashboard will be added to each build, which corresponds to a pull request.
 Now you are able to add plugins to the dashboard, change the layout or remove it again.
-The configuration will be saved for each project locally. If you want to save the configuration permanently, 
-it is best to copy and paste it into the Jenkinsfile and overwrite the default dashboard.
-
-Demo (v1.0.3-beta): 
-
-![Example Monitor](etc/gifs/example-monitor-without-config.gif)
+The configuration will be saved for each project per user. If you want to save the configuration permanently, 
+it is best to copy and paste it into the Jenkinsfile and overwrite the default dashboard and use a custom dashboard.
 
 #### Custom Dashboard
 
-You can add your own pre-defined dashboard in the Jenkinsfile, e.g.:
+The other way to add a dashboard is to set the configuration of the dashboard via the Jenkinsfile to pre-define
+your dashboard:
 
 ```text
 stage ('Pull Request Monitoring - Dashboard Configuration') {
     monitoring (
-        configuration:
+        portlets:
         '''
-        {
-          "plugins": {
-            "io.jenkins.plugins.monitoring.examples.ExampleMonitor2.View1": {
-              "width": 4,
-              "height": 4,
-              "color": "black"
-            },
-            "io.jenkins.plugins.monitoring.examples.ExampleMonitor2.View2": {
-              "width": 2,
-              "height": 4,
-              "color": "red"
-            },
-            "io.jenkins.plugins.monitoring.examples.ExampleMonitor": {
-              "width": 4,
-              "height": 2,
-              "color": "green"
+        [
+            {
+                // Minimal usage of one portlet 
+                "id": "portlet-id"
+            }, 
+            {   
+                // Feel free to customize the portlets
+                "id": "another-portlet-id",
+                "width": 200,
+                "height": 100,
+                "color": "#FF5733"
             }
-          }
-        }
+        ]
         '''
  )
 }
 ```
 
-Therefore, each plugin needs at least the following keys:
+Therefore, the monitoring stage expects a JSONArray of JSONObjects. To validate your
+configured json, you could use a [JSON Schema Validator](https://www.jsonschemavalidator.net) and the 
+corresponding [JSON schema](src/main/resources/schema.json) used for this plugin. 
+Each JSONObject needs at least the `id` of the portlet to add. For `width` and `height`, the default 
+`referredWidth` and `preferredHeight` of the `MonitorPortlet` is used. `#000000` is used as default `color`. 
 
-```text
-"<plugin-id>": {
-    "width": < 1, 2, 3, 4 or 5 >,
-    "height": < 1, 2, 3, 4 or 5 >,
-    "color": < "green", "red", "black" or "blue" >
-}
-```
+The dashboard will be added to your `Run` and the pre-defined monitor should be available. 
 
-The height and width of the views can be selected in a range from 1 to 5. One unit corresponds to 150px.
+> ⚠️ WARNING: **Duplicate or missing portlet IDs**:
+> Duplicates will be removed as well as missing portlet ids. The `Run` will not fail unless 
+> the provided json does not follow the scheme!
 
-Then, if you open the build, the pre-defined plugins will be loaded:
+If there are unavailable portlets (e.g. corresponding plugin is uninstalled) in stored user configuration, 
+and the dashboard tries to load this portlet, an alert will be displayed with the ids of the unavailable portlets:
 
-![Example Monitor 2](etc/gifs/example-monitor-with-config.png)
+![Unavailable Portlet](etc/images/missing-portlet.png)
+
+#### Settings
+
+Under the settings of each `Run`, various things can be tracked:
+
+1. Are there changes of the pre-defined dashboard since the last build.
+2. The current activated source of configuration (Default or User-specific).
+   * Default means Jenkinsfile if `monitoring` is provided, else and empty JSONArray.
+   * User-specific means the local changed of dashboard.
+3. Configuration synced with the default one? If needed, you can synchronize the
+   actual configuration with the default one.
+4. The actual configuration
+5. The default configuration.
+
+> ⚠️ WARNING: **Prioritising of the different configurations:**:
+> If there is a user-specific configuration for one dashboard (per project), the user-specific 
+> configuration will be loaded per default. If you sync the current configuration with 
+> the default one, the user-specific configuration for current dashboard will be deleted and the default
+> configuration will be loaded. Deletion cannot be undone!
+
+![Settings](etc/images/settings.png)
+
+## Demo
+
+For the demo (v1.3.0-beta) I added two recorder (javadoc and pmd) of the 
+[Warnings Ng Plugin](https://plugins.jenkins.io/warnings-ng/) to the pipeline and added both as
+default portlet to the `monitoring`. After the run finished, the portlets will be shown in
+the dashboard. 
+
+![Demo](etc/images/demo-1.3.0-beta.gif)
 
 ## Roadmap
 
