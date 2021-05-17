@@ -29,7 +29,7 @@
 
         <commons.lang.version>3.12.0</commons.lang.version>
         <plugin-util-api.version>2.2.0</plugin-util-api.version>
-        <bootstrap5-api.version>5.0.0-1</bootstrap5-api.version>
+        <bootstrap5-api.version>5.0.1-1</bootstrap5-api.version>
         <font-awesome-api.version>5.15.3-2</font-awesome-api.version>
         <jquery3-api.version>3.6.0-1</jquery3-api.version>
         <muuri-api.version>0.9.3-3</muuri-api.version>
