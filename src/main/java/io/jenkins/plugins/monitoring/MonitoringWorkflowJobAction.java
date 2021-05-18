@@ -1,7 +1,9 @@
 package io.jenkins.plugins.monitoring;
 
 import hudson.model.Action;
+import hudson.model.Item;
 import org.jenkinsci.plugins.workflow.job.WorkflowJob;
+import org.kohsuke.stapler.StaplerProxy;
 
 import java.io.File;
 
@@ -13,7 +15,7 @@ import java.io.File;
  *
  * @author Simon Symhoven
  */
-public class MonitoringWorkflowJobAction implements Action {
+public class MonitoringWorkflowJobAction implements Action, StaplerProxy {
 
     private final transient WorkflowJob workflowJob;
 
@@ -42,4 +44,9 @@ public class MonitoringWorkflowJobAction implements Action {
         return workflowJob.getLastBuild().getNumber() + File.separator + MonitoringMultibranchProjectAction.getURI();
     }
 
+    @Override
+    public Object getTarget() {
+        this.workflowJob.checkPermission(Item.CONFIGURE);
+        return this;
+    }
 }

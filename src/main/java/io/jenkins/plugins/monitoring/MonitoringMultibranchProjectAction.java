@@ -1,8 +1,10 @@
 package io.jenkins.plugins.monitoring;
 
 import hudson.model.Action;
+import hudson.model.Item;
 import hudson.model.Job;
 import hudson.model.ProminentProjectAction;
+import hudson.security.Permission;
 import jenkins.branch.Branch;
 import jenkins.branch.MultiBranchProject;
 import jenkins.scm.api.SCMHead;
@@ -10,6 +12,7 @@ import jenkins.scm.api.metadata.ContributorMetadataAction;
 import jenkins.scm.api.metadata.ObjectMetadataAction;
 import jenkins.scm.api.mixin.ChangeRequestSCMHead;
 import org.jenkinsci.plugins.workflow.multibranch.BranchJobProperty;
+import org.kohsuke.stapler.StaplerProxy;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,7 +25,7 @@ import java.util.stream.Collectors;
  *
  * @author Simon Symhoven
  */
-public class MonitoringMultibranchProjectAction implements ProminentProjectAction, Action {
+public class MonitoringMultibranchProjectAction implements ProminentProjectAction, Action, StaplerProxy {
 
     private static final String URI = "pull-request-monitoring";
     private static final String NAME = "Pull Request Monitoring";
@@ -144,4 +147,9 @@ public class MonitoringMultibranchProjectAction implements ProminentProjectActio
         return NAME;
     }
 
+    @Override
+    public Object getTarget() {
+        this.multiBranchProject.checkPermission(Item.CONFIGURE);
+        return this;
+    }
 }

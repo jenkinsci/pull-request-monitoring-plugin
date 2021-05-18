@@ -65,7 +65,7 @@ At the [Jenkins UX SIG Meeting](https://www.youtube.com/watch?v=F1ISpA7K0YA) on 
             <li><a href="#project-level">Project Level</a></li>
             <li><a href="#build-level">Build Level</a></li>
             <ul>
-                <li><a href="#persistence">Persistence</a></li>
+                <li><a href="#persistence-&-permissions">Persistence & Permissions</a></li>
                 <li><a href="#default-dashboard">Default Dashboard</a></li>
                 <li><a href="#custom-dashboard">Custom Dashboard</a></li>
                 <li><a href="#settings">Settings</a></li>
@@ -348,11 +348,11 @@ Otherwise, the corresponding [MonitoringBuildAction](src/main/java/io/jenkins/pl
 will not be added and no dashboard will be provided for the build.
 For more details, please refer to the logging in the console output of the respective build.
 
-#### Persistence
+#### Persistence & Permissions
 
 The configuration, which is set via the Jenkinsfile or via the Dahsboard, is saved per user as a 
 `hudson.model.UserProperty` and is browser independent. The plugin therefore requires that you are logged in 
-and have the appropriate permissions.
+and have the appropriate permissions. Otherwise, the action will not be displayed! 
 
 #### Default Dashboard
 
