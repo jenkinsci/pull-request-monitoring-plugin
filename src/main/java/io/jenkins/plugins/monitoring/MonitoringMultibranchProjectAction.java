@@ -1,7 +1,6 @@
 package io.jenkins.plugins.monitoring;
 
 import hudson.model.Action;
-import hudson.model.Item;
 import hudson.model.Job;
 import hudson.model.ProminentProjectAction;
 import hudson.security.Permission;
@@ -149,7 +148,7 @@ public class MonitoringMultibranchProjectAction implements ProminentProjectActio
 
     @Override
     public Object getTarget() {
-        this.multiBranchProject.checkPermission(Item.CONFIGURE);
+        this.multiBranchProject.checkPermission(Permission.CONFIGURE);
         return this;
     }
 }

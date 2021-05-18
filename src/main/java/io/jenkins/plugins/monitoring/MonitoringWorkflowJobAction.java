@@ -1,7 +1,7 @@
 package io.jenkins.plugins.monitoring;
 
 import hudson.model.Action;
-import hudson.model.Item;
+import hudson.security.Permission;
 import org.jenkinsci.plugins.workflow.job.WorkflowJob;
 import org.kohsuke.stapler.StaplerProxy;
 
@@ -46,7 +46,7 @@ public class MonitoringWorkflowJobAction implements Action, StaplerProxy {
 
     @Override
     public Object getTarget() {
-        this.workflowJob.checkPermission(Item.CONFIGURE);
+        this.workflowJob.checkPermission(Permission.CONFIGURE);
         return this;
     }
 }
