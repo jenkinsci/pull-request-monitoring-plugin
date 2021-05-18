@@ -49,16 +49,16 @@ public interface MonitorPortlet {
      * Defines the icon to show in the dropdown list of available portlets.
      *
      * @return
-     *          the icon url.
+     *          the app relative icon url depending on ${resURL} (/static/cache-id).
      */
     String getIconUrl();
 
     /**
-     * Defines the relative link to a detail portlet of showed plugin.
+     * Defines the relative url to a detail view of the portlet.
      *
      * @return
-     *          the link to the detail portlet, or {@code Optional.empty()},
-     *          if no link should be added to portlet.
+     *          the relative link to the detail view depending on ${rootURL} (/jenkins),
+     *          or {@code Optional.empty()}, if no link should be added to portlet.
      */
     Optional<String> getDetailViewUrl();
 }
