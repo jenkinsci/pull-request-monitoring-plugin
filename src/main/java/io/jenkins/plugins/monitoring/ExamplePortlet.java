@@ -15,6 +15,15 @@ public class ExamplePortlet implements MonitorPortlet {
     private final String id;
     private final String title;
 
+    /**
+     * Creates a new {@link ExamplePortlet}.
+     *
+     * @param title
+     *          the title of the portlet.
+     *
+     * @param id
+     *          the id of the portlet.
+     */
     public ExamplePortlet(String title, String id) {
         this.id = id;
         this.title = title;

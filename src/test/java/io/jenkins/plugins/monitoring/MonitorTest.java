@@ -1,6 +1,5 @@
 package io.jenkins.plugins.monitoring;
 
-import hudson.ExtensionList;
 import jenkins.branch.BranchSource;
 import jenkins.scm.impl.mock.MockSCMController;
 import jenkins.scm.impl.mock.MockSCMDiscoverBranches;
@@ -9,7 +8,6 @@ import jenkins.scm.impl.mock.MockSCMSource;
 import org.jenkinsci.plugins.workflow.job.WorkflowJob;
 import org.jenkinsci.plugins.workflow.job.WorkflowRun;
 import org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject;
-import org.json.JSONArray;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;

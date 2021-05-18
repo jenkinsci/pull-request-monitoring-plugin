@@ -30,24 +30,24 @@
     function getCurrentConfig() {
 
         let plugins = grid.getItems()
-            .filter(item => item.isActive())
+            .filter((item) => item.isActive())
             .map(function(item) {
                 const id = item.getElement().getAttribute('data-id');
-                let pluginConfig = `{"id":"${id}"`
+                let pluginConfig = `{"id":"${id}"`;
 
                 const width = Math.round(item.getWidth());
                 if (String(width) !== item.getElement().getAttribute('default-width')) {
-                    pluginConfig += `,"width":${width}`
+                    pluginConfig += `,"width":${width}`;
                 }
 
                 const height = Math.round(item.getHeight());
                 if (String(height) !== item.getElement().getAttribute('default-height')) {
-                    pluginConfig += `,"height":${height}`
+                    pluginConfig += `,"height":${height}`;
                 }
 
                 const color = item.getElement().getAttribute('data-color');
                 if (color !== item.getElement().getAttribute('default-color')) {
-                    pluginConfig += `,"color":"${color}"`
+                    pluginConfig += `,"color":"${color}"`;
                 }
                 pluginConfig += "}";
 
@@ -187,7 +187,7 @@
     function resetInput() {
         $('#monitor option').each(function () {
             $(this).removeAttr('disabled');
-        })
+        });
     }
 
     /**
@@ -229,7 +229,7 @@
                 item.getElement().style.lineHeihgt = `${height}px`;
                 item.getElement().querySelector('.card').style.color = color;
 
-                const link = item.getElement().querySelector('.plugin-link')
+                const link = item.getElement().querySelector('.plugin-link');
                 link !== null ? link.style.color = color : link;
 
                 item.getElement().querySelector('.card').style.borderColor = color;
@@ -245,6 +245,83 @@
 
         const modal = document.getElementById('modalClose');
         modal.click();
+
+    }
+
+    /**
+     * Resets the current project configuration to the default one.
+     */
+    function resetConfiguration() {
+        run.resetMonitorConfiguration(function() {
+            run.getConfiguration(function(config) {
+                configuration = JSON.parse(config.responseJSON);
+                resetInput();
+                loadGrid();
+                updateConfig();
+            });
+        });
+    }
+
+    /**
+     *  Load the grid slots.
+     */
+    function loadGrid() {
+
+        // Hide all elements
+        grid.hide(grid.getItems(), {instant: true});
+
+        // Remove html .hidden class
+        let pluginsToHide = document.getElementsByClassName('muuri-item');
+        for (let plugin of pluginsToHide) {
+            plugin.classList.remove('hidden');
+        }
+
+        let plugins = [];
+
+        configuration.forEach((portlet) => {
+            let plugin = grid.getItems().find((item) => item.getElement().getAttribute('data-id') === portlet.id);
+
+            if (plugin !== undefined) {
+                const color = portlet.hasOwnProperty("color") ?
+                    portlet.color : plugin.getElement().getAttribute('default-color');
+
+                const width = portlet.hasOwnProperty("width") ?
+                    portlet.width : plugin.getElement().getAttribute('default-width');
+
+                const height = portlet.hasOwnProperty("height") ?
+                    portlet.height : plugin.getElement().getAttribute('default-height');
+
+                plugin.getElement().style.width = `${width}px`;
+                plugin.getElement().style.height = `${height}px`;
+                plugin.getElement().style.lineHeihgt = `${height}px`;
+                plugin.getElement().setAttribute('data-color', color);
+                plugin.getElement().style.color = color;
+                plugin.getElement().querySelector('.card').style.color = color;
+                plugin.getElement().querySelector('.card').style.borderColor = color;
+
+                const link = plugin.getElement().querySelector('.plugin-link');
+                link !== null ? link.style.color = color : link;
+
+                changeInput(portlet.id, 'true');
+                plugins.push(plugin);
+            }
+
+        });
+
+        // Merge DOM elements with elements to show and sort it
+        let pluginsToSort = [...plugins];
+        grid.getItems().forEach((item) => {
+            const dataId = item.getElement().getAttribute('data-id');
+
+            let plugin = plugins.find((item) => item.getElement().getAttribute('data-id') === dataId);
+
+            if (!plugin) {
+                pluginsToSort.push(item);
+            }
+        });
+
+        grid.sort(pluginsToSort);
+        grid.show(plugins);
 
     }
 
@@ -293,77 +370,14 @@
         });
 
         copy.addEventListener('click', function() {
-            navigator.clipboard.writeText(document.getElementById('config').innerText)
+            navigator.clipboard.writeText(document.getElementById('config').innerText);
         });
 
         copyDefault.addEventListener('click',function() {
-            navigator.clipboard.writeText(document.getElementById('defaultConfig').innerText)
+            navigator.clipboard.writeText(document.getElementById('defaultConfig').innerText);
         });
 
         reset.addEventListener('click', resetConfiguration);
-
-    }
-
-    /**
-     *  Load the grid slots.
-     */
-    function loadGrid() {
-
-        // Hide all elements
-        grid.hide(grid.getItems(), {instant: true});
-
-        // Remove html .hidden class
-        let pluginsToHide = document.getElementsByClassName('muuri-item');
-        for (let plugin of pluginsToHide) {
-            plugin.classList.remove('hidden');
-        }
-
-        let plugins = [];
-
-        configuration.forEach((portlet) => {
-            let plugin = grid.getItems().find(item => item.getElement().getAttribute('data-id') === portlet.id);
-
-            if (plugin !== undefined) {
-                const color = portlet.hasOwnProperty("color") ?
-                    portlet.color : plugin.getElement().getAttribute('default-color');
-
-                const width = portlet.hasOwnProperty("width") ?
-                    portlet.width : plugin.getElement().getAttribute('default-width');
-
-                const height = portlet.hasOwnProperty("height") ?
-                    portlet.height : plugin.getElement().getAttribute('default-height');
-
-                plugin.getElement().style.width = `${width}px`;
-                plugin.getElement().style.height = `${height}px`;
-                plugin.getElement().style.lineHeihgt = `${height}px`;
-                plugin.getElement().setAttribute('data-color', color);
-                plugin.getElement().style.color = color;
-                plugin.getElement().querySelector('.card').style.color = color;
-                plugin.getElement().querySelector('.card').style.borderColor = color;
-
-                const link = plugin.getElement().querySelector('.plugin-link');
-                link !== null ? link.style.color = color : link
-
-                changeInput(portlet.id, 'true');
-                plugins.push(plugin);
-            }
-
-        });
-
-        // Merge DOM elements with elements to show and sort it
-        let pluginsToSort = [...plugins];
-        grid.getItems().forEach((item) => {
-            const dataId = item.getElement().getAttribute('data-id');
-
-            let plugin = plugins.find(item => item.getElement().getAttribute('data-id') === dataId);
-
-            if (!plugin) {
-                pluginsToSort.push(item);
-            }
-        });
-
-        grid.sort(pluginsToSort);
-        grid.show(plugins);
 
     }
 
@@ -438,16 +452,6 @@
     });
 
     /**
-     * Select2 initialisation.
-     */
-    $(document).ready(function() {
-        $('.monitor-selection').select2({
-            dropdownParent: $('#portletModal'),
-            templateResult: formatState
-        });
-    });
-
-    /**
      * Formats the dropdown list.
      *
      * @param state
@@ -463,23 +467,19 @@
 
         return $(
             '<span>' +
-                '<img width="25px;" src="' + state.element.getAttribute('icon') + '" class="img-flag" /> '
+            '<img width="25px;" src="' + state.element.getAttribute('icon') + '" class="img-flag" /> '
             + state.text + '</span>'
         );
     }
 
     /**
-     * Resets the current project configuration to the default one.
+     * Select2 initialisation.
      */
-    function resetConfiguration() {
-        run.resetMonitorConfiguration(function() {
-            run.getConfiguration(function(config) {
-                configuration = JSON.parse(config.responseJSON);
-                resetInput();
-                loadGrid();
-                updateConfig();
-            });
+    $(document).ready(function() {
+        $('.monitor-selection').select2({
+            dropdownParent: $('#portletModal'),
+            templateResult: formatState
         });
-    }
+    });
 
 })(jQuery3);

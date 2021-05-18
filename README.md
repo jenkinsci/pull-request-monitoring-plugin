@@ -358,14 +358,14 @@ and have the appropriate permissions. Otherwise, the action will not be displaye
 
 To start with an empty dashboard, there are two ways, which are provided by the plugin:
 
-1. Do nothing. If the run is part of a pull request, the corresponding 
-   [MonitoringDefaultAction](src/main/java/io/jenkins/plugins/monitoring/MonitoringDefaultAction.java) is automatically 
-   added to the `Run` and later available on the sidepanel of the run. 
+1.  Do nothing. If the run is part of a pull request, the corresponding 
+    [MonitoringDefaultAction](src/main/java/io/jenkins/plugins/monitoring/MonitoringDefaultAction.java) is automatically 
+    added to the `Run` and later available on the sidepanel of the run. 
    
-2. Another to get an empty dashboard, add the following stage to your Jenkinsfile:
-   It is recommended to add the monitoring at the end of your pipeline, to ensure that other
-   plugins such as static code analysis are performed first and that the actions that may be required are
-   available.
+2.  Another to get an empty dashboard, add the following stage to your Jenkinsfile:
+    It is recommended to add the monitoring at the end of your pipeline, to ensure that other
+    plugins such as static code analysis are performed first and that the actions that may be required are
+    available.
     ```text
     stage ('Pull Request Monitoring - Dashboard Configuration') {
         monitoring ( )
@@ -426,14 +426,14 @@ and the dashboard tries to load this portlet, an alert will be displayed with th
 
 Under the settings of each `Run`, various things can be tracked:
 
-1. Are there changes of the pre-defined dashboard since the last build.
-2. The current activated source of configuration (Default or User-specific).
-   * Default means Jenkinsfile if `monitoring` is provided, else and empty JSONArray.
-   * User-specific means the local changed of dashboard.
-3. Configuration synced with the default one? If needed, you can synchronize the
-   actual configuration with the default one.
-4. The actual configuration
-5. The default configuration.
+1.  Are there changes of the pre-defined dashboard since the last build?
+2.  The current activated source of configuration (Default or User-specific).
+    * Default means Jenkinsfile if `monitoring` is provided, else and empty JSONArray.
+    * User-specific means the local changed of dashboard.
+3.  Configuration synced with the default one? If needed, you can synchronize the
+    actual configuration with the default one.
+4.  The actual configuration
+5.  The default configuration.
 
 > ⚠️ WARNING: **Prioritising of the different configurations:**:
 > If there is a user-specific configuration for one dashboard (per project), the user-specific 
