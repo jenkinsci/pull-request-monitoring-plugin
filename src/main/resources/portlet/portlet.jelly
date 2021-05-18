@@ -22,7 +22,7 @@
                 <div class="plugin-card-id">
 
                     <j:if test="${portlet.detailViewUrl.isPresent()}">
-                        <a class="plugin-link" style="color: #000000" href="${rootURL}${portlet.detailViewUrl.get()}">
+                        <a class="plugin-link" style="color: #000000" href="../${portlet.detailViewUrl.get()}">
                             ${portlet.title}</a>
                     </j:if>
 

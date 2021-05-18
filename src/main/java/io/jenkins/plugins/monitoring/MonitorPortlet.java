@@ -53,7 +53,8 @@ public interface MonitorPortlet {
      * Defines the relative url to a detail view of the portlet.
      *
      * @return
-     *          the relative link to the detail view depending on ${rootURL} (/jenkins),
+     *          the relative link to the detail view depending on the current build url
+     *          (e.g. http://localhost:8080/jenkins/job/job-name/view/change-requests/job/PR-1/1/),
      *          or {@code Optional.empty()}, if no link should be added to portlet.
      */
     Optional<String> getDetailViewUrl();
