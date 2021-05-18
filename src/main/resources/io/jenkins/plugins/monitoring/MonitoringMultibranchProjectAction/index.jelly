@@ -64,7 +64,7 @@
 
                                     <div class="row border-top"/>
 
-                                    <button onclick="location.href='../../../${job.getLastBuild().getUrl()}/pull-request-monitoring'"
+                                    <button onclick="location.href='${rootURL}/${job.getLastBuild().getUrl()}${it.getUrlName()}'"
                                             type="button" class="btn btn-outline-primary">${%dashboard}</button>
 
                                     <button onclick="location.href='${it.getObjectMetaData(job).getObjectUrl()}'"
