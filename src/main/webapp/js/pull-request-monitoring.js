@@ -182,6 +182,15 @@
     }
 
     /**
+     * Reset the the visibility of input.
+     */
+    function resetInput() {
+        $('#monitor option').each(function () {
+            $(this).removeAttr('disabled');
+        })
+    }
+
+    /**
      * Removes an element from grid.
      * @param e
      *          the clicked element (element to be deleted).
@@ -466,6 +475,7 @@
         run.resetMonitorConfiguration(function() {
             run.getConfiguration(function(config) {
                 configuration = JSON.parse(config.responseJSON);
+                resetInput();
                 loadGrid();
                 updateConfig();
             });
