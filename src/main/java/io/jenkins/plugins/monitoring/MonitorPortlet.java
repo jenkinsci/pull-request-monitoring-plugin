@@ -1,9 +1,5 @@
 package io.jenkins.plugins.monitoring;
 
-import hudson.ExtensionPoint;
-import hudson.model.Run;
-
-import java.util.Collection;
 import java.util.Optional;
 
 /**

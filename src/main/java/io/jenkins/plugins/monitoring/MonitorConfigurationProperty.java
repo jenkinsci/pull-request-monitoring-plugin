@@ -26,6 +26,9 @@ public class MonitorConfigurationProperty extends UserProperty implements Saveab
 
     /**
      * Creates a new {@link MonitorConfigurationProperty}.
+     *
+     * @param configurations
+     *              the list of configurations to add to the {@link MonitorConfigurationProperty}.
      */
     public MonitorConfigurationProperty(List<MonitorConfiguration> configurations) {
         this.configurations = configurations;

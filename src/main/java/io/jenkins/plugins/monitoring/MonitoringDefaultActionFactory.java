@@ -2,7 +2,9 @@ package io.jenkins.plugins.monitoring;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import hudson.Extension;
-import hudson.model.*;
+import hudson.model.Run;
+import hudson.model.Action;
+import hudson.model.Job;
 import jenkins.model.TransientActionFactory;
 import jenkins.scm.api.SCMHead;
 import jenkins.scm.api.mixin.ChangeRequestSCMHead;
