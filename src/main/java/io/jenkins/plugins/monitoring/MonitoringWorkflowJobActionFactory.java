@@ -56,5 +56,4 @@ public class MonitoringWorkflowJobActionFactory extends TransientActionFactory<W
 
         return Collections.emptyList();
     }
-
 }

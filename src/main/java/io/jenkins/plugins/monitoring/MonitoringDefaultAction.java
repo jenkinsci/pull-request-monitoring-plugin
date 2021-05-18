@@ -3,12 +3,13 @@ package io.jenkins.plugins.monitoring;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hudson.model.Item;
 import hudson.model.Run;
 import jenkins.model.RunAction2;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.kohsuke.stapler.StaplerProxy;
 import org.kohsuke.stapler.bind.JavaScriptMethod;
 
 import java.io.IOException;
@@ -25,7 +26,7 @@ import java.util.stream.Collectors;
  *
  * @author Simon Symhoven
  */
-public class MonitoringDefaultAction implements RunAction2 {
+public class MonitoringDefaultAction implements RunAction2, StaplerProxy {
     private final Monitor monitor;
     private transient Run<?, ?> run;
 
@@ -212,7 +213,7 @@ public class MonitoringDefaultAction implements RunAction2 {
                 .forCurrentUser().orElse(null);
 
         return monitorConfigurationProperty == null
-                ? StringUtils.EMPTY : monitorConfigurationProperty.getConfiguration(getConfigurationId()).getConfig();
+                ? resolvePortlets() : monitorConfigurationProperty.getConfiguration(getConfigurationId()).getConfig();
     }
 
     /**
@@ -267,4 +268,9 @@ public class MonitoringDefaultAction implements RunAction2 {
                 .ifPresent(monitorConfigurationProperty -> monitorConfigurationProperty.removeConfiguration(getConfigurationId()));
     }
 
+    @Override
+    public Object getTarget() {
+        this.run.checkPermission(Item.CONFIGURE);
+        return this;
+    }
 }
