@@ -206,7 +206,7 @@ public class MonitoringDefaultAction implements RunAction2, StaplerProxy {
      */
     @JavaScriptMethod
     public String getConfiguration() throws IOException {
-        //todo: Work around, because no user is available when the action is added, so can not do this in ctor.
+        //TODO: Work around, because no user is available when the action is added, so can not do this in ctor.
         setDefaultMonitorConfiguration();
 
         MonitorConfigurationProperty monitorConfigurationProperty = MonitorConfigurationProperty

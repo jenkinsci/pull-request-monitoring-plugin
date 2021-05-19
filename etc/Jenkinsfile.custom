@@ -1,17 +1,42 @@
 node {
+
+    stage ('Checkout') {
+        checkout scm
+    }
+
+    stage ('Git mining') {
+        discoverGitReferenceBuild()
+        mineRepository()
+    }
+
+    stage ('Build and Static Analysis') {
+        withMaven {
+            sh 'mvn clean verify'
+        }
+
+        recordIssues tools: [javaDoc(), java()], aggregatingResults: 'true', id: 'java', name: 'Java'
+        recordIssues tool: errorProne(), healthy: 1, unhealthy: 20
+        recordIssues tools: [checkStyle(pattern: 'target/checkstyle-result.xml'),
+                    spotBugs(pattern: 'target/spotbugsXml.xml'),
+                    pmdParser(pattern: 'target/pmd.xml'),
+                    taskScanner(highTags:'FIXME', normalTags:'TODO', includePattern: '**/*.java', excludePattern: 'target/**/*')],
+                    qualityGates: [[threshold: 1, type: 'TOTAL', unstable: true]]
+        recordIssues tool: mavenConsole()
+    }
+
      stage ('Pull Request Monitoring - Dashboard Configuration') {
          monitoring (
-                portlets:
-                '''
-                    [
-                        {
-                            "id": "io.jenkins.plugins.monitoring.examples.First.View1",
-                            "width": 400,
-                            "height": 400,
-                            "color": "#000000"
-                        }
-                    ]
-                '''
-         )
+                 portlets:
+                 '''
+                     [
+                         {
+                             "id": "first-demo-portlet",
+                             "width": 400,
+                             "height": 400,
+                             "color": "#FF5733"
+                         }
+                     ]
+                 '''
+          )
      }
 }
