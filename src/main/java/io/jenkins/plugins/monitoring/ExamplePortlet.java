@@ -50,8 +50,8 @@ public class ExamplePortlet implements MonitorPortlet {
     }
 
     @Override
-    public String getIconUrl() {
-        return MonitoringMultibranchProjectAction.getIconSmall();
+    public Optional<String> getIconUrl() {
+        return Optional.empty();
     }
 
     @Override

@@ -45,9 +45,10 @@ public interface MonitorPortlet {
      * Defines the icon to show in the dropdown list of available portlets.
      *
      * @return
-     *          the app relative icon url depending on ${resURL} (/static/cache-id).
+     *          the app relative icon url depending on ${resURL} (/static/cache-id),
+     *          or {@code Optional.empty()}, if a default icon should be added.
      */
-    String getIconUrl();
+    Optional<String> getIconUrl();
 
     /**
      * Defines the relative url to a detail view of the portlet.

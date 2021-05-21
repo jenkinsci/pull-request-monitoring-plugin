@@ -63,8 +63,18 @@
                                                 <j:set var="portlets" value="${it.monitor.getAvailablePortletsForFactory(it.run, factory)}"/>
 
                                                 <j:forEach var="portlet" items="${portlets}">
-                                                    <option value="${portlet.id}" icon="${resURL}${portlet.iconUrl}"
-                                                            width="${portlet.preferredWidth}" height="${portlet.preferredHeight}">${portlet.title}</option>
+
+                                                    <j:if test="${portlet.iconUrl.isEmpty()}">
+                                                        <option value="${portlet.id}" icon="${resURL}${it.getIconFileName()}"
+                                                                width="${portlet.preferredWidth}" height="${portlet.preferredHeight}">${portlet.title}</option>
+                                                    </j:if>
+
+                                                    <j:if test="${portlet.iconUrl.isPresent()}">
+                                                        <option value="${portlet.id}" icon="${resURL}${portlet.iconUrl.get()}"
+                                                                width="${portlet.preferredWidth}" height="${portlet.preferredHeight}">${portlet.title}</option>
+                                                    </j:if>
+
+
                                                 </j:forEach>
 
 

@@ -24,7 +24,15 @@ node {
         recordIssues tool: mavenConsole()
     }
 
-     stage ('Pull Request Monitoring - Dashboard Configuration') {
-         monitoring ( )
-     }
+    stage ('Line and Branch Coverage') {
+        withMaven {
+            sh 'mvn jacoco:prepare-agent test jacoco:report -Dmaven.test.failure.ignore'
+        }
+        publishCoverage adapters: [jacocoAdapter('target/site/jacoco/jacoco.xml')],
+            calculateDiffForChangeRequests: true
+    }
+
+    stage ('Pull Request Monitoring - Dashboard Configuration') {
+        monitoring ( )
+    }
 }
