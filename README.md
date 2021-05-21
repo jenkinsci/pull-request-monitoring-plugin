@@ -191,11 +191,12 @@ public class ExamplePortlet implements MonitorPortlet {
      * all available portlets in the dashboard.
      *
      * @return
-     *          the icon url as string.
+     *          the icon url as {@link java.util.Optional} of string, or an
+     *          empty Optional, if a default icon should be added.
      */
     @Override
-    public String getIconUrl() {
-        return "</path-to-icon/icon.png>";
+    public Optional<String> getIconUrl() {
+        return Optional.of("</path-to-icon/icon.png>");
     }
 
     /**
