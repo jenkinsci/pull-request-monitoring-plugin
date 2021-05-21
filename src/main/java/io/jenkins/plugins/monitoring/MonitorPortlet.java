@@ -21,9 +21,7 @@ public interface MonitorPortlet {
      * @return
      *          the id.
      */
-    default String getId() {
-        return getClass().getName();
-    }
+    String getId();
 
     /**
      * Defines the preferred width of the portlet.
