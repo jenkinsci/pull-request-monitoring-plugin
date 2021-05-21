@@ -26,9 +26,7 @@
 
                     <h3 class="modal-title" id="itemsModalLabel">${%itemModal.title}</h3>
 
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <i class="material-icons icon">&#xe5cd;</i>
-                    </button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"/>
 
                 </div>
 
@@ -142,7 +140,7 @@
 
                 <div class="modal-footer">
 
-                    <button id="modalClose" type="button" class="btn btn-secondary" data-dismiss="modal">
+                    <button id="modalClose" type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                         ${%itemModal.cancel}</button>
 
                     <button type="button" id="submitButton" class="btn btn-primary add-more-items">${%itemModal.add}</button>

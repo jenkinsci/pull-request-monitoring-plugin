@@ -1,27 +1,27 @@
 <?jelly escape-by-default='true'?>
 
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:bs="/bootstrap"
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:bs="/bootstrap5"
          xmlns:modals="/modals" xmlns:portlet="/portlet" xmlns:alerts="/alerts">
 
     <st:header name="Content-Type" value="text/html;charset=UTF-8"/>
 
     <bs:page it="${it}">
 
-        <st:adjunct includes="io.jenkins.plugins.muuri"/>
-        <st:adjunct includes="io.jenkins.plugins.select2"/>
         <st:adjunct includes="io.jenkins.plugins.jquery3"/>
+        <st:adjunct includes="io.jenkins.plugins.select2"/>
+        <st:adjunct includes="io.jenkins.plugins.muuri"/>
 
         <link href="${resURL}/plugin/pull-request-monitoring/css/pull-request-monitoring.css" rel="stylesheet"/>
 
         <!-- The data toggle for <modals:config> -->
-        <button type="button" id="config-button" class="btn btn-success" data-toggle="modal" data-target="#configModal">
+        <button type="button" id="config-button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#configModal">
 
             <i class="material-icons icon spin">&#xE8B8;</i>
 
         </button>
 
         <!-- The data toggle for <modals:add-portlet> -->
-        <button type="button" class="btn btn-primary" id="add-item-button" data-toggle="modal" data-target="#portletModal">
+        <button type="button" class="btn btn-primary" id="add-item-button" data-bs-toggle="modal" data-bs-target="#portletModal">
 
             <i class="material-icons icon">&#xE145;</i>
 
