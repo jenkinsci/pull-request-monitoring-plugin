@@ -128,7 +128,7 @@ factory.
 
 ##### One Instance Of One Portlet
 
-Normally, one plugin delivers one portlet. The id has A minimal example could look as follows:
+Normally, one plugin delivers one portlet. A minimal example could look as follows:
 
 ```java
 import io.jenkins.plugins.monitoring.MonitorPortlet;
@@ -246,7 +246,7 @@ The factory can also deliver several portlets of one class.
 
 > ⚠️ WARNING: **Unique portlet ID**:
 > The id must be unique. Please make sure that the id is related to the plugin so that there are no conflicts with 
-> other plugins. It is recommended to use the artifact id of the plugin or parts of it as suffix.
+> other plugins. It is recommended to use the artifact id of the plugin or parts of it as prefix.
 > If several portlets of the same class are created in the factory, it must be ensured that the ID is always unique 
 > for each portlet!
 
