@@ -128,8 +128,7 @@ factory.
 
 ##### One Instance Of One Portlet
 
-Normally, one plugin delivers one portlet. Therefore you do not have to override the default implementiation of
-`String getId()` of the interface `MonitorPortlet`. A minimal example could look as follows:
+Normally, one plugin delivers one portlet. The id has A minimal example could look as follows:
 
 ```java
 import io.jenkins.plugins.monitoring.MonitorPortlet;
@@ -160,6 +159,17 @@ public class ExamplePortlet implements MonitorPortlet {
     @Override
     public String getTitle() {
         return "Example Portlet";
+    }
+
+    /**
+     * Defines the id for the portlet.
+     *
+     * @return
+     *          the id.
+     */
+    @Override
+    public String getId() {
+        return "example-portlet-id";
     }
 
     /**
@@ -235,9 +245,10 @@ public class ExamplePortlet implements MonitorPortlet {
 The factory can also deliver several portlets of one class.
 
 > ⚠️ WARNING: **Unique portlet ID**:
-> Usually the class name is used for the ID if only one portlet is delivered. If several portlets of the same 
-> class are created in the factory, it must be ensured that the ID is always unique! Therefore you have to override the 
-> default implementation of `String getId()`.
+> The id must be unique. Please make sure that the id is related to the plugin so that there are no conflicts with 
+> other plugins. It is recommended to use the artifact id of the plugin or parts of it as suffix.
+> If several portlets of the same class are created in the factory, it must be ensured that the ID is always unique 
+> for each portlet!
 
 Here is an example of a factory that delivers two instances of a class:
 
@@ -282,8 +293,8 @@ public class ExamplePortlet implements MonitorPortlet {
         @Override
         public Collection<MonitorPortlet> getPortlets(Run<?, ?> build) {
             List<MonitorPortlet> portlets = new ArrayList<>();
-            portlets.add(new ExamplePortlet(build, "io.jenkins.plugins.monitoring.ExamplePortlet.portlet1"));
-            portlets.add(new ExamplePortlet(build, "io.jenkins.plugins.monitoring.ExamplePortlet.portlet2"));
+            portlets.add(new ExamplePortlet(build, "example-portlet-first"));
+            portlets.add(new ExamplePortlet(build, "example-portlet-second"));
             return monitors;
         }
 
