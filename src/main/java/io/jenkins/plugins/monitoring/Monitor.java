@@ -138,7 +138,7 @@ public class Monitor extends Step implements Serializable {
         public Void run() throws Exception {
             JSONArray portlets = new JSONArray(monitor.getPortlets());
             getContext().get(TaskListener.class).getLogger()
-                    .println("[Monitor] Portlets: " + portlets.toString(3));
+                    .println("[Monitor] Portlet Configuration: " + portlets.toString(3));
 
             List<String> classes = monitor.getAvailablePortlets(getContext().get(Run.class))
                     .stream()
@@ -146,8 +146,8 @@ public class Monitor extends Step implements Serializable {
                     .collect(Collectors.toList());
 
             getContext().get(TaskListener.class).getLogger()
-                    .println("[Monitor] Classes that implement 'MonitorPortlet' interface: ["
-                            + StringUtils.join(classes, ",") + "]");
+                    .println("[Monitor] Available portlets: ["
+                            + StringUtils.join(classes, ", ") + "]");
 
             List<String> usedPortlets = new ArrayList<>();
 
@@ -169,7 +169,7 @@ public class Monitor extends Step implements Serializable {
 
             if (missedPortletIds.size() > 0) {
                 getContext().get(TaskListener.class).getLogger()
-                        .println("[Monitor] Can't find the following portlet classes "
+                        .println("[Monitor] Can't find the following portlets "
                                 + missedPortletIds + " in list of available portlets! Will remove from current configuration.");
 
                 JSONArray cleanedPortlets = new JSONArray();
@@ -195,13 +195,13 @@ public class Monitor extends Step implements Serializable {
 
                 if (head instanceof ChangeRequestSCMHead) {
                     getContext().get(TaskListener.class).getLogger()
-                            .println("[Monitor] Build is part of a pull request. Add 'MonitoringBuildAction' now.");
+                            .println("[Monitor] Build is part of a pull request. Add 'MonitoringCustomAction' now.");
 
                     run.addAction(new MonitoringCustomAction(monitor));
                 }
                 else {
                     getContext().get(TaskListener.class).getLogger()
-                            .println("[Monitor] Build is not part of a pull request. Skip adding 'MonitoringBuildAction'.");
+                            .println("[Monitor] Build is not part of a pull request. Skip adding 'MonitoringCustomAction'.");
                 }
             }
             else {

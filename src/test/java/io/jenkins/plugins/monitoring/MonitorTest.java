@@ -48,8 +48,8 @@ public class MonitorTest {
         MonitoringDefaultAction action = build.getAction(MonitoringDefaultAction.class);
 
         jenkinsRule.assertBuildStatusSuccess(build);
-        jenkinsRule.assertLogContains("[Monitor] Portlets: []", build);
-        jenkinsRule.assertLogContains("[Monitor] Build is part of a pull request. Add 'MonitoringBuildAction' now.", build);
+        jenkinsRule.assertLogContains("[Monitor] Portlet Configuration: []", build);
+        jenkinsRule.assertLogContains("[Monitor] Build is part of a pull request. Add 'MonitoringCustomAction' now.", build);
         Assert.assertNotNull(action);
         Assert.assertEquals(action.getMonitor().getPortlets(), "[]");
     }
@@ -72,7 +72,7 @@ public class MonitorTest {
         MonitoringDefaultAction action = build.getAction(MonitoringDefaultAction.class);
 
         jenkinsRule.assertBuildStatusSuccess(build);
-        jenkinsRule.assertLogContains("[Monitor] Build is not part of a pull request. Skip adding 'MonitoringBuildAction'.", build);
+        jenkinsRule.assertLogContains("[Monitor] Build is not part of a pull request. Skip adding 'MonitoringCustomAction'.", build);
         Assert.assertNull(action);
     }
 
@@ -95,7 +95,7 @@ public class MonitorTest {
 
         jenkinsRule.assertBuildStatusSuccess(build);
         jenkinsRule.assertLogContains(
-                "[Monitor] Can't find the following portlet classes [io.jenkins.plugins.view] in list of available portlets!", build);
+                "[Monitor] Can't find the following portlets [io.jenkins.plugins.view] in list of available portlets!", build);
         jenkinsRule.assertLogContains(
                 "[Monitor] Cleaned Portlets: []", build);
         Assert.assertEquals(action.getMonitor().getPortlets(), "[]");
