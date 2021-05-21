@@ -23,9 +23,7 @@
             <p>${%description} <br/>
                 <strong>${unavailablePortlets}</strong> </p>
 
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true"><i class="material-icons icon">&#xE5CD;</i></span>
-            </button>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"/>
 
         </div>
 
