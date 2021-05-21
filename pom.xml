@@ -11,7 +11,7 @@
     <artifactId>pull-request-monitoring</artifactId>
     <packaging>hpi</packaging>
     <name>Pull Request Monitoring</name>
-    <version>1.5.1</version>
+    <version>1.5.2-SNAPSHOT</version>
     <description>
         This plugin offers a possibility to display and aggregate the results (in the form of individual views) of a pull
         request in a configurable dashboard. Views can only be accessed or displayed if the corresponding plugin fulfils
@@ -75,7 +75,7 @@
         <connection>scm:git:git://github.com/${gitHubRepo}.git</connection>
         <developerConnection>scm:git:git@github.com:${gitHubRepo}.git</developerConnection>
         <url>https://github.com/${gitHubRepo}</url>
-        <tag>pull-request-monitoring-1.5.1</tag>
+        <tag>${scmTag}</tag>
     </scm>
 
     <dependencies>
