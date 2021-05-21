@@ -9,6 +9,8 @@
 
         <st:adjunct includes="io.jenkins.plugins.muuri"/>
         <st:adjunct includes="io.jenkins.plugins.select2"/>
+        <st:adjunct includes="io.jenkins.plugins.jquery3"/>
+
         <link href="${resURL}/plugin/pull-request-monitoring/css/pull-request-monitoring.css" rel="stylesheet"/>
 
         <!-- The data toggle for <modals:config> -->
