@@ -10,6 +10,7 @@ import jenkins.scm.api.SCMHead;
 import jenkins.scm.api.metadata.ContributorMetadataAction;
 import jenkins.scm.api.metadata.ObjectMetadataAction;
 import jenkins.scm.api.mixin.ChangeRequestSCMHead;
+import org.acegisecurity.AccessDeniedException;
 import org.jenkinsci.plugins.workflow.multibranch.BranchJobProperty;
 import org.kohsuke.stapler.StaplerProxy;
 
@@ -24,7 +25,7 @@ import java.util.stream.Collectors;
  *
  * @author Simon Symhoven
  */
-public class MonitoringMultibranchProjectAction implements ProminentProjectAction, Action, StaplerProxy {
+public class MonitoringMultibranchProjectAction implements ProminentProjectAction, Action {
 
     private static final String URI = "pull-request-monitoring";
     private static final String NAME = "Pull Request Monitoring";
@@ -146,9 +147,4 @@ public class MonitoringMultibranchProjectAction implements ProminentProjectActio
         return NAME;
     }
 
-    @Override
-    public Object getTarget() {
-        this.multiBranchProject.checkPermission(Permission.CONFIGURE);
-        return this;
-    }
 }

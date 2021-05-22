@@ -3,9 +3,12 @@ package io.jenkins.plugins.monitoring;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hudson.model.Item;
 import hudson.model.Run;
+import hudson.model.User;
 import hudson.security.Permission;
 import jenkins.model.RunAction2;
+import org.acegisecurity.AccessDeniedException;
 import org.apache.commons.collections.CollectionUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -265,7 +268,6 @@ public class MonitoringDefaultAction implements RunAction2, StaplerProxy {
 
     @Override
     public Object getTarget() {
-        this.run.checkPermission(Permission.CONFIGURE);
         setDefaultMonitorConfiguration();
         return this;
     }
