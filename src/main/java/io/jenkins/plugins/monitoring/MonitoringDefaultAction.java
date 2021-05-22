@@ -103,11 +103,8 @@ public class MonitoringDefaultAction implements RunAction2, StaplerProxy {
      *
      * @return
      *          a list of all unavailable portlet ids.
-     *
-     * @throws IOException
-     *          {@link MonitoringDefaultAction#getConfiguration()} throws an error.
      */
-    public List<String> getUnavailablePortlets() throws IOException {
+    public List<String> getUnavailablePortlets() {
         JSONArray portlets = new JSONArray(getConfiguration());
 
         List<String> usedPlugins = new ArrayList<>();
@@ -205,9 +202,7 @@ public class MonitoringDefaultAction implements RunAction2, StaplerProxy {
      *          for actual project.
      */
     @JavaScriptMethod
-    public String getConfiguration() throws IOException {
-        //TODO: Work around, because no user is available when the action is added, so can not do this in ctor.
-        setDefaultMonitorConfiguration();
+    public String getConfiguration() {
 
         MonitorConfigurationProperty monitorConfigurationProperty = MonitorConfigurationProperty
                 .forCurrentUser().orElse(null);
@@ -271,6 +266,7 @@ public class MonitoringDefaultAction implements RunAction2, StaplerProxy {
     @Override
     public Object getTarget() {
         this.run.checkPermission(Permission.CONFIGURE);
+        setDefaultMonitorConfiguration();
         return this;
     }
 }
