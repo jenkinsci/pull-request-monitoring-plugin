@@ -44,14 +44,20 @@ public class MonitoringWorkflowJobActionFactory extends TransientActionFactory<W
     @Override
     public Collection<? extends Action> createFor(@NonNull WorkflowJob workflowJob) {
 
+        if (workflowJob.getLastBuild() == null) {
+            return Collections.emptyList();
+        }
+
         final BranchJobProperty branchJobProperty = workflowJob.getProperty(BranchJobProperty.class);
 
-        if (branchJobProperty != null) {
-            final SCMHead head = branchJobProperty.getBranch().getHead();
+        if (branchJobProperty == null) {
+            return Collections.emptyList();
+        }
 
-            if (head instanceof ChangeRequestSCMHead) {
-                return Collections.singletonList(new MonitoringWorkflowJobAction(workflowJob));
-            }
+        final SCMHead head = branchJobProperty.getBranch().getHead();
+
+        if (head instanceof ChangeRequestSCMHead) {
+            return Collections.singletonList(new MonitoringWorkflowJobAction(workflowJob));
         }
 
         return Collections.emptyList();
