@@ -2,6 +2,7 @@ package io.jenkins.plugins.monitoring;
 
 import hudson.model.Action;
 import hudson.security.Permission;
+import org.acegisecurity.AccessDeniedException;
 import org.jenkinsci.plugins.workflow.job.WorkflowJob;
 import org.kohsuke.stapler.StaplerProxy;
 
@@ -15,7 +16,7 @@ import java.io.File;
  *
  * @author Simon Symhoven
  */
-public class MonitoringWorkflowJobAction implements Action, StaplerProxy {
+public class MonitoringWorkflowJobAction implements Action {
 
     private final transient WorkflowJob workflowJob;
 
@@ -42,11 +43,5 @@ public class MonitoringWorkflowJobAction implements Action, StaplerProxy {
     @Override
     public String getUrlName() {
         return workflowJob.getLastBuild().getNumber() + File.separator + MonitoringMultibranchProjectAction.getURI();
-    }
-
-    @Override
-    public Object getTarget() {
-        this.workflowJob.checkPermission(Permission.CONFIGURE);
-        return this;
     }
 }
