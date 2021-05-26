@@ -165,11 +165,11 @@ public class MonitoringDefaultAction implements RunAction2, StaplerProxy {
             return span(i("No metadata found.")).render();
         }
 
+        String description = getObjectMetadataAction().get().getObjectDescription();
+
         if (StringUtils.isEmpty(getObjectMetadataAction().get().getObjectDescription())) {
             return span(i("No description provided.")).render();
         }
-
-        String description = getObjectMetadataAction().get().getObjectDescription();
 
         Pattern markdownImage = Pattern.compile("\\[?!\\[(.*?)\\]\\((.*?)\\)\\]?\\(?(.*)\\)?");
         Matcher imageMatcher = markdownImage.matcher(description);
@@ -202,7 +202,6 @@ public class MonitoringDefaultAction implements RunAction2, StaplerProxy {
         }
 
         description = description.replaceAll("---", hr().render());
-
 
         return span(join(description)).withStyle("white-space: pre-line;").render();
     }
