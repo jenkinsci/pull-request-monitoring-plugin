@@ -3,16 +3,13 @@ package io.jenkins.plugins.monitoring;
 import hudson.model.Action;
 import hudson.model.Job;
 import hudson.model.ProminentProjectAction;
-import hudson.security.Permission;
-import jenkins.branch.Branch;
 import jenkins.branch.MultiBranchProject;
 import jenkins.scm.api.SCMHead;
 import jenkins.scm.api.metadata.ContributorMetadataAction;
 import jenkins.scm.api.metadata.ObjectMetadataAction;
 import jenkins.scm.api.mixin.ChangeRequestSCMHead;
-import org.acegisecurity.AccessDeniedException;
+import jenkins.scm.api.mixin.ChangeRequestSCMHead2;
 import org.jenkinsci.plugins.workflow.multibranch.BranchJobProperty;
-import org.kohsuke.stapler.StaplerProxy;
 
 import java.util.List;
 import java.util.Optional;
@@ -79,15 +76,16 @@ public class MonitoringMultibranchProjectAction implements ProminentProjectActio
     }
 
     /**
-     * Get the {@link BranchJobProperty} for a specific {@link Job}.
+     * Get the {@link ChangeRequestSCMHead2} for a specific {@link Job}.
      *
      * @param job
-     *          the job to get {@link Branch} for.
+     *          the job to get {@link ChangeRequestSCMHead2} for.
+     *
      * @return
-     *          the {@link Branch} of job.
+     *          the {@link ChangeRequestSCMHead2} of job.
      */
-    public Branch getBranch(Job<?, ?> job) {
-        return job.getProperty(BranchJobProperty.class).getBranch();
+    public ChangeRequestSCMHead2 getScmHead(Job<?, ?> job) {
+        return (ChangeRequestSCMHead2) job.getProperty(BranchJobProperty.class).getBranch().getHead();
     }
 
     /**
@@ -107,13 +105,11 @@ public class MonitoringMultibranchProjectAction implements ProminentProjectActio
      * @param job
      *          the job to get {@link ObjectMetadataAction} for.
      * @return
-     *          the {@link ObjectMetadataAction} for the given job.
+     *          the {@link ObjectMetadataAction} for the given job as {@link Optional}.
      */
-    public ObjectMetadataAction getObjectMetaData(Job<?, ?> job) {
-        Optional<Action> objectMetadataAction = job.getProperty(BranchJobProperty.class).getBranch().getActions()
-                .stream().filter(action -> action instanceof ObjectMetadataAction).findFirst();
-
-        return (ObjectMetadataAction) objectMetadataAction.orElse(null);
+    public Optional<ObjectMetadataAction> getObjectMetaData(Job<?, ?> job) {
+        return Optional.ofNullable(
+                job.getProperty(BranchJobProperty.class).getBranch().getAction(ObjectMetadataAction.class));
     }
 
     /**
@@ -122,13 +118,11 @@ public class MonitoringMultibranchProjectAction implements ProminentProjectActio
      * @param job
      *          the job to get {@link ContributorMetadataAction} for.
      * @return
-     *          the {@link ContributorMetadataAction} for the given job.
+     *          the {@link ContributorMetadataAction} for the given job as {@link Optional}.
      */
-    public ContributorMetadataAction getContributorMetaData(Job<?, ?> job) {
-        Optional<Action> contributorMetadataAction = job.getProperty(BranchJobProperty.class).getBranch().getActions()
-                .stream().filter(action -> action instanceof ContributorMetadataAction).findFirst();
-
-        return (ContributorMetadataAction) contributorMetadataAction.orElse(null);
+    public Optional<ContributorMetadataAction> getContributorMetaData(Job<?, ?> job) {
+        return Optional.ofNullable(
+                job.getProperty(BranchJobProperty.class).getBranch().getAction(ContributorMetadataAction.class));
     }
 
     public static String getURI() {
