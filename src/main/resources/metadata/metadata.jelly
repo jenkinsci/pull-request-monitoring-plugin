@@ -1,0 +1,45 @@
+<?jelly escape-by-default='true'?>
+
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler">
+    <st:documentation>
+        Creates a accordion with the metadata of the pull request.
+
+        <st:attribute name="it" use="required">
+            Owner of the page.
+        </st:attribute>
+
+    </st:documentation>
+
+    <st:header name="Content-Type" value="text/html;charset=UTF-8"/>
+
+    <div class="accordion" style="width: 95%">
+
+        <div class="accordion-item">
+
+            <h2 class="accordion-header" id="pr-metadata">
+
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#pr-metadata-body" aria-expanded="false"
+                        aria-controls="pr-metadata-body">
+
+                    <j:out value="${it.getPullRequestMetadataTitle()}"/>
+
+                </button>
+
+            </h2>
+
+            <div id="pr-metadata-body" class="accordion-collapse collapse" aria-labelledby="pr-metadata">
+
+                <div class="accordion-body">
+
+                    <j:out value="${it.getPullRequestMetadataBody()}"/>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</j:jelly>

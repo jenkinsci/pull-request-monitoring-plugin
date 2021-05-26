@@ -3,22 +3,31 @@ package io.jenkins.plugins.monitoring;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import hudson.model.Item;
+import edu.hm.hafner.util.FilteredLog;
+import groovy.util.OptionAccessor;
+import hudson.model.Job;
 import hudson.model.Run;
-import hudson.model.User;
-import hudson.security.Permission;
+import io.jenkins.plugins.forensics.reference.ReferenceFinder;
 import jenkins.model.RunAction2;
-import org.acegisecurity.AccessDeniedException;
+import jenkins.scm.api.metadata.ContributorMetadataAction;
+import jenkins.scm.api.metadata.ObjectMetadataAction;
+import jenkins.scm.api.mixin.ChangeRequestSCMHead2;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.jenkinsci.plugins.workflow.multibranch.BranchJobProperty;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.kohsuke.stapler.StaplerProxy;
 import org.kohsuke.stapler.bind.JavaScriptMethod;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import static j2html.TagCreator.*;
 
 /**
  * This action displays a link on the side panel of a {@link Run}. The action is only displayed if the parent job
@@ -78,6 +87,123 @@ public class MonitoringDefaultAction implements RunAction2, StaplerProxy {
 
     public Monitor getMonitor() {
         return monitor;
+    }
+
+    /**
+     * Get the {@link ObjectMetadataAction} for the current build.
+     *
+     * @return
+     *          the {@link ObjectMetadataAction}.
+     */
+    public Optional<ObjectMetadataAction> getObjectMetadataAction() {
+        return Optional.ofNullable(getRun().getParent().getProperty(BranchJobProperty.class)
+                .getBranch().getAction(ObjectMetadataAction.class));
+    }
+
+    /**
+     * Get the {@link ContributorMetadataAction} for the current build.
+     *
+     * @return
+     *          the {@link ContributorMetadataAction}.
+     */
+    public Optional<ContributorMetadataAction> getContributorMetadataAction() {
+        return Optional.ofNullable(getRun().getParent().getProperty(BranchJobProperty.class)
+                .getBranch().getAction(ContributorMetadataAction.class));
+    }
+
+    /**
+     * Get the {@link ChangeRequestSCMHead2} for a specific {@link Run}.
+     *
+     * @return
+     *          the {@link ChangeRequestSCMHead2} of run.
+     */
+    public ChangeRequestSCMHead2 getScmHead() {
+        return (ChangeRequestSCMHead2) getRun().getParent().getProperty(BranchJobProperty.class).getBranch().getHead();
+    }
+
+    /**
+     * Creates the heading for the pull request metadata accordion.
+     *
+     * @return
+     *          the title as html element.
+     */
+    public String getPullRequestMetadataTitle() {
+        Optional<Run<?, ?>> referenceBuild = getReferenceBuild();
+        Optional<ContributorMetadataAction> contributorMetadataAction = getContributorMetadataAction();
+        return span(join(
+                strong(iffElse(contributorMetadataAction.isPresent(),
+                        getContributorMetadataAction().get().getContributor(), "unknown")), "wants to merge",
+                getScmHead().getOriginName(), "into",
+                getScmHead().getTarget().getName(),
+                iffElse(referenceBuild.isPresent(),
+                        join("(reference build:",
+                                a().withHref(referenceBuild.get().getUrl())
+                                        .withText(referenceBuild.get().getDisplayName()), ")"),
+                        "(reference build not found)"))).render();
+    }
+
+    /**
+     * Get the reference build to current build.
+     *
+     * @return
+     *          the reference build as {@link Optional}.
+     */
+    private Optional<Run<?, ?>> getReferenceBuild() {
+        FilteredLog log = new FilteredLog("");
+        ReferenceFinder referenceFinder = new ReferenceFinder();
+        return referenceFinder.findReference(getRun(), log);
+    }
+
+    /**
+     * Creates the body for the pull request metadata accordion.
+     *
+     * @return
+     *          the body as html element.
+     */
+    public String getPullRequestMetadataBody() {
+        if (!getObjectMetadataAction().isPresent()) {
+            return span(i("No metadata found.")).render();
+        }
+
+        String description = getObjectMetadataAction().get().getObjectDescription();
+
+        if (StringUtils.isEmpty(getObjectMetadataAction().get().getObjectDescription())) {
+            return span(i("No description provided.")).render();
+        }
+
+        Pattern markdownImage = Pattern.compile("\\[?!\\[(.*?)\\]\\((.*?)\\)\\]?\\(?(.*)\\)?");
+        Matcher imageMatcher = markdownImage.matcher(description);
+        while (imageMatcher.find()) {
+            String text = imageMatcher.group(1);
+            String link = imageMatcher.group(2);
+            description = description.replace(imageMatcher.group(), img().withSrc(link).withAlt(text).render());
+        }
+
+        Pattern markdownUrl = Pattern.compile("\\[(.+)\\]\\(([^ ]+)( \"(.+)\")?\\)");
+        Matcher urlMatcher = markdownUrl.matcher(description);
+        while (urlMatcher.find()) {
+            String text = urlMatcher.group(1);
+            String link = urlMatcher.group(2);
+            description = description.replace(urlMatcher.group(), a().withHref(link).withText(text).render());
+        }
+
+        Pattern codeBlock = Pattern.compile("```[a-z]*\\r?\\n?([\\s\\S]*?)\\r?\\n?```");
+        Matcher codeBlockMatcher = codeBlock.matcher(description);
+        while (codeBlockMatcher.find()) {
+            String code = codeBlockMatcher.group(1);
+            description = description.replace(codeBlockMatcher.group(), code().withText(code).render());
+        }
+
+        Pattern codeLine = Pattern.compile("`([\\s\\S]*?)`");
+        Matcher codeLineMatcher = codeLine.matcher(description);
+        while (codeLineMatcher.find()) {
+            String code = codeLineMatcher.group(1);
+            description = description.replace(codeLineMatcher.group(), code().withText(code).render());
+        }
+
+        description = description.replaceAll("---", hr().render());
+
+        return span(join(description)).withStyle("white-space: pre-line;").render();
     }
 
     /**
