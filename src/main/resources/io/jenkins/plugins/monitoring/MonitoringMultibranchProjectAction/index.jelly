@@ -44,21 +44,27 @@
 
                                 <div class="card-header">
 
-                                    ${it.getObjectMetaData(job).getObjectDisplayName()}
+                                    ${job.getDisplayName()}
 
                                 </div>
 
                                 <div class="card-body">
 
-                                    <h5 class="card-title">${job.getDisplayName()}</h5>
+                                    <j:set var="objectMetadata" value="${it.getObjectMetaData(job)}"/>
+                                    <j:set var="contributorMetadata" value="${it.getContributorMetaData(job)}"/>
+
+                                    <h5 class="card-title">
+                                        ${objectMetadata.isPresent() ? objectMetadata.get().getObjectDisplayName() : 'unknown'}
+                                    </h5>
 
                                     <p class="card-text">
 
-                                        <strong>${%contributor}:</strong> ${it.getContributorMetaData(job).getContributor()} <br/>
+                                        <strong>${%contributor}:</strong> ${contributorMetadata.isPresent() ?
+                                        contributorMetadata.get().getContributor() : 'unknown'} <br/>
 
-                                        <strong>${%source}:</strong> ${it.getBranch(job).getHead().getSourceBranch()} <br/>
+                                        <strong>${%source}:</strong> ${it.getScmHead(job).getOriginName()} <br/>
 
-                                        <strong>${%target}:</strong> ${it.getBranch(job).getHead().getTarget().getName()}
+                                        <strong>${%target}:</strong> ${it.getScmHead(job).getTarget().getName()}
 
                                     </p>
 
@@ -71,22 +77,6 @@
                                             type="button" class="btn btn-outline-success">
                                         ${%goToPullRequest}
                                     </button>
-
-                                </div>
-
-                                <div class="card-footer text-muted">
-
-                                    <j:if test="${it.getBranch(job).getHead().merge}">
-
-                                        <i class="material-icons icon">&#xe5ca;</i>
-
-                                    </j:if>
-
-                                    <j:if test="${!it.getBranch(job).getHead().merge}">
-
-                                        <i class="material-icons icon">&#xe14c;</i>
-
-                                    </j:if>
 
                                 </div>
 
