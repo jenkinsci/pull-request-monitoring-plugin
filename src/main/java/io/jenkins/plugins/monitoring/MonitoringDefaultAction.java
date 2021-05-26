@@ -95,9 +95,9 @@ public class MonitoringDefaultAction implements RunAction2, StaplerProxy {
      * @return
      *          the {@link ObjectMetadataAction}.
      */
-    public ObjectMetadataAction getObjectMetadataAction() {
-        return getRun().getParent().getProperty(BranchJobProperty.class)
-                .getBranch().getAction(ObjectMetadataAction.class);
+    public Optional<ObjectMetadataAction> getObjectMetadataAction() {
+        return Optional.ofNullable(getRun().getParent().getProperty(BranchJobProperty.class)
+                .getBranch().getAction(ObjectMetadataAction.class));
     }
 
     /**
@@ -106,9 +106,9 @@ public class MonitoringDefaultAction implements RunAction2, StaplerProxy {
      * @return
      *          the {@link ContributorMetadataAction}.
      */
-    public ContributorMetadataAction getContributorMetadataAction() {
-        return getRun().getParent().getProperty(BranchJobProperty.class)
-                .getBranch().getAction(ContributorMetadataAction.class);
+    public Optional<ContributorMetadataAction> getContributorMetadataAction() {
+        return Optional.ofNullable(getRun().getParent().getProperty(BranchJobProperty.class)
+                .getBranch().getAction(ContributorMetadataAction.class));
     }
 
     /**
@@ -129,7 +129,10 @@ public class MonitoringDefaultAction implements RunAction2, StaplerProxy {
      */
     public String getPullRequestMetadataTitle() {
         Optional<Run<?, ?>> referenceBuild = getReferenceBuild();
-        return span(join(strong(getContributorMetadataAction().getContributor()), "wants to merge",
+        Optional<ContributorMetadataAction> contributorMetadataAction = getContributorMetadataAction();
+        return span(join(
+                strong(iffElse(contributorMetadataAction.isPresent(),
+                        getContributorMetadataAction().get().getContributor(), "unknown")), "wants to merge",
                 getScmHead().getOriginName(), "into",
                 getScmHead().getTarget().getName(),
                 iffElse(referenceBuild.isPresent(),
@@ -158,11 +161,15 @@ public class MonitoringDefaultAction implements RunAction2, StaplerProxy {
      *          the body as html element.
      */
     public String getPullRequestMetadataBody() {
-        if (StringUtils.isEmpty(getObjectMetadataAction().getObjectDescription())) {
+        if (!getObjectMetadataAction().isPresent()) {
+            return span(i("No metadata found.")).render();
+        }
+
+        if (StringUtils.isEmpty(getObjectMetadataAction().get().getObjectDescription())) {
             return span(i("No description provided.")).render();
         }
 
-        String description = getObjectMetadataAction().getObjectDescription();
+        String description = getObjectMetadataAction().get().getObjectDescription();
 
         Pattern markdownImage = Pattern.compile("\\[?!\\[(.*?)\\]\\((.*?)\\)\\]?\\(?(.*)\\)?");
         Matcher imageMatcher = markdownImage.matcher(description);
