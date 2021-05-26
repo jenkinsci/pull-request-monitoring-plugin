@@ -16,7 +16,7 @@
 
     <j:if test="${unavailablePortlets.size() > 0}">
 
-        <div class="alert alert-warning alert-dismissible fade show" role="alert" style="width: 95%">
+        <div class="alert alert-warning alert-dismissible fade show" role="alert" style="width: 95%; margin: 5px;">
 
             <h4 class="alert-heading">${%title}</h4>
 

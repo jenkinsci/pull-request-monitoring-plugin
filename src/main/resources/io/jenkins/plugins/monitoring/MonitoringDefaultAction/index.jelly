@@ -1,55 +1,69 @@
 <?jelly escape-by-default='true'?>
 
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:bs="/bootstrap5"
-         xmlns:modals="/modals" xmlns:portlet="/portlet" xmlns:alerts="/alerts">
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout"
+         xmlns:modals="/modals" xmlns:portlet="/portlet" xmlns:alerts="/alerts" xmlns:metadata="/metadata">
 
     <st:header name="Content-Type" value="text/html;charset=UTF-8"/>
 
-    <bs:page it="${it}">
+    <l:layout title="${it.getObjectMetadataAction().getObjectDisplayName()}"
+              css="${resURL}/plugin/pull-request-monitoring/css/pull-request-monitoring.css">
 
-        <st:adjunct includes="io.jenkins.plugins.jquery3"/>
-        <st:adjunct includes="io.jenkins.plugins.select2"/>
-        <st:adjunct includes="io.jenkins.plugins.muuri"/>
+        <l:side-panel>
 
-        <link href="${resURL}/plugin/pull-request-monitoring/css/pull-request-monitoring.css" rel="stylesheet"/>
+            <st:include page="sidepanel.jelly" it="${it.run}" optional="true" />
 
-        <!-- The data toggle for <modals:config> -->
-        <button type="button" id="config-button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#configModal">
+        </l:side-panel>
 
-            <i class="material-icons icon spin">&#xE8B8;</i>
+        <l:main-panel>
 
-        </button>
+            <st:adjunct includes="io.jenkins.plugins.jquery3"/>
+            <st:adjunct includes="io.jenkins.plugins.select2"/>
+            <st:adjunct includes="io.jenkins.plugins.muuri"/>
+            <st:adjunct includes="io.jenkins.plugins.bootstrap5"/>
 
-        <!-- The data toggle for <modals:add-portlet> -->
-        <button type="button" class="btn btn-primary" id="add-item-button" data-bs-toggle="modal" data-bs-target="#portletModal">
+            <h1>${it.getObjectMetadataAction().getObjectDisplayName()}</h1>
 
-            <i class="material-icons icon">&#xE145;</i>
+            <metadata:metadata it="${it}"/>
 
-        </button>
+            <!-- The data toggle for <modals:config> -->
+            <button type="button" id="config-button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#configModal">
 
-        <alerts:warning it="${it}"/>
+                <i class="material-icons icon spin">&#xE8B8;</i>
 
-        <div class="grid">
+            </button>
 
-            <j:set var="portlets" value="${it.monitor.getAvailablePortlets(it.run)}"/>
+            <!-- The data toggle for <modals:add-portlet> -->
+            <button type="button" class="btn btn-primary" id="add-item-button" data-bs-toggle="modal" data-bs-target="#portletModal">
 
-            <j:forEach var="portlet" items="${portlets}">
+                <i class="material-icons icon">&#xE145;</i>
 
-                <portlet:portlet portlet="${portlet}"/>
+            </button>
 
-            </j:forEach>
+            <alerts:warning it="${it}"/>
 
-        </div>
+            <div class="grid">
 
-        <!-- MODALS -->
-        <modals:config/>
+                <j:set var="portlets" value="${it.monitor.getAvailablePortlets(it.run)}"/>
 
-        <modals:add-portlet portlets="${portlets}" it="${it}"/>
+                <j:forEach var="portlet" items="${portlets}">
 
-        <script>var run = <st:bind value="${it}"/></script>
-        <script type="text/javascript" src="${resURL}/plugin/pull-request-monitoring/js/pull-request-monitoring.js"/>
+                    <portlet:portlet portlet="${portlet}"/>
 
-    </bs:page>
+                </j:forEach>
+
+            </div>
+
+            <!-- MODALS -->
+            <modals:config/>
+
+            <modals:add-portlet portlets="${portlets}" it="${it}"/>
+
+            <script>var run = <st:bind value="${it}"/></script>
+            <script type="text/javascript" src="${resURL}/plugin/pull-request-monitoring/js/pull-request-monitoring.js"/>
+
+        </l:main-panel>
+
+    </l:layout>
 
 </j:jelly>
 
