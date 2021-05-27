@@ -1,10 +1,7 @@
 package io.jenkins.plugins.monitoring;
 
 import hudson.model.Action;
-import hudson.security.Permission;
-import org.acegisecurity.AccessDeniedException;
 import org.jenkinsci.plugins.workflow.job.WorkflowJob;
-import org.kohsuke.stapler.StaplerProxy;
 
 import java.io.File;
 

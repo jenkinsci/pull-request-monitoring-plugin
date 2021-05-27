@@ -221,6 +221,7 @@
                         <exclude>**/*Action*</exclude>
                         <exclude>**/*Factory*</exclude>
                         <exclude>**/*Property*</exclude>
+                        <exclude>**/*Portlet*</exclude>
                     </excludes>
                 </configuration>
             </plugin>

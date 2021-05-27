@@ -116,11 +116,11 @@ This plugin relies on other plugins to provide a view that aggregates and provid
 
 #### The code behind
 
-The [MonitorPortlet](src/main/java/io/jenkins/plugins/monitoring/MonitorPortlet.java) interface defines the interface 
+The [MonitorPortlet](src/main/java/io/jenkins/plugins/monitoring/MonitorPortlet.java) class defines the base class 
 for each portlet that is to be displayed. In order to register the portlet for the plugin, 
 a factory class is required, which must be provided with the annotation `@Extension`. 
-The factory have to implement the [MonitorPortletFactory](src/main/java/io/jenkins/plugins/monitoring/MonitorPortletFactory.java) 
-interface, receives the current `Run<?,?>`, delivers a set of `MonitorPortlets` and defines a `displayedName`, 
+The factory has to extend the [MonitorPortletFactory](src/main/java/io/jenkins/plugins/monitoring/MonitorPortletFactory.java) 
+abstract class, receives the current `Run<?,?>`, delivers a set of `MonitorPortlets` and defines a `displayedName`, 
 which appears as `optgroup` in the dashboard in the dropdown list of all available portlets and their corresponding 
 factory.
 
@@ -131,21 +131,19 @@ factory.
 Normally, one plugin delivers one portlet. A minimal example could look as follows:
 
 ```java
-import io.jenkins.plugins.monitoring.MonitorPortlet;
-
 /**
  *  An example Monitor Portlet implementation with one portlet delivered by factory.
  */
-public class ExamplePortlet implements MonitorPortlet {
+public class DemoPortlet extends MonitorPortlet {
     private final Run<?, ?> build;
 
     /**
-     * Create a new {@link MonitorPortlet}.
+     * Create a new {@link DemoPortlet}.
      *
      * @param run
      *          the {@link Run}
      */
-    public MonitorPortlet(Run<?, ?> run) {
+    public DemoPortlet(Run<?, ?> run) {
         this.build = run;
     }
 
@@ -158,7 +156,7 @@ public class ExamplePortlet implements MonitorPortlet {
      */
     @Override
     public String getTitle() {
-        return "Example Portlet";
+        return "Demo Portlet";
     }
 
     /**
@@ -169,9 +167,20 @@ public class ExamplePortlet implements MonitorPortlet {
      */
     @Override
     public String getId() {
-        return "example-portlet-id";
+        return "demo-portlet-id";
     }
 
+    /**
+     * Defines whether the portlet is shown per default in the user dashboard or not.
+     * 
+     * @return
+     *          true if portlet should be shown, false else.
+     */
+    @Override
+    public boolean isDefault() {
+        return true;
+    }
+    
     /**
      * Defines the preferred width of the portlet. It's 
      * possible to override the default width by user.
@@ -226,19 +235,27 @@ public class ExamplePortlet implements MonitorPortlet {
      * Creates a new {@link ExamplePortletFactory}.
      */
     @Extension
-    public static class ExamplePortletFactory implements MonitorPortletFactory {
+    public static class ExamplePortletFactory extends MonitorPortletFactory {
         @Override
         public Collection<MonitorPortlet> getPortlets(Run<?, ?> build) {
-            return Collections.singleton(new ExamplePortlet(build));
+            return Collections.singleton(new DemoPortlet(build));
         }
 
         @Override
         public String getDisplayName() {
-            return "Example Portlet Factory";
+            return "Demo Portlet Factory";
         }
     }
 }
 ```
+
+> ⚠️ WARNING: **Null Check for used actions**
+> Since an empty dashboard is always added by default, it is possible that the method `getPortlets(Run)` will
+> be called (e.g. open the dashboard of actual run) even though the corresponding run may not be finished. 
+> It is possible that actions have not yet been added to the run. 
+> It is therefore advisable to perform a null check on the actions of the run required by your portlet and return 
+> an empty list if necessary.
+> (Example: <a href="https://github.com/simonsymhoven/code-coverage-api-plugin/blob/pull-request-monitoring-portlet/src/main/java/io/jenkins/plugins/coverage/CoveragePullRequestMonitoringPortlet.java#L142">code-coverage-api</a>)</p>
 
 #### Multiple Instances Of One Portlet
 
@@ -257,26 +274,26 @@ Here is an example of a factory that delivers two instances of a class:
 /**
  * An example Monitor Portlet implementation with multiple portlets delivered by factory.
  */
-public class ExamplePortlet implements MonitorPortlet {
+public class DemoPortlet extends MonitorPortlet {
     private final Run<?, ?> run;
     private final String id;
 
     /**
-     * Create a new {@link ExamplePortlet}.
+     * Create a new {@link DemoPortlet}.
      *
      * @param run
      *          the {@link Run}
      * @param id
      *          the id.
      */
-    public ExamplePortlet(Run<?, ?> run, String id) {
+    public DemoPortlet(Run<?, ?> run, String id) {
         this.run = run;
         this.id = id;
     }
 
     @Override
     public String getTitle() {
-        return "Example Portlet " + getId();
+        return "Demo Portlet " + getId();
     }
 
     @Override
@@ -290,18 +307,18 @@ public class ExamplePortlet implements MonitorPortlet {
      * Creates a new {@link ExamplePortletFactory}.
      */
     @Extension
-    public static class ExamplePortletFactory implements MonitorPortletFactory {
+    public static class ExamplePortletFactory extends MonitorPortletFactory {
         @Override
         public Collection<MonitorPortlet> getPortlets(Run<?, ?> build) {
             List<MonitorPortlet> portlets = new ArrayList<>();
-            portlets.add(new ExamplePortlet(build, "example-portlet-first"));
-            portlets.add(new ExamplePortlet(build, "example-portlet-second"));
+            portlets.add(new DemoPortlet(build, "example-portlet-first"));
+            portlets.add(new DemoPortlet(build, "example-portlet-second"));
             return monitors;
         }
 
         @Override
         public String getDisplayName() {
-            return "Example Portlet Factory";
+            return "Demo Portlet Factory";
         }
     }
 }
@@ -314,9 +331,9 @@ plugins portlet delivered on the dashboard later. Therefore you have to create a
 in the directory, which corresponds to the `MonitorView` class. 
 
 > **Example**: 
-> The code behind is defined in `src/main/java/io/jenkins/plugins/sample/ExamplePortlet.java`. The related sources 
+> The code behind is defined in `src/main/java/io/jenkins/plugins/sample/DemoPortlet.java`. The related sources 
 > (e.g. the `monitor.jelly` file) have to be defined in 
-> `src/main/resources/io/jenkins/plugins/sample/ExamplePortlet/monitory.jelly`. 
+> `src/main/resources/io/jenkins/plugins/sample/DemoPortlet/monitory.jelly`. 
 
 Now the portlet, which can be added later in the dashboard, can be filled individually.
 Of course, all obligatory functions of the Jelly files, such as [JEXL](https://commons.apache.org/proper/commons-jexl/) 
@@ -383,7 +400,7 @@ To start with an empty dashboard, there are two ways, which are provided by the 
     [MonitoringDefaultAction](src/main/java/io/jenkins/plugins/monitoring/MonitoringDefaultAction.java) is automatically 
     added to the `Run` and later available on the sidepanel of the run. 
    
-2.  Another to get an empty dashboard, add the following stage to your Jenkinsfile:
+2.  Another way to get an empty dashboard, add the following stage to your Jenkinsfile:
     It is recommended to add the monitoring at the end of your pipeline, to ensure that other
     plugins such as static code analysis are performed first and that the actions that may be required are
     available.
@@ -394,9 +411,15 @@ To start with an empty dashboard, there are two ways, which are provided by the 
     ```
 
 The dashboard will be added to each build, which corresponds to a pull request.
-Now you are able to add plugins to the dashboard, change the layout or remove it again.
+Now you are able to add portlets to the dashboard, change the layout or remove it again.
 The configuration will be saved for each project per user. If you want to save the configuration permanently, 
 it is best to copy and paste it into the Jenkinsfile and overwrite the default dashboard and use a custom dashboard.
+
+> 💤 **Default Portlets for Dashboard**:
+> 
+> Since version 1.6.0, the portlets can decide whether they should be displayed by default or not in the
+> user dashboard. The functionality for this is not yet given and the flag is ignored, but the API for it is 
+> already prepared.
 
 #### Custom Dashboard
 
