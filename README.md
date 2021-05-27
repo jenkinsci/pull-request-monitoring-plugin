@@ -245,6 +245,7 @@ public class ExamplePortlet implements MonitorPortlet {
 The factory can also deliver several portlets of one class.
 
 > ⚠️ WARNING: **Unique portlet ID**:
+> 
 > The id must be unique. Please make sure that the id is related to the plugin so that there are no conflicts with 
 > other plugins. It is recommended to use the artifact id of the plugin or parts of it as prefix.
 > If several portlets of the same class are created in the factory, it must be ensured that the ID is always unique 
@@ -368,6 +369,14 @@ and have the appropriate permissions. Otherwise, the action will not be displaye
 
 #### Default Dashboard
 
+> 💡 **Reference build search**:
+> 
+> The [git-forensics-api](https://www.jenkins.io/doc/pipeline/steps/git-forensics/) plugin allows to find a reference build for a pull request build. 
+> This is already pre-installed as a mandatory dependency. It is highly recommended using this plugin and 
+> to search for the reference build in the pipeline with `discoverGitReferenceBuild()` (or configure it via the Jenkins UI). 
+> For more information please visit the [plugin page](https://www.jenkins.io/doc/pipeline/steps/git-forensics/) or have a 
+> look into an example [pipeline](etc/Jenkinsfile.default).
+
 To start with an empty dashboard, there are two ways, which are provided by the plugin:
 
 1.  Do nothing. If the run is part of a pull request, the corresponding 
@@ -426,6 +435,7 @@ Each JSONObject needs at least the `id` of the portlet to add. For `width` and `
 The dashboard will be added to your `Run` and the pre-defined monitor should be available. 
 
 > ⚠️ WARNING: **Duplicate or missing portlet IDs**:
+> 
 > Duplicates will be removed as well as missing portlet ids. The `Run` will not fail unless 
 > the provided json does not follow the scheme!
 
@@ -447,7 +457,8 @@ Under the settings of each `Run`, various things can be tracked:
 4.  The actual configuration
 5.  The default configuration.
 
-> ⚠️ WARNING: **Prioritising of the different configurations:**:
+> ⚠️ WARNING: **Prioritising of the different configurations:**
+> 
 > If there is a user-specific configuration for one dashboard (per project), the user-specific 
 > configuration will be loaded per default. If you sync the current configuration with 
 > the default one, the user-specific configuration for current dashboard will be deleted and the default
