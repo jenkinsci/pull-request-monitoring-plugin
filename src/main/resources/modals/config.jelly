@@ -33,7 +33,7 @@
 
                     <div class="row">
 
-                        <div class="col-9">
+                        <div class="col-12">
 
                             <p>${it.hasChanges()}</p>
 
@@ -45,7 +45,7 @@
 
                     <div class="row">
 
-                        <div class="col-9">
+                        <div class="col-12">
 
                             <p id="sourceDescription"/>
 
@@ -58,13 +58,13 @@
 
                     <div class="row">
 
-                        <div class="col-9">
+                        <div class="col-10">
 
                             <p id="resetDescription"/>
 
                         </div>
 
-                        <div class="col-3">
+                        <div class="col-2">
 
                             <button id="reset" type="button" class="btn btn-light float-right">
                                 <i class="material-icons icon">&#xe5d5;</i>
@@ -78,13 +78,13 @@
 
                     <div class="row">
 
-                        <div class="col-9">
+                        <div class="col-10">
 
                             <pre id="config"/>
 
                         </div>
 
-                        <div class="col-3">
+                        <div class="col-2">
 
                             <button id="copy" type="button" class="btn btn-light float-right"
                                     data-toggle="tooltip" data-placement="bottom" title="Copy to clipboard">
@@ -99,13 +99,13 @@
 
                     <div class="row">
 
-                        <div class="col-9">
+                        <div class="col-10">
 
                             <pre id="defaultConfig"/>
 
                         </div>
 
-                        <div class="col-3">
+                        <div class="col-2">
 
                             <button id="copyDefault" type="button" class="btn btn-light float-right"
                                     data-toggle="tooltip" data-placement="bottom" title="Copy to clipboard">

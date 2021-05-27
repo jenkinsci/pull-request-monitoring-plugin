@@ -6,17 +6,16 @@ import hudson.model.Run;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 /**
- * An example of {@link MonitorPortletFactory}.
+ * An example of {@link MonitorPortlet}.
  */
-public class ExamplePortlet implements MonitorPortlet {
+public class DemoPortlet extends MonitorPortlet {
     private final String id;
     private final String title;
 
     /**
-     * Creates a new {@link ExamplePortlet}.
+     * Creates a new {@link DemoPortlet}.
      *
      * @param title
      *          the title of the portlet.
@@ -24,7 +23,7 @@ public class ExamplePortlet implements MonitorPortlet {
      * @param id
      *          the id of the portlet.
      */
-    public ExamplePortlet(String title, String id) {
+    public DemoPortlet(String title, String id) {
         this.id = id;
         this.title = title;
     }
@@ -49,27 +48,17 @@ public class ExamplePortlet implements MonitorPortlet {
         return 200;
     }
 
-    @Override
-    public Optional<String> getIconUrl() {
-        return Optional.empty();
-    }
-
-    @Override
-    public Optional<String> getDetailViewUrl() {
-        return Optional.empty();
-    }
-
     /**
      * An example of {@link MonitorPortletFactory}.
      */
     @Extension
-    public static class ExampleMonitorFactory implements MonitorPortletFactory {
+    public static class ExampleMonitorFactory extends MonitorPortletFactory {
 
         @Override
         public Collection<MonitorPortlet> getPortlets(Run<?, ?> build) {
             List<MonitorPortlet> portlets = new ArrayList<>();
-            portlets.add(new ExamplePortlet("Good First Portlet", "first-demo-portlet"));
-            portlets.add(new ExamplePortlet("Another Portlet", "second-demo-portlet"));
+            portlets.add(new DemoPortlet("Good First Portlet", "first-demo-portlet"));
+            portlets.add(new DemoPortlet("Another Portlet", "second-demo-portlet"));
             return portlets;
         }
 

@@ -4,8 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.hm.hafner.util.FilteredLog;
-import groovy.util.OptionAccessor;
-import hudson.model.Job;
 import hudson.model.Run;
 import io.jenkins.plugins.forensics.reference.ReferenceFinder;
 import jenkins.model.RunAction2;

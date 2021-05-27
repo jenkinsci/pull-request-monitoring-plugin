@@ -5,7 +5,7 @@
 
     <st:header name="Content-Type" value="text/html;charset=UTF-8"/>
 
-    <l:layout title="${it.getObjectMetadataAction().getObjectDisplayName()}"
+    <l:layout title="${it.getObjectMetadataAction().get().getObjectDisplayName()}"
               css="${resURL}/plugin/pull-request-monitoring/css/pull-request-monitoring.css">
 
         <l:side-panel>
@@ -21,7 +21,7 @@
             <st:adjunct includes="io.jenkins.plugins.muuri"/>
             <st:adjunct includes="io.jenkins.plugins.bootstrap5"/>
 
-            <h1>${it.getObjectMetadataAction().getObjectDisplayName()}</h1>
+            <h1>${it.getObjectMetadataAction().get().getObjectDisplayName()}</h1>
 
             <metadata:metadata it="${it}"/>
 
