@@ -1,11 +1,9 @@
 package io.jenkins.plugins.monitoring;
 
-import hudson.Extension;
 import hudson.ExtensionPoint;
 import hudson.model.Run;
 
 import java.util.Collection;
-import java.util.Collections;
 
 /**
  * <p>Defines the {@link ExtensionPoint} to register one or more new pull request monitoring portlets.</p>
@@ -16,8 +14,7 @@ import java.util.Collections;
  * <p>Since an empty dashboard is always added by default, it is possible that the method {@link #getPortlets(Run)} will
  * be called even though the current run may not be finished. It is therefore advisable to perform a null check on
  * the actions of the run required by your portlet and return an empty list if necessary.
- * (Example: <a href="https://github.com/simonsymhoven/code-coverage-api-plugin/blob/pull-request-monitoring-portlet/
- * src/main/java/io/jenkins/plugins/coverage/CoveragePullRequestMonitoringPortlet.java#L142">code-coverage-api</a>)</p>
+ * (Example: <a href="https://bit.ly/2SDZzAg">code-coverage-api</a>)</p>
  *
  * @since 1.6.0
  * @author Simon Symhoven
