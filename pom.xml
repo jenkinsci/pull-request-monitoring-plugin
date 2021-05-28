@@ -11,7 +11,7 @@
     <artifactId>pull-request-monitoring</artifactId>
     <packaging>hpi</packaging>
     <name>Pull Request Monitoring</name>
-    <version>1.6.1-SNAPSHOT</version>
+    <version>1.5.4-SNAPSHOT</version>
     <description>
         This plugin offers a possibility to display and aggregate the results (in the form of individual views) of a pull
         request in a configurable dashboard. Views can only be accessed or displayed if the corresponding plugin fulfils
