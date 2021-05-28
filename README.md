@@ -72,6 +72,7 @@ At the [Jenkins UX SIG Meeting](https://www.youtube.com/watch?v=F1ISpA7K0YA) on 
             </ul>
         </ul>
     </li>
+    <li><a href="#available-portlets">Available Portlets</a></li>
     <li><a href="#demo">Demo</a>
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contributing</a></li>
@@ -249,7 +250,8 @@ public class DemoPortlet extends MonitorPortlet {
 }
 ```
 
-> ⚠️ WARNING: **Null Check for used actions**
+> ⚠️ **Null Check for used actions**
+> 
 > Since an empty dashboard is always added by default, it is possible that the method `getPortlets(Run)` will
 > be called (e.g. open the dashboard of actual run) even though the corresponding run may not be finished. 
 > It is possible that actions have not yet been added to the run. 
@@ -261,7 +263,7 @@ public class DemoPortlet extends MonitorPortlet {
 
 The factory can also deliver several portlets of one class.
 
-> ⚠️ WARNING: **Unique portlet ID**:
+> ⚠️ **Unique portlet ID**:
 > 
 > The id must be unique. Please make sure that the id is related to the plugin so that there are no conflicts with 
 > other plugins. It is recommended to use the artifact id of the plugin or parts of it as prefix.
@@ -330,10 +332,10 @@ Each portlet have to have a corresponding `monitor.jelly` file, which is respons
 plugins portlet delivered on the dashboard later. Therefore you have to create a new `monitor.jelly` file 
 in the directory, which corresponds to the `MonitorView` class. 
 
-> **Example**: 
-> The code behind is defined in `src/main/java/io/jenkins/plugins/sample/DemoPortlet.java`. The related sources 
-> (e.g. the `monitor.jelly` file) have to be defined in 
-> `src/main/resources/io/jenkins/plugins/sample/DemoPortlet/monitory.jelly`. 
+**Example**: 
+The code behind is defined in `src/main/java/io/jenkins/plugins/sample/DemoPortlet.java`. The related sources 
+(e.g. the `monitor.jelly` file) have to be defined in 
+`src/main/resources/io/jenkins/plugins/sample/DemoPortlet/monitory.jelly`. 
 
 Now the portlet, which can be added later in the dashboard, can be filled individually.
 Of course, all obligatory functions of the Jelly files, such as [JEXL](https://commons.apache.org/proper/commons-jexl/) 
@@ -457,7 +459,7 @@ Each JSONObject needs at least the `id` of the portlet to add. For `width` and `
 
 The dashboard will be added to your `Run` and the pre-defined monitor should be available. 
 
-> ⚠️ WARNING: **Duplicate or missing portlet IDs**:
+> ⚠️ **Duplicate or missing portlet IDs**:
 > 
 > Duplicates will be removed as well as missing portlet ids. The `Run` will not fail unless 
 > the provided json does not follow the scheme!
@@ -480,7 +482,7 @@ Under the settings of each `Run`, various things can be tracked:
 4.  The actual configuration
 5.  The default configuration.
 
-> ⚠️ WARNING: **Prioritising of the different configurations:**
+> ⚠️ **Prioritising of the different configurations**:
 > 
 > If there is a user-specific configuration for one dashboard (per project), the user-specific 
 > configuration will be loaded per default. If you sync the current configuration with 
@@ -488,6 +490,16 @@ Under the settings of each `Run`, various things can be tracked:
 > configuration will be loaded. Deletion cannot be undone!
 
 ![Settings](etc/images/settings.png)
+
+## Available Portlets
+
+If your plugin is not in the list but provides a portlet, feel free to add it with a pull request!
+
+| | Plugin | Number of delivered portlets | Portlet ID |
+| --- | --- | --- | --- |
+| ![Warnings Next Generation](etc/images/portlets/warnings-next-generation.png) | [Warnings Next Generation](https://plugins.jenkins.io/warnings-ng/) | &#8805; 100 | depends on [tool](https://github.com/jenkinsci/warnings-ng-plugin/blob/master/SUPPORTED-FORMATS.md)
+| ![Code Coverage API](etc/images/portlets/code-coverage-api.png)               | [Code Coverage API](https://plugins.jenkins.io/code-coverage-api/)  | 1           | code-coverage
+
 
 ## Demo
 
