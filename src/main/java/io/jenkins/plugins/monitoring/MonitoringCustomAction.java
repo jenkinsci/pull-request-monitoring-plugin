@@ -19,7 +19,8 @@ public class MonitoringCustomAction extends InvisibleAction {
      * @param monitor
      *          the {@link Monitor} to be add.
      */
-    public MonitoringCustomAction(Monitor monitor) {
+    public MonitoringCustomAction(final Monitor monitor) {
+        super();
         this.monitor = monitor;
     }
 

@@ -391,7 +391,7 @@ and have the appropriate permissions. Otherwise, the action will not be displaye
 > 💡 **Reference build search**:
 > 
 > The [git-forensics-api](https://www.jenkins.io/doc/pipeline/steps/git-forensics/) plugin allows to find a reference build for a pull request build. 
-> This is already pre-installed as a mandatory dependency. It is highly recommended using this plugin and 
+> It is highly recommended using this plugin and 
 > to search for the reference build in the pipeline with `discoverGitReferenceBuild()` (or configure it via the Jenkins UI). 
 > For more information please visit the [plugin page](https://www.jenkins.io/doc/pipeline/steps/git-forensics/) or have a 
 > look into an example [pipeline](etc/Jenkinsfile.default).

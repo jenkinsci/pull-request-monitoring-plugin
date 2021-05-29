@@ -27,7 +27,7 @@ public class MonitoringDefaultActionFactory extends TransientActionFactory<Run> 
 
     @NonNull
     @Override
-    public Collection<? extends Action> createFor(@NonNull Run run) {
+    public Collection<? extends Action> createFor(@NonNull final Run run) {
 
         final Job<?, ?> job = run.getParent();
         final BranchJobProperty branchJobProperty = job.getProperty(BranchJobProperty.class);

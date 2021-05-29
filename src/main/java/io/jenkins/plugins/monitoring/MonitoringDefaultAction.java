@@ -21,6 +21,8 @@ import org.kohsuke.stapler.bind.JavaScriptMethod;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -37,6 +39,7 @@ import static j2html.TagCreator.*;
  * @author Simon Symhoven
  */
 public class MonitoringDefaultAction implements RunAction2, StaplerProxy {
+    private static final Logger LOGGER = Logger.getLogger(MonitoringDefaultAction.class.getName());
     private final Monitor monitor;
     private transient Run<?, ?> run;
 
@@ -49,7 +52,7 @@ public class MonitoringDefaultAction implements RunAction2, StaplerProxy {
      * @param monitor
      *          the {@link Monitor} to be add.
      */
-    public MonitoringDefaultAction(Run<?, ?> run, Monitor monitor) {
+    public MonitoringDefaultAction(final Run<?, ?> run, final Monitor monitor) {
         this.run = run;
         this.monitor = monitor;
     }
@@ -70,13 +73,13 @@ public class MonitoringDefaultAction implements RunAction2, StaplerProxy {
     }
 
     @Override
-    public void onAttached(Run<?, ?> run) {
-        this.run = run;
+    public void onAttached(final Run<?, ?> build) {
+        this.run = build;
     }
 
     @Override
-    public void onLoad(Run<?, ?> run) {
-        this.run = run;
+    public void onLoad(final Run<?, ?>  build) {
+        this.run = build;
     }
 
     public Run<?, ?> getRun() {
@@ -165,7 +168,7 @@ public class MonitoringDefaultAction implements RunAction2, StaplerProxy {
 
         String description = getObjectMetadataAction().get().getObjectDescription();
 
-        if (StringUtils.isEmpty(getObjectMetadataAction().get().getObjectDescription())) {
+        if (StringUtils.isEmpty(description)) {
             return span(i("No description provided.")).render();
         }
 
@@ -212,7 +215,7 @@ public class MonitoringDefaultAction implements RunAction2, StaplerProxy {
      */
     public String getConfigurationId() {
         String id = getRun().getParent().getParent().getDisplayName();
-        return id.toLowerCase().replaceAll(" ", "-");
+        return StringUtils.toRootLowerCase(id).replaceAll(" ", "-");
     }
 
     /**
@@ -286,7 +289,7 @@ public class MonitoringDefaultAction implements RunAction2, StaplerProxy {
      * @return
      *          true, if both are equals, else false.
      */
-    public boolean areJsonNodesEquals(String s1, String s2) {
+    public boolean areJsonNodesEquals(final String s1, final String s2) {
 
         try {
             ObjectMapper mapper = new ObjectMapper();
@@ -294,8 +297,8 @@ public class MonitoringDefaultAction implements RunAction2, StaplerProxy {
             JsonNode node2 = mapper.readTree(s2);
             return node1.equals(node2);
         }
-        catch (JsonProcessingException e) {
-            e.printStackTrace();
+        catch (JsonProcessingException exception) {
+            LOGGER.log(Level.SEVERE, "Json could not be parsed: ", exception);
         }
 
         return false;
@@ -313,7 +316,7 @@ public class MonitoringDefaultAction implements RunAction2, StaplerProxy {
      *
      */
     @JavaScriptMethod
-    public void updateMonitorConfiguration(String config) {
+    public void updateMonitorConfiguration(final String config) {
         MonitorConfigurationProperty
                 .forCurrentUser()
                 .ifPresent(monitorConfigurationProperty ->
@@ -347,8 +350,8 @@ public class MonitoringDefaultAction implements RunAction2, StaplerProxy {
     @JavaScriptMethod
     public boolean isMonitorConfigurationSynced() {
 
-        MonitorConfigurationProperty monitorConfigurationProperty = MonitorConfigurationProperty
-                .forCurrentUser().orElse(null);
+        MonitorConfigurationProperty monitorConfigurationProperty = MonitorConfigurationProperty.forCurrentUser()
+                .orElse(null);
 
         if (monitorConfigurationProperty == null) {
             return true;
@@ -357,12 +360,12 @@ public class MonitoringDefaultAction implements RunAction2, StaplerProxy {
         MonitorConfigurationProperty.MonitorConfiguration projectConfiguration =
                 monitorConfigurationProperty.getConfiguration(getConfigurationId());
 
-        MonitorConfigurationProperty.MonitorConfiguration defaultConfiguration =
-                monitorConfigurationProperty.getConfiguration(MonitorConfigurationProperty.DEFAULT_ID);
-
         if (projectConfiguration == null) {
             return true;
         }
+
+        MonitorConfigurationProperty.MonitorConfiguration defaultConfiguration =
+                monitorConfigurationProperty.getConfiguration(MonitorConfigurationProperty.DEFAULT_ID);
 
         return areJsonNodesEquals(projectConfiguration.getConfig(), defaultConfiguration.getConfig());
     }
@@ -377,7 +380,7 @@ public class MonitoringDefaultAction implements RunAction2, StaplerProxy {
     @JavaScriptMethod
     public String resolvePortlets() {
         MonitoringCustomAction action = getRun().getAction(MonitoringCustomAction.class);
-        return action != null ? action.getMonitor().getPortlets() : getMonitor().getPortlets();
+        return action == null ?  getMonitor().getPortlets() : action.getMonitor().getPortlets();
     }
 
     /**

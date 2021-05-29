@@ -9,6 +9,8 @@ import hudson.model.UserPropertyDescriptor;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * A {@link UserProperty} to store the json configuration per user as property.
@@ -16,7 +18,7 @@ import java.util.*;
  * @author Simon Symhoven
  */
 public class MonitorConfigurationProperty extends UserProperty implements Saveable {
-
+    private static final Logger LOGGER = Logger.getLogger(MonitorConfigurationProperty.class.getName());
     private final Collection<MonitorConfiguration> configurations;
 
     /**
@@ -30,7 +32,8 @@ public class MonitorConfigurationProperty extends UserProperty implements Saveab
      * @param configurations
      *              the list of configurations to add to the {@link MonitorConfigurationProperty}.
      */
-    public MonitorConfigurationProperty(List<MonitorConfiguration> configurations) {
+    public MonitorConfigurationProperty(final List<MonitorConfiguration> configurations) {
+        super();
         this.configurations = configurations;
     }
 
@@ -47,7 +50,7 @@ public class MonitorConfigurationProperty extends UserProperty implements Saveab
      * @return
      *          the {@link MonitorConfiguration} or default if id does not exist on {@link MonitorConfigurationProperty}.
      */
-    public MonitorConfiguration getConfiguration(String id) {
+    public MonitorConfiguration getConfiguration(final String id) {
         return getConfigurations().stream()
                 .filter(monitorConfiguration -> monitorConfiguration.getId().equals(id))
                 .findFirst()
@@ -66,7 +69,7 @@ public class MonitorConfigurationProperty extends UserProperty implements Saveab
      * @param config
      *          the config string to update.
      */
-    public void createOrUpdateConfiguration(String id, String config) {
+    public void createOrUpdateConfiguration(final String id, final String config) {
         MonitorConfiguration property = getConfigurations().stream()
                 .filter(monitorConfiguration -> monitorConfiguration.getId().equals(id))
                 .findFirst().orElse(null);
@@ -78,12 +81,7 @@ public class MonitorConfigurationProperty extends UserProperty implements Saveab
             property.setConfig(config);
         }
 
-        try {
-            save();
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
+        save();
     }
 
     /**
@@ -91,17 +89,10 @@ public class MonitorConfigurationProperty extends UserProperty implements Saveab
      *
      * @param id
      *              the id of configuration to remove.
-     *
      */
-    public void removeConfiguration(String id) {
+    public void removeConfiguration(final String id) {
         getConfigurations().remove(getConfiguration(id));
-
-        try {
-            save();
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
+        save();
     }
 
     /**
@@ -116,8 +107,13 @@ public class MonitorConfigurationProperty extends UserProperty implements Saveab
     }
 
     @Override
-    public void save() throws IOException {
-        user.save();
+    public void save() {
+        try {
+            user.save();
+        }
+        catch (IOException exception) {
+            LOGGER.log(Level.SEVERE, "User could not be saved: ", exception);
+        }
     }
 
     /**
@@ -137,7 +133,7 @@ public class MonitorConfigurationProperty extends UserProperty implements Saveab
          * @param config
          *          the config of the {@link MonitorConfiguration}.
          */
-        public MonitorConfiguration(String id, String config) {
+        public MonitorConfiguration(final String id, final String config) {
             this.id = id;
             this.config = config;
         }
@@ -150,7 +146,7 @@ public class MonitorConfigurationProperty extends UserProperty implements Saveab
             return config;
         }
 
-        public void setConfig(String config) {
+        public void setConfig(final String config) {
             this.config = config;
         }
 
@@ -163,7 +159,7 @@ public class MonitorConfigurationProperty extends UserProperty implements Saveab
     public static class MonitorPropertyDescriptor extends UserPropertyDescriptor {
 
         @Override
-        public UserProperty newInstance(User user) {
+        public UserProperty newInstance(final User user) {
             return new MonitorConfigurationProperty(new ArrayList<>());
         }
 

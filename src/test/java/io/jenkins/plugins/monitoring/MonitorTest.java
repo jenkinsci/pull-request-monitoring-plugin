@@ -5,16 +5,16 @@ import jenkins.scm.impl.mock.MockSCMController;
 import jenkins.scm.impl.mock.MockSCMDiscoverBranches;
 import jenkins.scm.impl.mock.MockSCMDiscoverChangeRequests;
 import jenkins.scm.impl.mock.MockSCMSource;
+import org.apache.commons.io.IOUtils;
 import org.jenkinsci.plugins.workflow.job.WorkflowJob;
 import org.jenkinsci.plugins.workflow.job.WorkflowRun;
 import org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject;
-import org.junit.Assert;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.jvnet.hudson.test.JenkinsRule;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Objects;
 
 
 /**
@@ -22,83 +22,114 @@ import java.io.InputStream;
  *
  * @author Simon Symhoven
  */
+@SuppressWarnings("checkstyle:IllegalCatch")
 public class MonitorTest {
 
     /**
      * JUnit rule to allow test cases to fire up a Jenkins instance.
      */
     @Rule
-    public JenkinsRule jenkinsRule = new JenkinsRule();
+    public final JenkinsRule jenkinsRule = new JenkinsRule();
+
+    private MockSCMController controller;
+
+    /**
+     * Creates a {@link MockSCMController} before each test.
+     */
+    @Before
+    public void init() {
+        controller = MockSCMController.create();
+    }
+
+    /**
+     * Closes the {@link MockSCMController} after each test. Cleans the repository.
+     */
+    @After
+    public void teardown() {
+        controller.close();
+    }
 
     /**
      * Test if default monitor and {@link MonitoringDefaultAction} is added if {@link hudson.model.Run} is a pull request.
-     *
-     * @throws Exception
-     *          if {@link JenkinsRule#waitUntilNoActivity()} fails.
      */
     @Test
-    public void shouldAddDefaultMonitorWhenBuildIsPr() throws Exception {
-        WorkflowMultiBranchProject project = createRepositoryWithPr("Jenkinsfile.default");
+    public void shouldAddDefaultMonitorWhenBuildIsPr() {
 
-        project.scheduleBuild2(0);
-        jenkinsRule.waitUntilNoActivity();
+        try {
+            WorkflowMultiBranchProject project = createRepositoryWithPr("Jenkinsfile.default");
 
-        final WorkflowJob job = project.getItems().iterator().next();
-        final WorkflowRun build = job.getLastBuild();
-        MonitoringDefaultAction action = build.getAction(MonitoringDefaultAction.class);
+            project.scheduleBuild2(0);
+            jenkinsRule.waitUntilNoActivity();
 
-        jenkinsRule.assertBuildStatusSuccess(build);
-        jenkinsRule.assertLogContains("[Monitor] Portlet Configuration: []", build);
-        jenkinsRule.assertLogContains("[Monitor] Build is part of a pull request. Add 'MonitoringCustomAction' now.", build);
-        Assert.assertNotNull(action);
-        Assert.assertEquals(action.getMonitor().getPortlets(), "[]");
+            final WorkflowJob job = project.getItems().iterator().next();
+            final WorkflowRun build = job.getLastBuild();
+            MonitoringCustomAction action = build.getAction(MonitoringCustomAction.class);
+
+            jenkinsRule.assertBuildStatusSuccess(build);
+            jenkinsRule.assertLogContains("[Monitor] Portlet Configuration: []", build);
+            jenkinsRule.assertLogContains("[Monitor] Build is part of a pull request. Add 'MonitoringCustomAction' now.", build);
+            Assert.assertNotNull(action);
+            Assert.assertEquals(action.getMonitor().getPortlets(), "[]");
+        }
+        catch (Exception e) {
+            throw new AssertionError(e);
+        }
+
     }
 
     /**
      * Test if nothing is added if {@link hudson.model.Run} is not a pull request.
-     *
-     * @throws Exception
-     *          if {@link JenkinsRule#waitUntilNoActivity()} fails.
      */
     @Test
-    public void shouldSkipAddDefaultMonitorWhenBuildIsNotPr() throws Exception {
-        WorkflowMultiBranchProject project = createRepositoryWithoutPr("Jenkinsfile.default");
+    public void shouldSkipAddDefaultMonitorWhenBuildIsNotPr() {
 
-        project.scheduleBuild2(0);
-        jenkinsRule.waitUntilNoActivity();
+        try {
+            WorkflowMultiBranchProject project = createRepositoryWithoutPr("Jenkinsfile.default");
 
-        final WorkflowJob job = project.getItems().iterator().next();
-        final WorkflowRun build = job.getLastBuild();
-        MonitoringDefaultAction action = build.getAction(MonitoringDefaultAction.class);
+            project.scheduleBuild2(0);
+            jenkinsRule.waitUntilNoActivity();
 
-        jenkinsRule.assertBuildStatusSuccess(build);
-        jenkinsRule.assertLogContains("[Monitor] Build is not part of a pull request. Skip adding 'MonitoringCustomAction'.", build);
-        Assert.assertNull(action);
+            final WorkflowJob job = project.getItems().iterator().next();
+            final WorkflowRun build = job.getLastBuild();
+            MonitoringCustomAction action = build.getAction(MonitoringCustomAction.class);
+
+            jenkinsRule.assertBuildStatusSuccess(build);
+            jenkinsRule.assertLogContains("[Monitor] Build is not part of a pull request. Skip adding 'MonitoringCustomAction'.", build);
+            Assert.assertNull(action);
+        }
+        catch (Exception e) {
+            throw new AssertionError(e);
+        }
+
     }
 
     /**
      * Test if missed portlets are removed form monitor if unknown plugin id is used in monitoring configuration.
-     *
-     * @throws Exception
-     *              if {@link JenkinsRule#waitUntilNoActivity()} fails.
      */
     @Test
-    public void shouldRemovePortletFromConfigurationWhenAddingNotExistingPortlet() throws Exception {
-        WorkflowMultiBranchProject project = createRepositoryWithPr("Jenkinsfile.custom2");
+    public void shouldRemovePortletFromConfigurationWhenAddingNotExistingPortlet() {
 
-        project.scheduleBuild2(0);
-        jenkinsRule.waitUntilNoActivity();
+        try {
+            WorkflowMultiBranchProject project = createRepositoryWithPr("Jenkinsfile.custom2");
 
-        final WorkflowJob job = project.getItems().iterator().next();
-        final WorkflowRun build = job.getLastBuild();
-        MonitoringDefaultAction action = build.getAction(MonitoringDefaultAction.class);
+            project.scheduleBuild2(0);
+            jenkinsRule.waitUntilNoActivity();
 
-        jenkinsRule.assertBuildStatusSuccess(build);
-        jenkinsRule.assertLogContains(
-                "[Monitor] Can't find the following portlets [io.jenkins.plugins.view] in list of available portlets!", build);
-        jenkinsRule.assertLogContains(
-                "[Monitor] Cleaned Portlets: []", build);
-        Assert.assertEquals(action.getMonitor().getPortlets(), "[]");
+            final WorkflowJob job = project.getItems().iterator().next();
+            final WorkflowRun build = job.getLastBuild();
+            MonitoringCustomAction action = build.getAction(MonitoringCustomAction.class);
+
+            jenkinsRule.assertBuildStatusSuccess(build);
+            jenkinsRule.assertLogContains(
+                    "[Monitor] Can't find the following portlets [io.jenkins.plugins.view] in list of available portlets!", build);
+            jenkinsRule.assertLogContains(
+                    "[Monitor] Cleaned Portlets: []", build);
+            Assert.assertEquals(action.getMonitor().getPortlets(), "[]");
+        }
+        catch (Exception e) {
+            throw new AssertionError(e);
+        }
+
     }
 
     /**
@@ -110,29 +141,31 @@ public class MonitorTest {
      * @return
      *              the generated {@link WorkflowMultiBranchProject}.
      *
-     * @throws IOException
-     *              if something went wrong with {@link MockSCMController}.
-     *
      */
-    private WorkflowMultiBranchProject createRepositoryWithPr(String jenkinsfile) throws IOException {
+    private WorkflowMultiBranchProject createRepositoryWithPr(final String jenkinsfile) {
 
-        MockSCMController controller = MockSCMController.create();
-        controller.createRepository("scm-repo");
-        controller.createBranch("scm-repo", "master");
-        final int num = controller.openChangeRequest("scm-repo", "master");
-        final String crNum = "change-request/" + num;
-        InputStream st = getClass().getResourceAsStream(String.format("/io/jenkins/plugins/monitoring/%s", jenkinsfile));
-        byte[] targetArray = new byte[st.available()];
-        st.read(targetArray);
-        controller.addFile("scm-repo", crNum, "Jenkinsfile", "Jenkinsfile",
-                targetArray);
+        try (InputStream st = getClass().getResourceAsStream(String.format("/io/jenkins/plugins/monitoring/%s", jenkinsfile))) {
 
-        WorkflowMultiBranchProject project = jenkinsRule.createProject(WorkflowMultiBranchProject.class);
-        project.getSourcesList().add(new BranchSource(new MockSCMSource(controller, "scm-repo",
-                new MockSCMDiscoverChangeRequests())));
+            controller.createRepository("scm-repo");
+            controller.createBranch("scm-repo", "master");
+            final int num = controller.openChangeRequest("scm-repo", "master");
+            final String crNum = "change-request/" + num;
 
+            byte[] targetArray = IOUtils.toByteArray(Objects.requireNonNull(st));
 
-        return project;
+            controller.addFile("scm-repo", crNum, "Jenkinsfile", "Jenkinsfile",
+                    targetArray);
+
+            WorkflowMultiBranchProject project = jenkinsRule.createProject(WorkflowMultiBranchProject.class);
+            project.getSourcesList().add(new BranchSource(new MockSCMSource(controller, "scm-repo",
+                    new MockSCMDiscoverChangeRequests())));
+
+            return project;
+        }
+        catch (IOException e) {
+            throw new AssertionError(e);
+        }
+
     }
 
     /**
@@ -144,24 +177,29 @@ public class MonitorTest {
      * @return
      *              the generated {@link WorkflowMultiBranchProject}.
      *
-     * @throws IOException
-     *              if something went wrong with {@link MockSCMController}.
-     *
      */
-    private WorkflowMultiBranchProject createRepositoryWithoutPr(String jenkinsfile) throws IOException {
-        MockSCMController controller = MockSCMController.create();
-        controller.createRepository("scm-repo");
-        controller.createBranch("scm-repo", "master");
-        InputStream st = getClass().getResourceAsStream(String.format("/io/jenkins/plugins/monitoring/%s", jenkinsfile));
-        byte[] targetArray = new byte[st.available()];
-        st.read(targetArray);
-        controller.addFile("scm-repo", "master", "Jenkinsfile", "Jenkinsfile",
-                targetArray);
+    private WorkflowMultiBranchProject createRepositoryWithoutPr(final String jenkinsfile) {
 
-        WorkflowMultiBranchProject project = jenkinsRule.createProject(WorkflowMultiBranchProject.class);
-        project.getSourcesList().add(new BranchSource(new MockSCMSource(controller, "scm-repo",
-                new MockSCMDiscoverBranches())));
+        try (InputStream st = getClass().getResourceAsStream(String.format("/io/jenkins/plugins/monitoring/%s", jenkinsfile))) {
 
-        return project;
+            controller.createRepository("scm-repo");
+            controller.createBranch("scm-repo", "master");
+
+            byte[] targetArray = IOUtils.toByteArray(Objects.requireNonNull(st));
+
+            controller.addFile("scm-repo", "master", "Jenkinsfile", "Jenkinsfile",
+                    targetArray);
+
+            WorkflowMultiBranchProject project = jenkinsRule.createProject(WorkflowMultiBranchProject.class);
+            project.getSourcesList().add(new BranchSource(new MockSCMSource(controller, "scm-repo",
+                    new MockSCMDiscoverBranches())));
+
+            return project;
+        }
+        catch (IOException e) {
+            throw new AssertionError(e);
+        }
+
     }
+
 }

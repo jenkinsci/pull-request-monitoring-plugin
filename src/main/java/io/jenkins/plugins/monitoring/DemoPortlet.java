@@ -23,7 +23,8 @@ public class DemoPortlet extends MonitorPortlet {
      * @param id
      *          the id of the portlet.
      */
-    public DemoPortlet(String title, String id) {
+    public DemoPortlet(final String title, final String id) {
+        super();
         this.id = id;
         this.title = title;
     }
@@ -55,7 +56,7 @@ public class DemoPortlet extends MonitorPortlet {
     public static class ExampleMonitorFactory extends MonitorPortletFactory {
 
         @Override
-        public Collection<MonitorPortlet> getPortlets(Run<?, ?> build) {
+        public Collection<MonitorPortlet> getPortlets(final Run<?, ?> build) {
             List<MonitorPortlet> portlets = new ArrayList<>();
             portlets.add(new DemoPortlet("Good First Portlet", "first-demo-portlet"));
             portlets.add(new DemoPortlet("Another Portlet", "second-demo-portlet"));
