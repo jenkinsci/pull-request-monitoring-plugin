@@ -66,7 +66,7 @@ public class MonitoringDefaultAction implements RunAction2, StaplerProxy {
 
     @Override
     public String getDisplayName() {
-        return String.format("%s '%s'", MonitoringMultibranchProjectAction.getName(), getRun().getDisplayName());
+        return String.format("%s '%s'", Messages.BuildAction_Name(), getRun().getDisplayName());
     }
 
     @Override

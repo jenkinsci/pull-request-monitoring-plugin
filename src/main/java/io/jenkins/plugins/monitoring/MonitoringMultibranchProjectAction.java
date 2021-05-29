@@ -25,7 +25,6 @@ import java.util.stream.Collectors;
 public class MonitoringMultibranchProjectAction implements ProminentProjectAction, Action {
 
     private static final String URI = "pull-request-monitoring";
-    private static final String NAME = "Pull Request Monitoring";
     private static final String ICONS_PREFIX = "/plugin/pull-request-monitoring/icons/";
     private static final String ICON_SMALL = ICONS_PREFIX + "line-graph-32x32.png";
     private static final String ICON_BIG = ICONS_PREFIX + "line-graph-64x64.png";
@@ -49,7 +48,7 @@ public class MonitoringMultibranchProjectAction implements ProminentProjectActio
 
     @Override
     public String getDisplayName() {
-        return NAME;
+        return Messages.ProjectAction_Name();
     }
 
     @Override
@@ -135,10 +134,6 @@ public class MonitoringMultibranchProjectAction implements ProminentProjectActio
 
     public static String getIconBig() {
         return ICON_BIG;
-    }
-
-    public static String getName() {
-        return NAME;
     }
 
 }

@@ -34,7 +34,7 @@ public class MonitoringWorkflowJobAction implements Action {
 
     @Override
     public String getDisplayName() {
-        return String.format("%s '%s'", MonitoringMultibranchProjectAction.getName(), workflowJob.getLastBuild().getDisplayName());
+        return String.format("%s '%s'", Messages.JobAction_Name(), workflowJob.getLastBuild().getDisplayName());
     }
 
     @Override
