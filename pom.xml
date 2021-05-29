@@ -34,6 +34,7 @@
         <json-schema.version>1.5.1</json-schema.version>
         <forensics-api.version>1.0.0</forensics-api.version>
         <j2html.version>1.4.0</j2html.version>
+        <commonmark.version>0.17.2</commonmark.version>
     </properties>
 
     <licenses>
@@ -106,6 +107,11 @@
         <dependency>
             <groupId>org.jenkins-ci.plugins</groupId>
             <artifactId>scm-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.commonmark</groupId>
+            <artifactId>commonmark</artifactId>
+            <version>${commonmark.version}</version>
         </dependency>
 
         <!-- Workflow dependencies -->
