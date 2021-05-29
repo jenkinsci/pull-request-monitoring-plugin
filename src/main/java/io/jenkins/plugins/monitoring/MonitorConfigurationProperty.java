@@ -166,7 +166,7 @@ public class MonitorConfigurationProperty extends UserProperty implements Saveab
         @NonNull
         @Override
         public String getDisplayName() {
-            return "Pull Request Monitoring";
+            return Messages.Property_DisplayName();
         }
 
     }

@@ -231,13 +231,13 @@ public final class Monitor extends Step implements Serializable {
 
         @Override
         public String getFunctionName() {
-            return "monitoring";
+            return Messages.Step_FunctionName();
         }
 
         @Override
         @NonNull
         public String getDisplayName() {
-            return "Configure Monitoring Dashboard";
+            return Messages.Step_DisplayName();
         }
     }
 
