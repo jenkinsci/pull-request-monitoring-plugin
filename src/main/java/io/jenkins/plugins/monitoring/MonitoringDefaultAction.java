@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.hm.hafner.util.FilteredLog;
 import hudson.model.Run;
 import io.jenkins.plugins.forensics.reference.ReferenceFinder;
+import j2html.tags.DomContent;
+import j2html.tags.UnescapedText;
 import jenkins.model.RunAction2;
 import jenkins.scm.api.metadata.ContributorMetadataAction;
 import jenkins.scm.api.metadata.ObjectMetadataAction;
@@ -131,16 +133,22 @@ public class MonitoringDefaultAction implements RunAction2, StaplerProxy {
     public String getPullRequestMetadataTitle() {
         Optional<Run<?, ?>> referenceBuild = getReferenceBuild();
         Optional<ContributorMetadataAction> contributorMetadataAction = getContributorMetadataAction();
+
+        DomContent reference;
+        if (referenceBuild.isPresent()) {
+            reference = join("(reference build:", a().withHref(referenceBuild.get().getUrl())
+                    .withText(referenceBuild.get().getDisplayName()), ")");
+        }
+        else {
+            reference = span("(reference build unknown)");
+        }
+
         return span(join(
                 strong(iffElse(contributorMetadataAction.isPresent(),
-                        getContributorMetadataAction().get().getContributor(), "unknown")), "wants to merge",
-                getScmHead().getOriginName(), "into",
-                getScmHead().getTarget().getName(),
-                iffElse(referenceBuild.isPresent(),
-                        join("(reference build:",
-                                a().withHref(referenceBuild.get().getUrl())
-                                        .withText(referenceBuild.get().getDisplayName()), ")"),
-                        "(reference build not found)"))).render();
+                        getContributorMetadataAction().get().getContributor(),
+                        "unknown")), "wants to merge",
+                strong(getScmHead().getOriginName()), "into",
+               strong(getScmHead().getTarget().getName()), reference)).render();
     }
 
     /**
