@@ -7,7 +7,9 @@ import edu.hm.hafner.util.FilteredLog;
 import hudson.model.Run;
 import io.jenkins.plugins.forensics.reference.ReferenceFinder;
 import j2html.tags.DomContent;
-import j2html.tags.UnescapedText;
+import org.commonmark.node.*;
+import org.commonmark.parser.Parser;
+import org.commonmark.renderer.html.HtmlRenderer;
 import jenkins.model.RunAction2;
 import jenkins.scm.api.metadata.ContributorMetadataAction;
 import jenkins.scm.api.metadata.ObjectMetadataAction;
@@ -25,8 +27,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static j2html.TagCreator.*;
@@ -180,39 +180,11 @@ public class MonitoringDefaultAction implements RunAction2, StaplerProxy {
             return span(i("No description provided.")).render();
         }
 
-        Pattern markdownImage = Pattern.compile("\\[?!\\[(.*?)\\]\\((.*?)\\)\\]?\\(?(.*)\\)?");
-        Matcher imageMatcher = markdownImage.matcher(description);
-        while (imageMatcher.find()) {
-            String text = imageMatcher.group(1);
-            String link = imageMatcher.group(2);
-            description = description.replace(imageMatcher.group(), img().withSrc(link).withAlt(text).render());
-        }
+        Parser parser = Parser.builder().build();
+        Node document = parser.parse(description);
+        HtmlRenderer renderer = HtmlRenderer.builder().build();
 
-        Pattern markdownUrl = Pattern.compile("\\[(.+)\\]\\(([^ ]+)( \"(.+)\")?\\)");
-        Matcher urlMatcher = markdownUrl.matcher(description);
-        while (urlMatcher.find()) {
-            String text = urlMatcher.group(1);
-            String link = urlMatcher.group(2);
-            description = description.replace(urlMatcher.group(), a().withHref(link).withText(text).render());
-        }
-
-        Pattern codeBlock = Pattern.compile("```[a-z]*\\r?\\n?([\\s\\S]*?)\\r?\\n?```");
-        Matcher codeBlockMatcher = codeBlock.matcher(description);
-        while (codeBlockMatcher.find()) {
-            String code = codeBlockMatcher.group(1);
-            description = description.replace(codeBlockMatcher.group(), code().withText(code).render());
-        }
-
-        Pattern codeLine = Pattern.compile("`([\\s\\S]*?)`");
-        Matcher codeLineMatcher = codeLine.matcher(description);
-        while (codeLineMatcher.find()) {
-            String code = codeLineMatcher.group(1);
-            description = description.replace(codeLineMatcher.group(), code().withText(code).render());
-        }
-
-        description = description.replaceAll("---", hr().render());
-
-        return span(join(description)).withStyle("white-space: pre-line;").render();
+        return renderer.render(document);
     }
 
     /**
