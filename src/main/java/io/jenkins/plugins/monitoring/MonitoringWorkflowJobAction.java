@@ -23,7 +23,7 @@ public class MonitoringWorkflowJobAction implements Action {
      * @param workflowJob
      *          the job that owns owns this action.
      */
-    public MonitoringWorkflowJobAction(WorkflowJob workflowJob) {
+    public MonitoringWorkflowJobAction(final WorkflowJob workflowJob) {
         this.workflowJob = workflowJob;
     }
 

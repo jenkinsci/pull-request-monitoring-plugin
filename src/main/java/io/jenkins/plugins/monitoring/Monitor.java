@@ -25,12 +25,12 @@ import org.json.JSONTokener;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 /**
@@ -39,7 +39,8 @@ import java.util.stream.Collectors;
  *
  * @author Simon Symhoven
  */
-public class Monitor extends Step implements Serializable {
+public final class Monitor extends Step implements Serializable {
+    private static final Logger LOGGER = Logger.getLogger(Monitor.class.getName());
     private static final long serialVersionUID = -1329798203887148860L;
     private String portlets;
 
@@ -60,13 +61,16 @@ public class Monitor extends Step implements Serializable {
      */
     @DataBoundSetter
     public void setPortlets(final String portlets) {
-        InputStream schemaStream = getClass().getResourceAsStream("/schema.json");
-        JSONObject jsonSchema = new JSONObject(new JSONTokener(schemaStream));
-        JSONArray jsonSubject = new JSONArray(portlets);
-        Schema schema = SchemaLoader.load(jsonSchema);
-        schema.validate(jsonSubject);
-
-        this.portlets = jsonSubject.toString();
+        try (InputStream schemaStream = getClass().getResourceAsStream("/schema.json")) {
+            JSONObject jsonSchema = new JSONObject(new JSONTokener(schemaStream));
+            JSONArray jsonSubject = new JSONArray(portlets);
+            Schema schema = SchemaLoader.load(jsonSchema);
+            schema.validate(jsonSubject);
+            this.portlets = jsonSubject.toString();
+        }
+        catch (IOException exception) {
+            LOGGER.log(Level.SEVERE, "Could not set portlets: ", exception);
+        }
     }
 
     public String getPortlets() {
@@ -82,7 +86,7 @@ public class Monitor extends Step implements Serializable {
      * @return
      *          all available {@link MonitorPortlet}.
      */
-    public List<? extends MonitorPortlet> getAvailablePortlets(Run<?, ?> build) {
+    public List<? extends MonitorPortlet> getAvailablePortlets(final Run<?, ?> build) {
         return getFactories()
                 .stream()
                 .map(factory -> factory.getPortlets(build))
@@ -107,7 +111,7 @@ public class Monitor extends Step implements Serializable {
      *         the filtered portlets.
      */
     public List<? extends MonitorPortlet> getAvailablePortletsForFactory(
-            Run<?, ?> build, MonitorPortletFactory factory) {
+            final Run<?, ?> build, final MonitorPortletFactory factory) {
         return getFactories()
                 .stream()
                 .filter(fac -> fac.equals(factory))
@@ -129,7 +133,7 @@ public class Monitor extends Step implements Serializable {
         private static final long serialVersionUID = 1300005476208035751L;
         private final Monitor monitor;
 
-        Execution(StepContext stepContext, Monitor monitor) {
+        Execution(final StepContext stepContext, final Monitor monitor) {
             super(stepContext);
             this.monitor = monitor;
         }
@@ -167,7 +171,7 @@ public class Monitor extends Step implements Serializable {
 
             List<String> missedPortletIds = new ArrayList<String>(CollectionUtils.removeAll(usedPortlets, classes));
 
-            if (missedPortletIds.size() > 0) {
+            if (!missedPortletIds.isEmpty()) {
                 getContext().get(TaskListener.class).getLogger()
                         .println("[Monitor] Can't find the following portlets "
                                 + missedPortletIds + " in list of available portlets! Will remove from current configuration.");
@@ -190,23 +194,23 @@ public class Monitor extends Step implements Serializable {
             final Job<?, ?> job = run.getParent();
             final BranchJobProperty branchJobProperty = job.getProperty(BranchJobProperty.class);
 
-            if (branchJobProperty != null) {
-                final SCMHead head = branchJobProperty.getBranch().getHead();
+            if (branchJobProperty == null) {
+                getContext().get(TaskListener.class).getLogger()
+                        .println("[Monitor] Project is not a MultiBranchProject.");
+                return null;
+            }
 
-                if (head instanceof ChangeRequestSCMHead) {
-                    getContext().get(TaskListener.class).getLogger()
-                            .println("[Monitor] Build is part of a pull request. Add 'MonitoringCustomAction' now.");
+            final SCMHead head = branchJobProperty.getBranch().getHead();
 
-                    run.addAction(new MonitoringCustomAction(monitor));
-                }
-                else {
-                    getContext().get(TaskListener.class).getLogger()
-                            .println("[Monitor] Build is not part of a pull request. Skip adding 'MonitoringCustomAction'.");
-                }
+            if (head instanceof ChangeRequestSCMHead) {
+                getContext().get(TaskListener.class).getLogger()
+                        .println("[Monitor] Build is part of a pull request. Add 'MonitoringCustomAction' now.");
+
+                run.addAction(new MonitoringCustomAction(monitor));
             }
             else {
                 getContext().get(TaskListener.class).getLogger()
-                        .println("[Monitor] Project is not a MultiBranchProject.");
+                        .println("[Monitor] Build is not part of a pull request. Skip adding 'MonitoringCustomAction'.");
             }
 
             return null;

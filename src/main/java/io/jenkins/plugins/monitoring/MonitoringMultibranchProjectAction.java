@@ -38,7 +38,7 @@ public class MonitoringMultibranchProjectAction implements ProminentProjectActio
      * @param multiBranchProject
      *          the project that owns this action.
      */
-    public MonitoringMultibranchProjectAction(MultiBranchProject<?, ?> multiBranchProject) {
+    public MonitoringMultibranchProjectAction(final MultiBranchProject<?, ?> multiBranchProject) {
         this.multiBranchProject = multiBranchProject;
     }
 
@@ -84,7 +84,7 @@ public class MonitoringMultibranchProjectAction implements ProminentProjectActio
      * @return
      *          the {@link ChangeRequestSCMHead2} of job.
      */
-    public ChangeRequestSCMHead2 getScmHead(Job<?, ?> job) {
+    public ChangeRequestSCMHead2 getScmHead(final Job<?, ?> job) {
         return (ChangeRequestSCMHead2) job.getProperty(BranchJobProperty.class).getBranch().getHead();
     }
 
@@ -107,7 +107,7 @@ public class MonitoringMultibranchProjectAction implements ProminentProjectActio
      * @return
      *          the {@link ObjectMetadataAction} for the given job as {@link Optional}.
      */
-    public Optional<ObjectMetadataAction> getObjectMetaData(Job<?, ?> job) {
+    public Optional<ObjectMetadataAction> getObjectMetaData(final Job<?, ?> job) {
         return Optional.ofNullable(
                 job.getProperty(BranchJobProperty.class).getBranch().getAction(ObjectMetadataAction.class));
     }
@@ -120,7 +120,7 @@ public class MonitoringMultibranchProjectAction implements ProminentProjectActio
      * @return
      *          the {@link ContributorMetadataAction} for the given job as {@link Optional}.
      */
-    public Optional<ContributorMetadataAction> getContributorMetaData(Job<?, ?> job) {
+    public Optional<ContributorMetadataAction> getContributorMetaData(final Job<?, ?> job) {
         return Optional.ofNullable(
                 job.getProperty(BranchJobProperty.class).getBranch().getAction(ContributorMetadataAction.class));
     }

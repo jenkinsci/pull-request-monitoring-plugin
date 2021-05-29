@@ -42,7 +42,7 @@ public class MonitoringWorkflowJobActionFactory extends TransientActionFactory<W
      */
     @NonNull
     @Override
-    public Collection<? extends Action> createFor(@NonNull WorkflowJob workflowJob) {
+    public Collection<? extends Action> createFor(@NonNull final WorkflowJob workflowJob) {
 
         if (workflowJob.getLastBuild() == null) {
             return Collections.emptyList();

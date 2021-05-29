@@ -38,7 +38,7 @@ public class MonitoringMultibranchProjectActionFactory extends TransientActionFa
      */
     @Override
     @NonNull
-    public Collection<? extends Action> createFor(@NonNull MultiBranchProject multiBranchProject) {
+    public Collection<? extends Action> createFor(@NonNull final MultiBranchProject multiBranchProject) {
         return Collections.singletonList(new MonitoringMultibranchProjectAction(multiBranchProject));
     }
 
