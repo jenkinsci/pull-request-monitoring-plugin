@@ -1,5 +1,6 @@
 package io.jenkins.plugins.monitoring;
 
+import hudson.model.Result;
 import jenkins.branch.BranchSource;
 import jenkins.scm.impl.mock.MockSCMController;
 import jenkins.scm.impl.mock.MockSCMDiscoverBranches;
@@ -50,26 +51,60 @@ public class MonitorTest {
     }
 
     /**
-     * Test if default monitor and {@link MonitoringDefaultAction} is added if {@link hudson.model.Run} is a pull request.
+     * Test if {@link MonitoringDefaultAction} and {@link MonitoringCustomAction} is added if {@link hudson.model.Run}
+     * is a pull request and pipeline is valid.
      */
     @Test
-    public void shouldAddDefaultMonitorWhenBuildIsPr() {
+    public void shouldAddCustomAndDefaultMonitorWhenBuildIsPr() {
 
         try {
-            WorkflowMultiBranchProject project = createRepositoryWithPr("Jenkinsfile.default");
+            WorkflowMultiBranchProject project = createRepositoryWithPr("Jenkinsfile.customEmpty");
 
             project.scheduleBuild2(0);
             jenkinsRule.waitUntilNoActivity();
 
             final WorkflowJob job = project.getItems().iterator().next();
             final WorkflowRun build = job.getLastBuild();
-            MonitoringCustomAction action = build.getAction(MonitoringCustomAction.class);
+            MonitoringCustomAction customAction = build.getAction(MonitoringCustomAction.class);
+            MonitoringDefaultAction defaultAction = build.getAction(MonitoringDefaultAction.class);
 
             jenkinsRule.assertBuildStatusSuccess(build);
             jenkinsRule.assertLogContains("[Monitor] Portlet Configuration: []", build);
             jenkinsRule.assertLogContains("[Monitor] Build is part of a pull request. Add 'MonitoringCustomAction' now.", build);
-            Assert.assertNotNull(action);
-            Assert.assertEquals(action.getMonitor().getPortlets(), "[]");
+            Assert.assertNotNull(customAction);
+            Assert.assertNotNull(defaultAction);
+            Assert.assertEquals(customAction.getMonitor().getPortlets(), "[]");
+            Assert.assertEquals(defaultAction.getMonitor().getPortlets(), "[]");
+        }
+        catch (Exception e) {
+            throw new AssertionError(e);
+        }
+
+    }
+
+    /**
+     * Test if {@link MonitoringDefaultAction} isn't and {@link MonitoringCustomAction} is added if {@link hudson.model.Run}
+     * is a pull request and pipeline is empty.
+     */
+    @Test
+    public void shouldAddDefaultMonitorWhenBuildIsPr() {
+
+        try {
+            WorkflowMultiBranchProject project = createRepositoryWithPr("Jenkinsfile.emptyStage");
+
+            project.scheduleBuild2(0);
+            jenkinsRule.waitUntilNoActivity();
+
+            final WorkflowJob job = project.getItems().iterator().next();
+            final WorkflowRun build = job.getLastBuild();
+            MonitoringCustomAction customAction = build.getAction(MonitoringCustomAction.class);
+            MonitoringDefaultAction defaultAction = build.getAction(MonitoringDefaultAction.class);
+
+            jenkinsRule.assertBuildStatusSuccess(build);
+
+            Assert.assertNull(customAction);
+            Assert.assertNotNull(defaultAction);
+            Assert.assertEquals(defaultAction.getMonitor().getPortlets(), "[]");
         }
         catch (Exception e) {
             throw new AssertionError(e);
@@ -81,21 +116,24 @@ public class MonitorTest {
      * Test if nothing is added if {@link hudson.model.Run} is not a pull request.
      */
     @Test
-    public void shouldSkipAddDefaultMonitorWhenBuildIsNotPr() {
+    public void shouldSkipAddDefaultAndCustomMonitorWhenBuildIsNotPr() {
 
         try {
-            WorkflowMultiBranchProject project = createRepositoryWithoutPr("Jenkinsfile.default");
+            WorkflowMultiBranchProject project = createRepositoryWithoutPr("Jenkinsfile.customEmpty");
 
             project.scheduleBuild2(0);
             jenkinsRule.waitUntilNoActivity();
 
             final WorkflowJob job = project.getItems().iterator().next();
             final WorkflowRun build = job.getLastBuild();
-            MonitoringCustomAction action = build.getAction(MonitoringCustomAction.class);
+
+            MonitoringCustomAction customAction = build.getAction(MonitoringCustomAction.class);
+            MonitoringDefaultAction defaultAction = build.getAction(MonitoringDefaultAction.class);
 
             jenkinsRule.assertBuildStatusSuccess(build);
             jenkinsRule.assertLogContains("[Monitor] Build is not part of a pull request. Skip adding 'MonitoringCustomAction'.", build);
-            Assert.assertNull(action);
+            Assert.assertNull(customAction);
+            Assert.assertNull(defaultAction);
         }
         catch (Exception e) {
             throw new AssertionError(e);
@@ -104,13 +142,13 @@ public class MonitorTest {
     }
 
     /**
-     * Test if missed portlets are removed form monitor if unknown plugin id is used in monitoring configuration.
+     * Test if missed portlets are removed from monitor if unknown plugin id is used in monitoring configuration.
      */
     @Test
     public void shouldRemovePortletFromConfigurationWhenAddingNotExistingPortlet() {
 
         try {
-            WorkflowMultiBranchProject project = createRepositoryWithPr("Jenkinsfile.custom2");
+            WorkflowMultiBranchProject project = createRepositoryWithPr("Jenkinsfile.custom");
 
             project.scheduleBuild2(0);
             jenkinsRule.waitUntilNoActivity();
@@ -125,12 +163,65 @@ public class MonitorTest {
             jenkinsRule.assertLogContains(
                     "[Monitor] Cleaned Portlets: []", build);
             Assert.assertEquals(action.getMonitor().getPortlets(), "[]");
+
         }
         catch (Exception e) {
             throw new AssertionError(e);
         }
 
     }
+
+    /**
+     * Test that run fails, if invalid configuration is provided in pipeline.
+     */
+    @Test
+    public void shouldFailIfConfigurationInPipelineIsInvalid() {
+
+        try {
+            WorkflowMultiBranchProject project = createRepositoryWithPr("Jenkinsfile.error");
+
+            project.scheduleBuild2(0);
+            jenkinsRule.waitUntilNoActivity();
+
+            final WorkflowJob job = project.getItems().iterator().next();
+            final WorkflowRun build = job.getLastBuild();
+
+            MonitoringCustomAction action = build.getAction(MonitoringCustomAction.class);
+
+            jenkinsRule.assertBuildStatus(Result.FAILURE, build);
+            Assert.assertNull(action);
+        }
+        catch (Exception e) {
+            throw new AssertionError(e);
+        }
+
+    }
+
+    /**
+     * Test that run fails, if no configuration is provided in pipeline.
+     */
+    @Test
+    public void shouldFailIfNoConfigurationInPipelineIsProvided() {
+
+        try {
+            WorkflowMultiBranchProject project = createRepositoryWithPr("Jenkinsfile.error2");
+
+            project.scheduleBuild2(0);
+            jenkinsRule.waitUntilNoActivity();
+
+            final WorkflowJob job = project.getItems().iterator().next();
+            final WorkflowRun build = job.getLastBuild();
+
+            MonitoringCustomAction action = build.getAction(MonitoringCustomAction.class);
+            jenkinsRule.assertBuildStatus(Result.FAILURE, build);
+            Assert.assertNull(action);
+        }
+        catch (Exception e) {
+            throw new AssertionError(e);
+        }
+
+    }
+
 
     /**
      * Creates an {@link WorkflowMultiBranchProject} with a sample pull request based on the given Jenkinsfile.

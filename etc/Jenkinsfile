@@ -33,9 +33,9 @@ node {
             calculateDiffForChangeRequests: true
     }
 
+    /*
     stage ('Pull Request Monitoring - Dashboard Configuration') {
         monitoring (
-            portlets:
             '''
             [
                 {
@@ -48,4 +48,5 @@ node {
             '''
         )
     }
+    */
 }

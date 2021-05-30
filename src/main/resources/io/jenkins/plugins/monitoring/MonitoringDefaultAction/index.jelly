@@ -43,7 +43,7 @@
 
             <div class="grid">
 
-                <j:set var="portlets" value="${it.monitor.getAvailablePortlets(it.run)}"/>
+                <j:set var="portlets" value="${it.getAvailablePortlets(it.run)}"/>
 
                 <j:forEach var="portlet" items="${portlets}">
 
