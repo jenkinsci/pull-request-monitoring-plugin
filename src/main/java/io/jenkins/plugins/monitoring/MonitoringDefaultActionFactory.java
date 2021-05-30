@@ -27,6 +27,10 @@ public class MonitoringDefaultActionFactory extends TransientActionFactory<Run> 
     @Override
     public Collection<? extends Action> createFor(@NonNull final Run run) {
 
+        if (run.isBuilding()) {
+            return Collections.emptyList();
+        }
+
         final Job<?, ?> job = run.getParent();
 
         if (PullRequestFinder.isPullRequest(job)) {

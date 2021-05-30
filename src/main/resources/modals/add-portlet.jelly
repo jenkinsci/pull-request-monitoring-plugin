@@ -56,25 +56,27 @@
 
                                             <j:forEach var="factory" items="${it.monitor.getFactories()}">
 
-                                                <optgroup label="${factory.getDisplayName()}"/>
-
                                                 <j:set var="portlets" value="${it.monitor.getAvailablePortletsForFactory(it.run, factory)}"/>
 
-                                                <j:forEach var="portlet" items="${portlets}">
+                                                <j:if test="${!portlets.isEmpty()}">
 
-                                                    <j:if test="${portlet.iconUrl.isEmpty()}">
-                                                        <option value="${portlet.id}" icon="${resURL}${it.getIconFileName()}"
-                                                                width="${portlet.preferredWidth}" height="${portlet.preferredHeight}">${portlet.title}</option>
-                                                    </j:if>
+                                                    <optgroup label="${factory.getDisplayName()}"/>
 
-                                                    <j:if test="${portlet.iconUrl.isPresent()}">
-                                                        <option value="${portlet.id}" icon="${resURL}${portlet.iconUrl.get()}"
-                                                                width="${portlet.preferredWidth}" height="${portlet.preferredHeight}">${portlet.title}</option>
-                                                    </j:if>
+                                                    <j:forEach var="portlet" items="${portlets}">
 
+                                                        <j:if test="${portlet.iconUrl.isEmpty()}">
+                                                            <option value="${portlet.id}" icon="${resURL}${it.getIconFileName()}"
+                                                                    width="${portlet.preferredWidth}" height="${portlet.preferredHeight}">${portlet.title}</option>
+                                                        </j:if>
 
-                                                </j:forEach>
+                                                        <j:if test="${portlet.iconUrl.isPresent()}">
+                                                            <option value="${portlet.id}" icon="${resURL}${portlet.iconUrl.get()}"
+                                                                    width="${portlet.preferredWidth}" height="${portlet.preferredHeight}">${portlet.title}</option>
+                                                        </j:if>
 
+                                                    </j:forEach>
+
+                                                </j:if>
 
                                             </j:forEach>
 
