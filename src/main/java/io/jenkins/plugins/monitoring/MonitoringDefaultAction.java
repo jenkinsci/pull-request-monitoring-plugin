@@ -4,8 +4,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.hm.hafner.util.FilteredLog;
+import hudson.ExtensionList;
 import hudson.model.Run;
 import io.jenkins.plugins.forensics.reference.ReferenceFinder;
+import io.jenkins.plugins.monitoring.util.PortletService;
 import j2html.tags.DomContent;
 import org.commonmark.node.*;
 import org.commonmark.parser.Parser;
@@ -22,7 +24,9 @@ import org.json.JSONObject;
 import org.kohsuke.stapler.StaplerProxy;
 import org.kohsuke.stapler.bind.JavaScriptMethod;
 
+import javax.sound.sampled.Port;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
@@ -224,7 +228,7 @@ public class MonitoringDefaultAction implements RunAction2, StaplerProxy {
             usedPlugins.add(portlet.getString("id"));
         }
 
-        List<String> availablePlugins = getMonitor().getAvailablePortlets(getRun())
+        List<String> availablePlugins = PortletService.getAvailablePortlets(getRun())
                 .stream().map(MonitorPortlet::getId).collect(Collectors.toList());
         return new ArrayList<String>(CollectionUtils.removeAll(usedPlugins, availablePlugins));
     }
@@ -377,5 +381,45 @@ public class MonitoringDefaultAction implements RunAction2, StaplerProxy {
     public Object getTarget() {
         setDefaultMonitorConfiguration();
         return this;
+    }
+
+    /**
+     * Gets all {@link MonitorPortlet} for corresponding {@link MonitorPortletFactory}.
+     *
+     * @param build
+     *          the reference build.
+     *
+     * @return
+     *          all available {@link MonitorPortlet}.
+     */
+    public static List<? extends MonitorPortlet> getAvailablePortlets(final Run<?, ?> build) {
+        return PortletService.getAvailablePortlets(build);
+    }
+
+    /**
+     * Get all portlet factories, type of {@link MonitorPortletFactory}.
+     *
+     * @return
+     *          all factories as list.
+     */
+    public static List<? extends MonitorPortletFactory> getFactories() {
+        return PortletService.getFactories();
+    }
+
+    /**
+     * Gets all {@link MonitorPortlet} for one {@link MonitorPortletFactory}.
+     *
+     * @param build
+     *         the build to get the portlets for.
+     *
+     * @param factory
+     *         the factory to get the portlets for.
+     *
+     * @return
+     *         the filtered portlets.
+     */
+    public static List<? extends MonitorPortlet> getAvailablePortletsForFactory(
+            final Run<?, ?> build, final MonitorPortletFactory factory) {
+        return PortletService.getAvailablePortletsForFactory(build, factory);
     }
 }

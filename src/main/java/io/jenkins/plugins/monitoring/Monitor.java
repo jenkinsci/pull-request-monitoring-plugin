@@ -3,14 +3,12 @@ package io.jenkins.plugins.monitoring;
 import com.google.common.collect.ImmutableSet;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import hudson.Extension;
-import hudson.ExtensionList;
 import hudson.model.Run;
 import hudson.model.TaskListener;
+import io.jenkins.plugins.monitoring.util.PortletService;
 import io.jenkins.plugins.monitoring.util.PullRequestFinder;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
-import org.everit.json.schema.Schema;
-import org.everit.json.schema.loader.SchemaLoader;
 import org.jenkinsci.plugins.workflow.steps.Step;
 import org.jenkinsci.plugins.workflow.steps.StepContext;
 import org.jenkinsci.plugins.workflow.steps.StepExecution;
@@ -18,16 +16,10 @@ import org.jenkinsci.plugins.workflow.steps.SynchronousStepExecution;
 import org.jenkinsci.plugins.workflow.steps.StepDescriptor;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.json.JSONTokener;
 import org.kohsuke.stapler.DataBoundConstructor;
-import org.kohsuke.stapler.DataBoundSetter;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.Serializable;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 /**
@@ -37,84 +29,27 @@ import java.util.stream.Collectors;
  * @author Simon Symhoven
  */
 public final class Monitor extends Step implements Serializable {
-    private static final Logger LOGGER = Logger.getLogger(Monitor.class.getName());
     private static final long serialVersionUID = -1329798203887148860L;
     private String portlets;
 
     /**
      * Creates a new instance of {@link Monitor}.
-     */
-    @DataBoundConstructor
-    public Monitor() {
-        super();
-        this.portlets = "[]";
-    }
-
-    /**
-     * Sets the portlets for the dashboard.
      *
      * @param portlets
-     *         the configuration as json
+     *              the monitor configuration as json array string.
      */
-    @DataBoundSetter
-    public void setPortlets(final String portlets) {
-        try (InputStream schemaStream = getClass().getResourceAsStream("/schema.json")) {
-            JSONObject jsonSchema = new JSONObject(new JSONTokener(schemaStream));
-            JSONArray jsonSubject = new JSONArray(portlets);
-            Schema schema = SchemaLoader.load(jsonSchema);
-            schema.validate(jsonSubject);
-            this.portlets = jsonSubject.toString();
-        }
-        catch (IOException exception) {
-            LOGGER.log(Level.SEVERE, "Could not set portlets: ", exception);
-        }
+    @DataBoundConstructor
+    public Monitor(final String portlets) {
+        super();
+        this.portlets = portlets;
+    }
+
+    private void setPortlets(String portlets) {
+        this.portlets = portlets;
     }
 
     public String getPortlets() {
         return portlets;
-    }
-
-    /**
-     * Gets all {@link MonitorPortlet} for corresponding {@link MonitorPortletFactory}.
-     *
-     * @param build
-     *          the reference build.
-     *
-     * @return
-     *          all available {@link MonitorPortlet}.
-     */
-    public List<? extends MonitorPortlet> getAvailablePortlets(final Run<?, ?> build) {
-        return getFactories()
-                .stream()
-                .map(factory -> factory.getPortlets(build))
-                .flatMap(Collection::stream)
-                .collect(Collectors.toList());
-    }
-
-    public List<? extends MonitorPortletFactory> getFactories() {
-        return ExtensionList.lookup(MonitorPortletFactory.class);
-    }
-
-    /**
-     * Gets all {@link MonitorPortlet} for one {@link MonitorPortletFactory}.
-     *
-     * @param build
-     *         the build to get the portlets for.
-     *
-     * @param factory
-     *         the factory to get the portlets for.
-     *
-     * @return
-     *         the filtered portlets.
-     */
-    public List<? extends MonitorPortlet> getAvailablePortletsForFactory(
-            final Run<?, ?> build, final MonitorPortletFactory factory) {
-        return getFactories()
-                .stream()
-                .filter(fac -> fac.equals(factory))
-                .map(fac -> fac.getPortlets(build))
-                .flatMap(Collection::stream)
-                .collect(Collectors.toList());
     }
 
     @Override
@@ -137,11 +72,18 @@ public final class Monitor extends Step implements Serializable {
 
         @Override
         public Void run() throws Exception {
+
+            if (!PortletService.isValidConfiguration(monitor.getPortlets())) {
+                getContext().get(TaskListener.class).getLogger()
+                        .println("[Monitor] Portlet Configuration is invalid!");
+                return null;
+            }
+
             JSONArray portlets = new JSONArray(monitor.getPortlets());
             getContext().get(TaskListener.class).getLogger()
                     .println("[Monitor] Portlet Configuration: " + portlets.toString(3));
 
-            List<String> classes = monitor.getAvailablePortlets(getContext().get(Run.class))
+            List<String> classes = PortletService.getAvailablePortlets(getContext().get(Run.class))
                     .stream()
                     .map(MonitorPortlet::getId)
                     .collect(Collectors.toList());

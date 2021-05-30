@@ -82,7 +82,7 @@ At the [Jenkins UX SIG Meeting](https://www.youtube.com/watch?v=F1ISpA7K0YA) on 
   </ol>
 </details>
 
-## About The Project
+# About The Project
 
 Many software teams have changed their development processes to lightweight pull requests. 
 Changes to the software are packed into such a pull request, 
@@ -98,24 +98,24 @@ This plugin offers a possibility to display and aggregate the results (in the fo
 request in a configurable dashboard. Views can only be accessed or displayed if the corresponding plugin fulfils 
 certain requirements and already provides a view.
 
-### Built With
+## Built With
 
 *   [Muuri](https://github.com/haltu/muuri) wrapped in [Jenkins Muuri.js API Plugin](https://github.com/jenkinsci/muuri-api-plugin)
 *   [Select2](https://select2.org) wrapped in [Jenkins Select2.js API Plugin](https://github.com/jenkinsci/select2-api-plugin)
 
-## Getting Started
+# Getting Started
 
-### Prerequisites
+## Prerequisites
 
 Currently, only **multibranch pipelines** projects are supported to use this plugin. Therefore, you have to 
 install the corresponding Jenkins plugin [Multibranch: Pipeline](https://plugins.jenkins.io/workflow-multibranch/) 
 and connect to own of your SCM Repositories to use the **Pull Request Monitoring** Jenkins plugin. 
 
-### Provide a portlet
+## Provide a portlet
 
 This plugin relies on other plugins to provide a view that aggregates and provides delta metrics for a pull request.
 
-#### The code behind
+### The code behind
 
 The [MonitorPortlet](src/main/java/io/jenkins/plugins/monitoring/MonitorPortlet.java) class defines the base class 
 for each portlet that is to be displayed. In order to register the portlet for the plugin, 
@@ -127,7 +127,7 @@ factory.
 
 ![Add portlet](etc/images/add-portlet.png)
 
-##### One Instance Of One Portlet
+#### One Instance Of One Portlet
 
 Normally, one plugin delivers one portlet. A minimal example could look as follows:
 
@@ -250,7 +250,7 @@ public class DemoPortlet extends MonitorPortlet {
 }
 ```
 
-> ⚠️ **Null Check for used actions**
+> ⭕ **Null Check for used actions**
 > 
 > Since an empty dashboard is always added by default, it is possible that the method `getPortlets(Run)` will
 > be called (e.g. open the dashboard of actual run) even though the corresponding run may not be finished. 
@@ -326,7 +326,7 @@ public class DemoPortlet extends MonitorPortlet {
 }
 ```
 
-#### The corresponding jelly file
+### The corresponding jelly file
 
 Each portlet have to have a corresponding `monitor.jelly` file, which is responsible for the content of the 
 plugins portlet delivered on the dashboard later. Therefore you have to create a new `monitor.jelly` file 
@@ -352,15 +352,15 @@ A minimal example:
 </j:jelly>
 ```
 
-## Usage Of Monitoring
+# Usage Of Monitoring
 
-### Introduction
+## Introduction
 This plugin offers the following monitoring options:
 
 *   project level: [MonitoringMultibranchProjectAction](src/main/java/io/jenkins/plugins/monitoring/MonitoringMultibranchProjectAction.java)
 *   build level: [MonitoringBuildAction](src/main/java/io/jenkins/plugins/monitoring/MonitoringBuildAction.java)
 
-### Project Level
+## Project Level
 
 The monitoring on the project level is very basic and is limited to the summary of all open pull requests of the associated SCM.
 From here, you can access the corresponding monitoring dashboards, view the pull request information and navigate
@@ -368,7 +368,7 @@ to the respective pull request in the repository.
 
 ![Example Overview](etc/images/example-monitor-overview.png)
 
-### Build Level
+## Build Level
 
 The monitoring at build level is the core of the plugin and offers the possibility 
 to observe various delta metrics of a pull request provided by other portlets.
@@ -380,13 +380,13 @@ Otherwise, the corresponding [MonitoringBuildAction](src/main/java/io/jenkins/pl
 will not be added and no dashboard will be provided for the build.
 For more details, please refer to the logging in the console output of the respective build.
 
-#### Persistence & Permissions
+### Persistence & Permissions
 
 The configuration, which is set via the Jenkinsfile or via the Dahsboard, is saved per user as a 
 `hudson.model.UserProperty` and is browser independent. The plugin therefore requires that you are logged in 
 and have the appropriate permissions. Otherwise, the action will not be displayed! 
 
-#### Default Dashboard
+### Default Dashboard
 
 > 💡 **Reference build search**:
 > 
@@ -394,44 +394,32 @@ and have the appropriate permissions. Otherwise, the action will not be displaye
 > It is highly recommended using this plugin and 
 > to search for the reference build in the pipeline with `discoverGitReferenceBuild()` (or configure it via the Jenkins UI). 
 > For more information please visit the [plugin page](https://www.jenkins.io/doc/pipeline/steps/git-forensics/) or have a 
-> look into an example [pipeline](etc/Jenkinsfile.default).
+> look into an example [pipeline](etc/Jenkinsfile).
 
-To start with an empty dashboard, there are two ways, which are provided by the plugin:
+To start with the default dashboard, you have to do nothing. If the run is part of a pull request, the corresponding 
+[MonitoringDefaultAction](src/main/java/io/jenkins/plugins/monitoring/MonitoringDefaultAction.java) is automatically 
+added to the `Run` and later available on the sidepanel of the run. 
 
-1.  Do nothing. If the run is part of a pull request, the corresponding 
-    [MonitoringDefaultAction](src/main/java/io/jenkins/plugins/monitoring/MonitoringDefaultAction.java) is automatically 
-    added to the `Run` and later available on the sidepanel of the run. 
-   
-2.  Another way to get an empty dashboard, add the following stage to your Jenkinsfile:
-    It is recommended to add the monitoring at the end of your pipeline, to ensure that other
-    plugins such as static code analysis are performed first and that the actions that may be required are
-    available.
-    ```text
-    stage ('Pull Request Monitoring - Dashboard Configuration') {
-        monitoring ( )
-    }
-    ```
-
-The dashboard will be added to each build, which corresponds to a pull request.
 Now you are able to add portlets to the dashboard, change the layout or remove it again.
 The configuration will be saved for each project per user. If you want to save the configuration permanently, 
 it is best to copy and paste it into the Jenkinsfile and overwrite the default dashboard and use a custom dashboard.
 
-> 💤 **Default Portlets for Dashboard**:
+> 🧩 **Default Portlets for Dashboard**:
 > 
-> Since version 1.6.0, the portlets can decide whether they should be displayed by default or not in the
-> user dashboard. The functionality for this is not yet given and the flag is ignored, but the API for it is 
-> already prepared.
+> Since version 1.7.0, the portlets can decide whether they should be displayed by default or not in the
+> user dashboard. So when you start with the default dashboard, all <a href="#available-portlets">available portlets</a> 
+> that are marked as default are automatically loaded into your dashboard.
 
-#### Custom Dashboard
+### Custom Dashboard
 
 The other way to add a dashboard is to set the configuration of the dashboard via the Jenkinsfile to pre-define
-your dashboard:
+your dashboard. It is recommended to add the monitoring at the end of your pipeline, to ensure that other
+plugins such as static code analysis are performed first and that the actions that may be required are
+available:
 
 ```text
 stage ('Pull Request Monitoring - Dashboard Configuration') {
     monitoring (
-        portlets:
         '''
         [
             {
@@ -455,11 +443,11 @@ Therefore, the monitoring stage expects a JSONArray of JSONObjects. To validate 
 configured json, you could use a [JSON Schema Validator](https://www.jsonschemavalidator.net) and the 
 corresponding [JSON schema](src/main/resources/schema.json) used for this plugin. 
 Each JSONObject needs at least the `id` of the portlet to add. For `width` and `height`, the default 
-`referredWidth` and `preferredHeight` of the `MonitorPortlet` is used. `#000000` is used as default `color`. 
+`preferredWidth` and `preferredHeight` of the `MonitorPortlet` is used. `#000000` is used as default `color`. 
 
 The dashboard will be added to your `Run` and the pre-defined monitor should be available. 
 
-> ⚠️ **Duplicate or missing portlet IDs**:
+> 🔥 **Duplicate or missing portlet IDs**:
 > 
 > Duplicates will be removed as well as missing portlet ids. The `Run` will not fail unless 
 > the provided json does not follow the scheme!
@@ -469,39 +457,39 @@ and the dashboard tries to load this portlet, an alert will be displayed with th
 
 ![Unavailable Portlet](etc/images/missing-portlet.png)
 
-#### Settings
+### Settings
 
 Under the settings of each `Run`, various things can be tracked:
 
 1.  Are there changes of the pre-defined dashboard since the last build?
 2.  The current activated source of configuration (Default or User-specific).
-    * Default means Jenkinsfile if `monitoring` is provided, else and empty JSONArray.
-    * User-specific means the local changed of dashboard.
+    * Default means Jenkinsfile if `monitoring` is provided, else all <a href="#available-portlets">available default portlets</a>.
+    * User-specific means the local changes of dashboard.
 3.  Configuration synced with the default one? If needed, you can synchronize the
     actual configuration with the default one.
 4.  The actual configuration
 5.  The default configuration.
 
-> ⚠️ **Prioritising of the different configurations**:
+> ❗**Prioritising of the different configurations**:
 > 
-> If there is a user-specific configuration for one dashboard (per project), the user-specific 
-> configuration will be loaded per default. If you sync the current configuration with 
-> the default one, the user-specific configuration for current dashboard will be deleted and the default
-> configuration will be loaded. Deletion cannot be undone!
+> By default, all <a href="#available-portlets">available default portlets</a> are loaded. If there is a user-specific configuration for one 
+> dashboard (per project), the user-specific configuration will be loaded per default. If you sync the current 
+> configuration with the default one, the user-specific configuration for current dashboard will be deleted, and the 
+> default configuration will be loaded. Deletion cannot be undone!
 
 ![Settings](etc/images/settings.png)
 
-## Available Portlets
+# Available Portlets
 
 If your plugin is not in the list but provides a portlet, feel free to add it with a pull request!
 
-| | Plugin | Number of delivered portlets | Portlet ID |
-| --- | --- | --- | --- |
-| ![Warnings Next Generation](etc/images/portlets/warnings-next-generation.png) | [Warnings Next Generation](https://plugins.jenkins.io/warnings-ng/) | &#8805; 100 | depends on [tool](https://github.com/jenkinsci/warnings-ng-plugin/blob/master/SUPPORTED-FORMATS.md)
-| ![Code Coverage API](etc/images/portlets/code-coverage-api.png)               | [Code Coverage API](https://plugins.jenkins.io/code-coverage-api/)  | 1           | code-coverage
+| | Plugin | Number of delivered portlets | Portlet ID | Default? |
+| --- | --- | --- | --- | ---|
+| ![Pull Request Monitoring](src/main/webapp/icons/line-graph-48x48.png) | [Pull Request Monitoring](https://plugins.jenkins.io/pull-request-monitoring/) | 2 | `first-demo-portlet` <br> `second-demo-portlet` | ❌
+| ![Warnings Next Generation](etc/images/portlets/warnings-next-generation.png) | [Warnings Next Generation](https://plugins.jenkins.io/warnings-ng/) | &#8805; 100 | depends on [tool](https://github.com/jenkinsci/warnings-ng-plugin/blob/master/SUPPORTED-FORMATS.md) | ✅ |
+| ![Code Coverage API](etc/images/portlets/code-coverage-api.png) | [Code Coverage API](https://plugins.jenkins.io/code-coverage-api/)  | 1 | `code-coverage` | ✅
 
-
-## Demo
+# Demo
 
 For the demo (v1.3.0-beta) I added two recorder (javadoc and pmd) of the 
 [Warnings Ng Plugin](https://plugins.jenkins.io/warnings-ng/) to the pipeline and added both as
@@ -510,12 +498,12 @@ the dashboard.
 
 ![Demo](etc/images/demo-1.3.0-beta.gif)
 
-## Roadmap
+# Roadmap
 
 See the [open issues](https://github.com/jenkinsci/pull-request-monitoring-plugin/issues) 
 for a list of proposed features (and known issues).
 
-## Contributing
+# Contributing
 
 Contributions are what make the open source community such an amazing place to be learn, 
 inspire, and create. Any contributions you make are **greatly appreciated**.
@@ -526,11 +514,11 @@ inspire, and create. Any contributions you make are **greatly appreciated**.
 4.  Push to the Branch (`git push origin feature/AmazingFeature`)
 5.  Open a Pull Request
 
-## License
+# License
 
 Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
 
-## Credits
+# Credits
 
 The following icons, which are used by this plugin 
 
@@ -539,7 +527,7 @@ The following icons, which are used by this plugin
 
 made by [Freepik](https://www.freepik.com) from [Flaticon](https://www.flaticon.com/).
 
-## Contact
+# Contact
 
 Simon Symhoven - post@simon-symhoven.de
 

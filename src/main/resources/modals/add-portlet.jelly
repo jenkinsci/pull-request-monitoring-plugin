@@ -54,9 +54,9 @@
 
                                             <option value="">${%itemModal.choose}</option>
 
-                                            <j:forEach var="factory" items="${it.monitor.getFactories()}">
+                                            <j:forEach var="factory" items="${it.getFactories()}">
 
-                                                <j:set var="portlets" value="${it.monitor.getAvailablePortletsForFactory(it.run, factory)}"/>
+                                                <j:set var="portlets" value="${it.getAvailablePortletsForFactory(it.run, factory)}"/>
 
                                                 <j:if test="${!portlets.isEmpty()}">
 
