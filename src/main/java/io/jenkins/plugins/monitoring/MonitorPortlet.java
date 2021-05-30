@@ -1,5 +1,7 @@
 package io.jenkins.plugins.monitoring;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.Optional;
 
 /**
@@ -86,4 +88,11 @@ public abstract class MonitorPortlet {
         return Optional.empty();
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return "MonitorPortlet{'" + getId() + "'}";
+    }
 }

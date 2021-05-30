@@ -3,17 +3,17 @@ package io.jenkins.plugins.monitoring;
 import hudson.model.Action;
 import hudson.model.Job;
 import hudson.model.ProminentProjectAction;
+import io.jenkins.plugins.monitoring.util.PullRequestFinder;
 import jenkins.branch.MultiBranchProject;
-import jenkins.scm.api.SCMHead;
 import jenkins.scm.api.metadata.ContributorMetadataAction;
 import jenkins.scm.api.metadata.ObjectMetadataAction;
-import jenkins.scm.api.mixin.ChangeRequestSCMHead;
 import jenkins.scm.api.mixin.ChangeRequestSCMHead2;
 import org.jenkinsci.plugins.workflow.multibranch.BranchJobProperty;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
 
 /**
  * This action displays a link on the side panel of a {@link MultiBranchProject}.
@@ -67,11 +67,7 @@ public class MonitoringMultibranchProjectAction implements ProminentProjectActio
      *          filtered list of all {@link #getJobs() jobs} by "Pull Request".
      */
     public List<Job<?, ?>> getPullRequests() {
-        return getJobs().stream().filter(job -> {
-            BranchJobProperty branchJobProperty = job.getProperty(BranchJobProperty.class);
-            SCMHead head = branchJobProperty.getBranch().getHead();
-            return head instanceof ChangeRequestSCMHead;
-        }).collect(Collectors.toList());
+        return getJobs().stream().filter(PullRequestFinder::isPullRequest).collect(Collectors.toList());
     }
 
     /**
