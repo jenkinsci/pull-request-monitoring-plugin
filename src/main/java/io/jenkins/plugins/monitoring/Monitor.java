@@ -4,16 +4,13 @@ import com.google.common.collect.ImmutableSet;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import hudson.Extension;
 import hudson.ExtensionList;
-import hudson.model.Job;
 import hudson.model.Run;
 import hudson.model.TaskListener;
-import jenkins.scm.api.SCMHead;
-import jenkins.scm.api.mixin.ChangeRequestSCMHead;
+import io.jenkins.plugins.monitoring.util.PullRequestFinder;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.everit.json.schema.Schema;
 import org.everit.json.schema.loader.SchemaLoader;
-import org.jenkinsci.plugins.workflow.multibranch.BranchJobProperty;
 import org.jenkinsci.plugins.workflow.steps.Step;
 import org.jenkinsci.plugins.workflow.steps.StepContext;
 import org.jenkinsci.plugins.workflow.steps.StepExecution;
@@ -191,18 +188,14 @@ public final class Monitor extends Step implements Serializable {
             }
 
             final Run<?, ?> run = getContext().get(Run.class);
-            final Job<?, ?> job = run.getParent();
-            final BranchJobProperty branchJobProperty = job.getProperty(BranchJobProperty.class);
 
-            if (branchJobProperty == null) {
+            if (run == null) {
                 getContext().get(TaskListener.class).getLogger()
-                        .println("[Monitor] Project is not a MultiBranchProject.");
+                        .println("[Monitor] Run not found!");
                 return null;
             }
 
-            final SCMHead head = branchJobProperty.getBranch().getHead();
-
-            if (head instanceof ChangeRequestSCMHead) {
+            if (PullRequestFinder.isPullRequest(run.getParent())) {
                 getContext().get(TaskListener.class).getLogger()
                         .println("[Monitor] Build is part of a pull request. Add 'MonitoringCustomAction' now.");
 

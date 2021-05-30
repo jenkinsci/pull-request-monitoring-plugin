@@ -3,11 +3,9 @@ package io.jenkins.plugins.monitoring;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import hudson.Extension;
 import hudson.model.Action;
+import io.jenkins.plugins.monitoring.util.PullRequestFinder;
 import jenkins.model.TransientActionFactory;
-import jenkins.scm.api.SCMHead;
-import jenkins.scm.api.mixin.ChangeRequestSCMHead;
 import org.jenkinsci.plugins.workflow.job.WorkflowJob;
-import org.jenkinsci.plugins.workflow.multibranch.BranchJobProperty;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -48,15 +46,7 @@ public class MonitoringWorkflowJobActionFactory extends TransientActionFactory<W
             return Collections.emptyList();
         }
 
-        final BranchJobProperty branchJobProperty = workflowJob.getProperty(BranchJobProperty.class);
-
-        if (branchJobProperty == null) {
-            return Collections.emptyList();
-        }
-
-        final SCMHead head = branchJobProperty.getBranch().getHead();
-
-        if (head instanceof ChangeRequestSCMHead) {
+        if (PullRequestFinder.isPullRequest(workflowJob)) {
             return Collections.singletonList(new MonitoringWorkflowJobAction(workflowJob));
         }
 
