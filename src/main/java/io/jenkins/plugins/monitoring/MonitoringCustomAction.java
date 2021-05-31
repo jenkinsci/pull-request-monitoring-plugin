@@ -4,27 +4,27 @@ import hudson.model.InvisibleAction;
 import hudson.model.Run;
 
 /**
- * This action is added to {@link Run}, if configuration is set in the Jenkinsfile. Therefore the {@link Monitor} of this
+ * This action is added to {@link Run}, if configuration is set in the Jenkinsfile. Therefore the portlets of this
  * action {@link MonitoringCustomAction} overwrites the one from the {@link MonitoringDefaultAction} added by the
  * {@link MonitoringDefaultActionFactory}.
  *
  * @author Simon Symhoven
  */
 public class MonitoringCustomAction extends InvisibleAction {
-    private final Monitor monitor;
+    private final String portlets;
 
     /**
      * Creates a new instance of {@link MonitoringCustomAction}.
      *
-     * @param monitor
-     *          the {@link Monitor} to be add.
+     * @param portlets
+     *          the portlets as json array string to be add.
      */
-    public MonitoringCustomAction(final Monitor monitor) {
+    public MonitoringCustomAction(final String portlets) {
         super();
-        this.monitor = monitor;
+        this.portlets = portlets;
     }
 
-    public Monitor getMonitor() {
-        return monitor;
+    public String getPortlets() {
+        return portlets;
     }
 }

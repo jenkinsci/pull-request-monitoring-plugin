@@ -44,7 +44,7 @@ public final class Monitor extends Step implements Serializable {
         this.portlets = portlets;
     }
 
-    private void setPortlets(String portlets) {
+    public void setPortlets(String portlets) {
         this.portlets = portlets;
     }
 
@@ -141,7 +141,7 @@ public final class Monitor extends Step implements Serializable {
                 getContext().get(TaskListener.class).getLogger()
                         .println("[Monitor] Build is part of a pull request. Add 'MonitoringCustomAction' now.");
 
-                run.addAction(new MonitoringCustomAction(monitor));
+                run.addAction(new MonitoringCustomAction(monitor.getPortlets()));
             }
             else {
                 getContext().get(TaskListener.class).getLogger()

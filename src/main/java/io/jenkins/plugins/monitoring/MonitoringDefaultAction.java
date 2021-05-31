@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.hm.hafner.util.FilteredLog;
-import hudson.ExtensionList;
 import hudson.model.Run;
 import io.jenkins.plugins.forensics.reference.ReferenceFinder;
 import io.jenkins.plugins.monitoring.util.PortletService;
@@ -24,9 +23,7 @@ import org.json.JSONObject;
 import org.kohsuke.stapler.StaplerProxy;
 import org.kohsuke.stapler.bind.JavaScriptMethod;
 
-import javax.sound.sampled.Port;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
@@ -46,7 +43,6 @@ import static j2html.TagCreator.*;
  */
 public class MonitoringDefaultAction implements RunAction2, StaplerProxy {
     private static final Logger LOGGER = Logger.getLogger(MonitoringDefaultAction.class.getName());
-    private final Monitor monitor;
     private transient Run<?, ?> run;
 
     /**
@@ -54,13 +50,9 @@ public class MonitoringDefaultAction implements RunAction2, StaplerProxy {
      *
      * @param run
      *          the run that owns this action.
-     *
-     * @param monitor
-     *          the {@link Monitor} to be add.
      */
-    public MonitoringDefaultAction(final Run<?, ?> run, final Monitor monitor) {
+    public MonitoringDefaultAction(final Run<?, ?> run) {
         this.run = run;
-        this.monitor = monitor;
     }
 
     @Override
@@ -92,8 +84,8 @@ public class MonitoringDefaultAction implements RunAction2, StaplerProxy {
         return run;
     }
 
-    public Monitor getMonitor() {
-        return monitor;
+    public String getPortlets() {
+        return PortletService.getDefaultPortletsAsConfiguration(getRun());
     }
 
     /**
@@ -258,7 +250,7 @@ public class MonitoringDefaultAction implements RunAction2, StaplerProxy {
             return false;
         }
 
-        return !areJsonNodesEquals(action.getMonitor().getPortlets(), prevAction.getMonitor().getPortlets());
+        return !areJsonNodesEquals(action.getPortlets(), prevAction.getPortlets());
     }
 
     /**
@@ -364,7 +356,7 @@ public class MonitoringDefaultAction implements RunAction2, StaplerProxy {
     @JavaScriptMethod
     public String resolvePortlets() {
         MonitoringCustomAction action = getRun().getAction(MonitoringCustomAction.class);
-        return action == null ?  getMonitor().getPortlets() : action.getMonitor().getPortlets();
+        return action == null ? getPortlets() : action.getPortlets();
     }
 
     /**

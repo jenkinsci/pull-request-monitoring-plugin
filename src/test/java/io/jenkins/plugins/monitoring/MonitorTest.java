@@ -73,8 +73,8 @@ public class MonitorTest {
             jenkinsRule.assertLogContains("[Monitor] Build is part of a pull request. Add 'MonitoringCustomAction' now.", build);
             Assert.assertNotNull(customAction);
             Assert.assertNotNull(defaultAction);
-            Assert.assertEquals(customAction.getMonitor().getPortlets(), "[]");
-            Assert.assertEquals(defaultAction.getMonitor().getPortlets(), "[]");
+            Assert.assertEquals(customAction.getPortlets(), "[]");
+            Assert.assertEquals(defaultAction.getPortlets(), "[]");
         }
         catch (Exception e) {
             throw new AssertionError(e);
@@ -104,7 +104,7 @@ public class MonitorTest {
 
             Assert.assertNull(customAction);
             Assert.assertNotNull(defaultAction);
-            Assert.assertEquals(defaultAction.getMonitor().getPortlets(), "[]");
+            Assert.assertEquals(defaultAction.getPortlets(), "[]");
         }
         catch (Exception e) {
             throw new AssertionError(e);
@@ -162,7 +162,7 @@ public class MonitorTest {
                     "[Monitor] Can't find the following portlets [io.jenkins.plugins.view] in list of available portlets!", build);
             jenkinsRule.assertLogContains(
                     "[Monitor] Cleaned Portlets: []", build);
-            Assert.assertEquals(action.getMonitor().getPortlets(), "[]");
+            Assert.assertEquals(action.getPortlets(), "[]");
 
         }
         catch (Exception e) {
