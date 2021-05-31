@@ -5,7 +5,6 @@ import hudson.Extension;
 import hudson.model.Run;
 import hudson.model.Action;
 import hudson.model.Job;
-import io.jenkins.plugins.monitoring.util.PortletService;
 import io.jenkins.plugins.monitoring.util.PullRequestFinder;
 import jenkins.model.TransientActionFactory;
 
@@ -35,8 +34,7 @@ public class MonitoringDefaultActionFactory extends TransientActionFactory<Run> 
         final Job<?, ?> job = run.getParent();
 
         if (PullRequestFinder.isPullRequest(job)) {
-            Monitor monitor = new Monitor(PortletService.getDefaultPortletsAsConfiguration(run));
-            return Collections.singletonList(new MonitoringDefaultAction(run, monitor));
+            return Collections.singletonList(new MonitoringDefaultAction(run));
         }
 
         return Collections.emptyList();
