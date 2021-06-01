@@ -8,6 +8,8 @@
 
     <st:header name="Content-Type" value="text/html;charset=UTF-8"/>
 
+    <link rel="stylesheet" href="${resURL}/plugin/pull-request-monitoring/css/jsontree.css"/>
+
     <div class="modal right fade" id="configModal" tabindex="-1" aria-labelledby="configModalLabel">
 
         <div class="modal-dialog">
@@ -105,15 +107,6 @@
 
                         </div>
 
-                        <div class="col-2">
-
-                            <button id="copyDefault" type="button" class="btn btn-light float-right"
-                                    data-toggle="tooltip" data-placement="bottom" title="Copy to clipboard">
-                                <i class="material-icons icon">&#xe14d;</i>
-                            </button>
-
-                        </div>
-
                     </div>
 
                 </div>
@@ -123,5 +116,7 @@
         </div>
 
     </div>
+
+    <script type="text/javascript" src="${resURL}/plugin/pull-request-monitoring/js/jsontree.js"/>
 
 </j:jelly>
