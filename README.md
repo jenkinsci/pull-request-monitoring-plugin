@@ -6,6 +6,7 @@
 [![Build Status](https://ci.jenkins.io/buildStatus/icon?subject=Jenkins%20CI&job=Plugins%2Fpull-request-monitoring-plugin%2Fmaster)](https://ci.jenkins.io/job/Plugins/job/pull-request-monitoring-plugin/job/master/)
 ![Contributions](https://img.shields.io/badge/contributions-welcome-orange)
 ![Jenkins Plugins](https://img.shields.io/jenkins/plugin/v/pull-request-monitoring?label=latest%20version)
+![Jenkins Plugin installs](https://img.shields.io/jenkins/plugin/i/pull-request-monitoring)
 [![codecov](https://codecov.io/gh/jenkinsci/pull-request-monitoring-plugin/branch/master/graph/badge.svg?token=8tAFvX7eSJ)](https://codecov.io/gh/jenkinsci/pull-request-monitoring-plugin)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/07246f679cbc4bc280b92dabc4425a17)](https://www.codacy.com/gh/jenkinsci/pull-request-monitoring-plugin/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=jenkinsci/pull-request-monitoring-plugin&amp;utm_campaign=Badge_Grade)
 
