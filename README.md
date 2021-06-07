@@ -257,7 +257,7 @@ public class DemoPortlet extends MonitorPortlet {
 > It is possible that actions have not yet been added to the run. 
 > It is therefore advisable to perform a null check on the actions of the run required by your portlet and return 
 > an empty list if necessary.
-> (Example: <a href="https://github.com/simonsymhoven/code-coverage-api-plugin/blob/pull-request-monitoring-portlet/src/main/java/io/jenkins/plugins/coverage/CoveragePullRequestMonitoringPortlet.java#L142">code-coverage-api</a>)</p>
+> (Example: <a href="https://bit.ly/2T74AS9">code-coverage-api</a>)</p>
 
 #### Multiple Instances Of One Portlet
 

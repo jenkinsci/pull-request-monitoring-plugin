@@ -14,7 +14,7 @@ import java.util.Collection;
  * <p>Since an empty dashboard is always added by default, it is possible that the method {@link #getPortlets(Run)} will
  * be called even though the current run may not be finished. It is therefore advisable to perform a null check on
  * the actions of the run required by your portlet and return an empty list if necessary.
- * (Example: <a href="https://bit.ly/2SDZzAg">code-coverage-api</a>)</p>
+ * (Example: <a href="https://bit.ly/2T74AS9">code-coverage-api</a>)</p>
  *
  * @since 1.6.0
  * @author Simon Symhoven
