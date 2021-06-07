@@ -28,8 +28,6 @@
 
                         <div class="col-12 center">
 
-                            <img src="https://www.jenkins.io/images/logos/fire/fire.svg"/>
-
                             <p>${%noPullRequest}</p>
 
                         </div>
