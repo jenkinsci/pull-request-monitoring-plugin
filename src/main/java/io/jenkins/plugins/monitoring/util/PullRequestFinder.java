@@ -25,6 +25,11 @@ public final class PullRequestFinder {
      */
     public static boolean isPullRequest(Job<?, ?> job) {
         BranchJobProperty branchJobProperty = job.getProperty(BranchJobProperty.class);
+
+        if (branchJobProperty == null) {
+            return false;
+        }
+
         SCMHead head = branchJobProperty.getBranch().getHead();
         return head instanceof ChangeRequestSCMHead2;
     }
