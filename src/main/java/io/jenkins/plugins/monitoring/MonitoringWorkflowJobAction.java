@@ -39,6 +39,6 @@ public class MonitoringWorkflowJobAction implements Action {
 
     @Override
     public String getUrlName() {
-        return workflowJob.getLastBuild().getNumber() + File.separator + MonitoringMultibranchProjectAction.getURI();
+        return workflowJob.getLastBuild().getNumber() + "/" + MonitoringMultibranchProjectAction.getURI();
     }
 }
