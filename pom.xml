@@ -22,6 +22,8 @@
     <url>https://github.com/jenkinsci/${project.artifactId}-plugin</url>
 
     <properties>
+        <jenkins.baseline>2.263</jenkins.baseline>
+        <jenkins.version>${jenkins.baseline}.4</jenkins.version>
         <revision>1.7.1</revision>
         <changelist>-SNAPSHOT</changelist>
         <gitHubRepo>jenkinsci/${project.artifactId}-plugin</gitHubRepo>
