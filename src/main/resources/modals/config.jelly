@@ -20,7 +20,7 @@
 
                     <h4 class="modal-title" id="configModalLabel">
 
-                        <img src="https://www.jenkins.io/images/logos/JCasC/JCasC.png" width="15%" height="15%"/>
+                        <img src="${resURL}/plugin/pull-request-monitoring/icons/JCasC.png" width="15%" height="15%"/>
                         ${%configModal.title}
 
                     </h4>
