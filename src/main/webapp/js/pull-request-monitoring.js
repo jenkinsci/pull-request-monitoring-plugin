@@ -335,7 +335,7 @@
 
         addItemsElement.addEventListener('click', addItem);
         gridElement.addEventListener('click', function (e) {
-            if (elementMatches(e.target, '.plugin-remove, .plugin-remove i')) {
+            if (elementMatches(e.target, '.plugin-remove, .plugin-remove svg')) {
                 removeItem(e);
                 updateConfig();
             }

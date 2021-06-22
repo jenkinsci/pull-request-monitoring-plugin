@@ -1,6 +1,6 @@
 <?jelly escape-by-default='true'?>
 
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler">
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout">
 
     <st:documentation>
         The configuration modal.
@@ -20,7 +20,7 @@
 
                     <h4 class="modal-title" id="configModalLabel">
 
-                        <img src="${resURL}/plugin/pull-request-monitoring/icons/JCasC.png" width="15%" height="15%"/>
+                        <img src="${resURL}/plugin/pull-request-monitoring/icons/JCasC.svg" width="15%" height="15%"/>
                         ${%configModal.title}
 
                     </h4>
@@ -69,7 +69,9 @@
                         <div class="col-2">
 
                             <button id="reset" type="button" class="btn btn-light float-right">
-                                <i class="material-icons icon">&#xe5d5;</i>
+                                <l:svgIcon class="icon-small" tooltip="${%configModal.reset}"
+                                           ariaHidden="true"
+                                           href="${resURL}/images/material-icons/svg-sprite-content-symbol.svg#ic_undo_24px"/>
                             </button>
 
                         </div>
@@ -90,7 +92,9 @@
 
                             <button id="copy" type="button" class="btn btn-light float-right"
                                     data-toggle="tooltip" data-placement="bottom" title="Copy to clipboard">
-                                <i class="material-icons icon">&#xe14d;</i>
+                                <l:svgIcon class="icon-small" tooltip="${%configModal.copy}"
+                                           ariaHidden="true"
+                                           href="${resURL}/images/material-icons/svg-sprite-content-symbol.svg#ic_content_paste_24px"/>
                             </button>
 
                         </div>

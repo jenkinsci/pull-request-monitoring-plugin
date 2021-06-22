@@ -1,6 +1,6 @@
 <?jelly escape-by-default='true'?>
 
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler">
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout">
     <st:documentation>
         A portlet for the dashboard.
 
@@ -39,7 +39,10 @@
                 </div>
 
                 <div class="plugin-remove">
-                    <i class="material-icons icon">&#xE5CD;</i></div>
+                    <l:svgIcon class="icon-small" tooltip="${%portlet.remove}"
+                               ariaHidden="true"
+                               href="${resURL}/images/material-icons/svg-sprite-content-symbol.svg#ic_clear_24px"/>
+                </div>
 
             </div>
 
