@@ -71,7 +71,7 @@
                                     <button onclick="location.href='${rootURL}/${job.getLastBuild().getUrl()}${it.getUrlName()}'"
                                             type="button" class="btn btn-outline-primary">${%dashboard}</button>
 
-                                    <button onclick="location.href='${!objectMetadata.isPresent() ? objectMetadata.get().getObjectUrl() : '#'}'"
+                                    <button onclick="location.href='${objectMetadata.isPresent() ? objectMetadata.get().getObjectUrl() : '#'}'"
                                             type="button" class="btn btn-outline-success">
                                         ${%goToPullRequest}
                                     </button>
