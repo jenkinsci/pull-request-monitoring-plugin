@@ -22,10 +22,10 @@ import java.util.stream.Collectors;
 /**
  * A utility class for the portlets.
  */
-public final class PortletService {
-    private static final Logger LOGGER = Logger.getLogger(PortletService.class.getName());
+public final class PortletUtils {
+    private static final Logger LOGGER = Logger.getLogger(PortletUtils.class.getName());
 
-    private PortletService() {
+    private PortletUtils() {
         // make checkstyle happy.
     }
 
@@ -106,7 +106,7 @@ public final class PortletService {
      *              true, if the configuration is valid, else false.
      */
     public static boolean isValidConfiguration(@NonNull final String configuration) {
-        try (InputStream schemaStream = PortletService.class.getResourceAsStream("/schema.json")) {
+        try (InputStream schemaStream = PortletUtils.class.getResourceAsStream("/schema.json")) {
             JSONObject jsonSchema = new JSONObject(new JSONTokener(schemaStream));
             JSONArray jsonSubject = new JSONArray(configuration);
             Schema schema = SchemaLoader.load(jsonSchema);

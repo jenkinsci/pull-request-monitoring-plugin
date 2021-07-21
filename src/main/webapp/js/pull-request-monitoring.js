@@ -222,20 +222,6 @@
     }
 
     /**
-     * Resets the current project configuration to the default one.
-     */
-    function resetConfiguration() {
-        run.resetMonitorConfiguration(function() {
-            run.getConfiguration(function(config) {
-                configuration = JSON.parse(config.responseJSON);
-                resetInput();
-                loadGrid();
-                updateConfig();
-            });
-        });
-    }
-
-    /**
      *  Load the grid slots.
      */
     function loadGrid() {
@@ -296,6 +282,20 @@
         grid.sort(pluginsToSort);
         grid.show(plugins);
 
+    }
+
+    /**
+     * Resets the current project configuration to the default one.
+     */
+    function resetConfiguration() {
+        run.resetMonitorConfiguration(function() {
+            run.getConfiguration(function(config) {
+                configuration = JSON.parse(config.responseJSON);
+                resetInput();
+                loadGrid();
+                updateConfig();
+            });
+        });
     }
 
     /**

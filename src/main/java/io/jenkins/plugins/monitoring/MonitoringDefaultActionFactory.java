@@ -2,10 +2,10 @@ package io.jenkins.plugins.monitoring;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import hudson.Extension;
-import hudson.model.Run;
 import hudson.model.Action;
 import hudson.model.Job;
-import io.jenkins.plugins.monitoring.util.PullRequestFinder;
+import hudson.model.Run;
+import io.jenkins.plugins.monitoring.util.PullRequestUtils;
 import jenkins.model.TransientActionFactory;
 
 import java.util.Collection;
@@ -33,7 +33,7 @@ public class MonitoringDefaultActionFactory extends TransientActionFactory<Run> 
 
         final Job<?, ?> job = run.getParent();
 
-        if (PullRequestFinder.isPullRequest(job)) {
+        if (PullRequestUtils.isPullRequest(job)) {
             return Collections.singletonList(new MonitoringDefaultAction(run));
         }
 
