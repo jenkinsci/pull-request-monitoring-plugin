@@ -70,15 +70,15 @@ public class MonitorConfigurationProperty extends UserProperty implements Saveab
      *          the config string to update.
      */
     public void createOrUpdateConfiguration(final String id, final String config) {
-        MonitorConfiguration property = getConfigurations().stream()
+        Optional<MonitorConfiguration> property = getConfigurations().stream()
                 .filter(monitorConfiguration -> monitorConfiguration.getId().equals(id))
-                .findFirst().orElse(null);
+                .findFirst();
 
-        if (property == null) {
-            getConfigurations().add(new MonitorConfiguration(id, config));
+        if (property.isPresent()) {
+            property.get().setConfig(config);
         }
         else {
-            property.setConfig(config);
+            getConfigurations().add(new MonitorConfiguration(id, config));
         }
 
         save();
