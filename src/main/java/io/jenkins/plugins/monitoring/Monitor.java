@@ -18,6 +18,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.kohsuke.stapler.DataBoundConstructor;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -143,8 +144,8 @@ public final class Monitor extends Step implements Serializable {
             return null;
         }
 
-        private void log(String message) {
-            getContext().get(TaskListener.class).getLogger()
+        private void log(String message) throws IOException, InterruptedException {
+            Objects.requireNonNull(getContext().get(TaskListener.class)).getLogger()
                     .println(message);
         }
 
