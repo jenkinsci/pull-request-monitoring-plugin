@@ -22,6 +22,7 @@
             <st:adjunct includes="io.jenkins.plugins.bootstrap5"/>
 
             <h1>${it.getObjectMetadataAction().get().getObjectDisplayName()}</h1>
+            <h6><j:out value="${it.getPullRequestReferenceBuildDescription()}"/></h6>
 
             <metadata:metadata it="${it}"/>
 

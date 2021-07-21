@@ -22,7 +22,7 @@
                         data-bs-target="#pr-metadata-body" aria-expanded="false"
                         aria-controls="pr-metadata-body">
 
-                    <j:out value="${it.getPullRequestMetadataTitle()}"/>
+                        <j:out value="${it.getPullRequestMetadataTitle()}"/>
 
                 </button>
 

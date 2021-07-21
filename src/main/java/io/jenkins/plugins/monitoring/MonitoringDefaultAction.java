@@ -8,6 +8,7 @@ import hudson.model.Run;
 import io.jenkins.plugins.forensics.reference.ReferenceFinder;
 import io.jenkins.plugins.monitoring.util.PortletService;
 import j2html.tags.DomContent;
+import jenkins.model.Jenkins;
 import org.commonmark.node.*;
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
@@ -127,24 +128,36 @@ public class MonitoringDefaultAction implements RunAction2, StaplerProxy {
      *          the title as html element.
      */
     public String getPullRequestMetadataTitle() {
-        Optional<Run<?, ?>> referenceBuild = getReferenceBuild();
-        Optional<ContributorMetadataAction> contributorMetadataAction = getContributorMetadataAction();
 
-        DomContent reference;
-        if (referenceBuild.isPresent()) {
-            reference = join("(reference build:", a().withHref(referenceBuild.get().getUrl())
-                    .withText(referenceBuild.get().getDisplayName()), ")");
-        }
-        else {
-            reference = span("(reference build unknown)");
-        }
+        Optional<ContributorMetadataAction> contributorMetadataAction = getContributorMetadataAction();
 
         return span(join(
                 strong(iffElse(contributorMetadataAction.isPresent(),
                         getContributorMetadataAction().get().getContributor(),
                         "unknown")), "wants to merge",
                 strong(getScmHead().getOriginName()), "into",
-               strong(getScmHead().getTarget().getName()), reference)).render();
+               strong(getScmHead().getTarget().getName()))).render();
+    }
+
+    /**
+     * Creates the reference build link for the pull request metadata title.
+     *
+     * @return
+     *          the reference build as html element.
+     */
+    public String getPullRequestReferenceBuildDescription() {
+        Optional<Run<?, ?>> referenceBuild = getReferenceBuild();
+
+        String url = referenceBuild.map(value -> Jenkins.get().getRootUrl() + value.getUrl()).orElse("#");
+        String name = referenceBuild.map(Run::getDisplayName).orElse("#?");
+
+        String target = getScmHead().getTarget().getName();
+
+        DomContent reference = join("Reference Build:", a().withId("reference-build-link")
+                    .withHref(url)
+                    .withText(target + " " + name));
+
+        return span(reference).render();
     }
 
     /**
