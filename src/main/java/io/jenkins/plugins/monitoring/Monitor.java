@@ -5,22 +5,21 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import hudson.Extension;
 import hudson.model.Run;
 import hudson.model.TaskListener;
-import io.jenkins.plugins.monitoring.util.PortletService;
-import io.jenkins.plugins.monitoring.util.PullRequestFinder;
+import io.jenkins.plugins.monitoring.util.PortletUtils;
+import io.jenkins.plugins.monitoring.util.PullRequestUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
-import org.jenkinsci.plugins.workflow.steps.Step;
-import org.jenkinsci.plugins.workflow.steps.StepContext;
-import org.jenkinsci.plugins.workflow.steps.StepExecution;
-import org.jenkinsci.plugins.workflow.steps.SynchronousStepExecution;
-import org.jenkinsci.plugins.workflow.steps.StepDescriptor;
+import org.jenkinsci.plugins.workflow.steps.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -80,7 +79,7 @@ public final class Monitor extends Step implements Serializable {
                 return null;
             }
 
-            if (!PortletService.isValidConfiguration(monitor.getPortlets())) {
+            if (!PortletUtils.isValidConfiguration(monitor.getPortlets())) {
                 log("[Monitor] Portlet Configuration is invalid!");
                 return null;
             }
@@ -88,7 +87,7 @@ public final class Monitor extends Step implements Serializable {
             JSONArray portlets = new JSONArray(monitor.getPortlets());
             log("[Monitor] Portlet Configuration: " + portlets.toString(3));
 
-            List<String> classes = PortletService.getAvailablePortlets(run)
+            List<String> classes = PortletUtils.getAvailablePortlets(run)
                     .stream()
                     .map(MonitorPortlet::getId)
                     .collect(Collectors.toList());
@@ -132,7 +131,7 @@ public final class Monitor extends Step implements Serializable {
                 log("[Monitor] Cleaned Portlets: " + cleanedPortlets.toString(3));
             }
 
-            if (PullRequestFinder.isPullRequest(run.getParent())) {
+            if (PullRequestUtils.isPullRequest(run.getParent())) {
                 log("[Monitor] Build is part of a pull request. Add 'MonitoringCustomAction' now.");
 
                 run.addAction(new MonitoringCustomAction(monitor.getPortlets()));

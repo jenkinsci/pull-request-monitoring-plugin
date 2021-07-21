@@ -6,18 +6,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.hm.hafner.util.FilteredLog;
 import hudson.model.Run;
 import io.jenkins.plugins.forensics.reference.ReferenceFinder;
-import io.jenkins.plugins.monitoring.util.PortletService;
+import io.jenkins.plugins.monitoring.util.PortletUtils;
 import j2html.tags.DomContent;
 import jenkins.model.Jenkins;
-import org.commonmark.node.*;
-import org.commonmark.parser.Parser;
-import org.commonmark.renderer.html.HtmlRenderer;
 import jenkins.model.RunAction2;
 import jenkins.scm.api.metadata.ContributorMetadataAction;
 import jenkins.scm.api.metadata.ObjectMetadataAction;
 import jenkins.scm.api.mixin.ChangeRequestSCMHead2;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.commonmark.node.Node;
+import org.commonmark.parser.Parser;
+import org.commonmark.renderer.html.HtmlRenderer;
 import org.jenkinsci.plugins.workflow.multibranch.BranchJobProperty;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -86,7 +86,7 @@ public class MonitoringDefaultAction implements RunAction2, StaplerProxy {
     }
 
     public String getPortlets() {
-        return PortletService.getDefaultPortletsAsConfiguration(getRun());
+        return PortletUtils.getDefaultPortletsAsConfiguration(getRun());
     }
 
     /**
@@ -233,7 +233,7 @@ public class MonitoringDefaultAction implements RunAction2, StaplerProxy {
             usedPlugins.add(portlet.getString("id"));
         }
 
-        List<String> availablePlugins = PortletService.getAvailablePortlets(getRun())
+        List<String> availablePlugins = PortletUtils.getAvailablePortlets(getRun())
                 .stream().map(MonitorPortlet::getId).collect(Collectors.toList());
         return new ArrayList<String>(CollectionUtils.removeAll(usedPlugins, availablePlugins));
     }
@@ -398,7 +398,7 @@ public class MonitoringDefaultAction implements RunAction2, StaplerProxy {
      *          all available {@link MonitorPortlet}.
      */
     public static List<? extends MonitorPortlet> getAvailablePortlets(final Run<?, ?> build) {
-        return PortletService.getAvailablePortlets(build);
+        return PortletUtils.getAvailablePortlets(build);
     }
 
     /**
@@ -408,7 +408,7 @@ public class MonitoringDefaultAction implements RunAction2, StaplerProxy {
      *          all factories as list.
      */
     public static List<? extends MonitorPortletFactory> getFactories() {
-        return PortletService.getFactories();
+        return PortletUtils.getFactories();
     }
 
     /**
@@ -425,6 +425,6 @@ public class MonitoringDefaultAction implements RunAction2, StaplerProxy {
      */
     public static List<? extends MonitorPortlet> getAvailablePortletsForFactory(
             final Run<?, ?> build, final MonitorPortletFactory factory) {
-        return PortletService.getAvailablePortletsForFactory(build, factory);
+        return PortletUtils.getAvailablePortletsForFactory(build, factory);
     }
 }

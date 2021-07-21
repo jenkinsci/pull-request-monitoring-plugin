@@ -3,7 +3,7 @@ package io.jenkins.plugins.monitoring;
 import hudson.model.Action;
 import hudson.model.Job;
 import hudson.model.ProminentProjectAction;
-import io.jenkins.plugins.monitoring.util.PullRequestFinder;
+import io.jenkins.plugins.monitoring.util.PullRequestUtils;
 import jenkins.branch.MultiBranchProject;
 import jenkins.scm.api.metadata.ContributorMetadataAction;
 import jenkins.scm.api.metadata.ObjectMetadataAction;
@@ -67,7 +67,7 @@ public class MonitoringMultibranchProjectAction implements ProminentProjectActio
      *          filtered list of all {@link #getJobs() jobs} by "Pull Request".
      */
     public List<Job<?, ?>> getPullRequests() {
-        return getJobs().stream().filter(PullRequestFinder::isPullRequest).collect(Collectors.toList());
+        return getJobs().stream().filter(PullRequestUtils::isPullRequest).collect(Collectors.toList());
     }
 
     /**

@@ -3,8 +3,6 @@ package io.jenkins.plugins.monitoring;
 import hudson.model.Action;
 import org.jenkinsci.plugins.workflow.job.WorkflowJob;
 
-import java.io.File;
-
 /**
  * This action displays a link on the side panel of a {@link WorkflowJob}. The action is only displayed if the job
  * is a pull request, which is described in the associated {@link MonitoringWorkflowJobActionFactory}.

@@ -3,7 +3,7 @@ package io.jenkins.plugins.monitoring;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import hudson.Extension;
 import hudson.model.Action;
-import io.jenkins.plugins.monitoring.util.PullRequestFinder;
+import io.jenkins.plugins.monitoring.util.PullRequestUtils;
 import jenkins.model.TransientActionFactory;
 import org.jenkinsci.plugins.workflow.job.WorkflowJob;
 
@@ -46,7 +46,7 @@ public class MonitoringWorkflowJobActionFactory extends TransientActionFactory<W
             return Collections.emptyList();
         }
 
-        if (PullRequestFinder.isPullRequest(workflowJob)) {
+        if (PullRequestUtils.isPullRequest(workflowJob)) {
             return Collections.singletonList(new MonitoringWorkflowJobAction(workflowJob));
         }
 

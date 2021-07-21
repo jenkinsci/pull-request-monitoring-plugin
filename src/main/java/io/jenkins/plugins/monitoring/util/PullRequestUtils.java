@@ -8,9 +8,9 @@ import org.jenkinsci.plugins.workflow.multibranch.BranchJobProperty;
 /**
  * A utility class for pull requests.
  */
-public final class PullRequestFinder {
+public final class PullRequestUtils {
 
-    private PullRequestFinder() {
+    private PullRequestUtils() {
         // make checkstyle happy.
     }
 
