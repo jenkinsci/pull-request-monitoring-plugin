@@ -36,7 +36,7 @@
         <muuri-api.version>0.9.5-1</muuri-api.version>
         <select2-api.version>4.0.13-6</select2-api.version>
         <json-schema.version>1.5.1</json-schema.version>
-        <forensics-api.version>1.2.1</forensics-api.version>
+        <forensics-api.version>1.6.0</forensics-api.version>
         <j2html.version>1.4.0</j2html.version>
         <commonmark.version>0.18.0</commonmark.version>
     </properties>
