@@ -38,7 +38,7 @@
         <json-schema.version>1.5.1</json-schema.version>
         <forensics-api.version>1.2.1</forensics-api.version>
         <j2html.version>1.4.0</j2html.version>
-        <commonmark.version>0.18.0</commonmark.version>
+        <commonmark.version>0.18.1</commonmark.version>
     </properties>
 
     <licenses>
