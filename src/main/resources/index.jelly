@@ -1,0 +1,6 @@
+<?jelly escape-by-default='true'?>
+<div>
+    This plugin offers a possibility to display and aggregate the results (in the form of individual views) of a pull
+            request in a configurable dashboard. Views can only be accessed or displayed if the corresponding plugin fulfils
+            certain requirements and already provides a view.
+</div>
