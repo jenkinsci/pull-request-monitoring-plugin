@@ -17,8 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;
 
-
-/**
+/*
  * Unit tests for the {@link Monitor} step.
  *
  * @author Simon Symhoven
