@@ -2,6 +2,7 @@ package io.jenkins.plugins.monitoring;
 
 import com.google.common.collect.ImmutableSet;
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import hudson.Extension;
 import hudson.model.Run;
 import hudson.model.TaskListener;
@@ -60,7 +61,7 @@ public final class Monitor extends Step implements Serializable {
     /**
      *  The {@link Execution} routine for the monitoring step.
      */
-    @SuppressWarnings("THROWS_METHOD_THROWS_CLAUSE_BASIC_EXCEPTION")
+    @SuppressFBWarnings(value = "THROWS_METHOD_THROWS_CLAUSE_BASIC_EXCEPTION")
     static class Execution extends SynchronousStepExecution<Void> {
 
         private static final long serialVersionUID = 1300005476208035751L;
