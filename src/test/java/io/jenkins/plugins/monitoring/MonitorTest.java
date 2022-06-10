@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;
 
-/*
+/**
  * Unit tests for the {@link Monitor} step.
  *
  * @author Simon Symhoven
@@ -220,8 +220,7 @@ public class MonitorTest {
         }
 
     }
-
-
+    
     /**
      * Creates an {@link WorkflowMultiBranchProject} with a sample pull request based on the given Jenkinsfile.
      *

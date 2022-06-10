@@ -71,7 +71,7 @@ public final class Monitor extends Step implements Serializable {
         }
 
         @Override
-        public Void run() throws Exception {
+        public Void run() throws IOException, InterruptedException {
             final Run<?, ?> run = getContext().get(Run.class);
 
             if (run == null) {
