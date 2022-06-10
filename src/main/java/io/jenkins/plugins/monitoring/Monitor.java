@@ -53,7 +53,7 @@ public final class Monitor extends Step implements Serializable {
     }
 
     @Override
-    public StepExecution start(final StepContext stepContext) throws Exception {
+    public StepExecution start(final StepContext stepContext) {
         return new Execution(stepContext, this);
     }
 

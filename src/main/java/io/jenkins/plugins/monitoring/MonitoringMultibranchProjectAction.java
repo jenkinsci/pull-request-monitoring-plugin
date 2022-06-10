@@ -15,7 +15,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 
-/**
+/*
  * This action displays a link on the side panel of a {@link MultiBranchProject}.
  * The action is responsible to render the basic overview of all open pull requests
  * via its associated 'index.jelly' view.
