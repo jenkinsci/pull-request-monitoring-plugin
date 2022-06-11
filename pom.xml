@@ -123,6 +123,22 @@
             <version>${commonmark.version}</version>
         </dependency>
 
+        <!-- Workflow dependencies -->
+        <dependency>
+            <groupId>org.jenkins-ci.plugins.workflow</groupId>
+            <artifactId>workflow-multibranch</artifactId>
+            <version>716.vc692a_e52371b_</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jenkins-ci.plugins.workflow</groupId>
+            <artifactId>workflow-api</artifactId>
+            <version>1153.vb_912c0e47fb_a_</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jenkins-ci.plugins.workflow</groupId>
+            <artifactId>workflow-job</artifactId>
+        </dependency>
+
         <!-- Test scope dependencies -->
         <dependency>
             <groupId>org.jenkins-ci.plugins.workflow</groupId>
