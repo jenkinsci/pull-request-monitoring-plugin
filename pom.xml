@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
+    
     <parent>
-        <groupId>org.jvnet.hudson.plugins</groupId>
-        <artifactId>analysis-pom</artifactId>
-        <version>5.26.0</version>
+        <groupId>org.jenkins-ci.plugins</groupId>
+        <artifactId>plugin</artifactId>
+        <version>4.42</version>
         <relativePath />
     </parent>
 
@@ -13,7 +13,7 @@
     <artifactId>pull-request-monitoring</artifactId>
     <packaging>hpi</packaging>
     <name>Pull Request Monitoring</name>
-    <version>1.7.9-SNAPSHOT</version>
+    <version>${revision}${changelist}</version>
     <description>
         This plugin offers a possibility to display and aggregate the results (in the form of individual views) of a pull
         request in a configurable dashboard. Views can only be accessed or displayed if the corresponding plugin fulfils
@@ -22,8 +22,11 @@
     <url>https://github.com/jenkinsci/${project.artifactId}-plugin</url>
 
     <properties>
-        <revision>1.7.1</revision>
+        <revision>1.7.9</revision>
         <changelist>-SNAPSHOT</changelist>
+        <jenkins.baseline>2.332</jenkins.baseline>
+        <jenkins.version>${jenkins.baseline}.4</jenkins.version>
+        <java.level>11</java.level>
         <gitHubRepo>jenkinsci/${project.artifactId}-plugin</gitHubRepo>
 
         <plugin-util-api.version>2.17.0</plugin-util-api.version>
@@ -38,6 +41,18 @@
         <commonmark.version>0.19.0</commonmark.version>
     </properties>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>io.jenkins.tools.bom</groupId>
+                <artifactId>bom-${jenkins.baseline}.x</artifactId>
+                <version>1478.v81d3dc4f9a_43</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+    
     <licenses>
         <license>
             <name>MIT license</name>
@@ -92,11 +107,6 @@
             <version>${echarts-api.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.jenkins-ci.plugins</groupId>
-            <artifactId>jackson2-api</artifactId>
-            <version>2.13.3-285.vc03c0256d517</version>
-        </dependency>
-        <dependency>
             <groupId>io.jenkins.plugins</groupId>
             <artifactId>select2-api</artifactId>
             <version>${select2-api.version}</version>
@@ -131,12 +141,10 @@
         <dependency>
             <groupId>org.jenkins-ci.plugins.workflow</groupId>
             <artifactId>workflow-multibranch</artifactId>
-            <version>716.vc692a_e52371b_</version>
         </dependency>
         <dependency>
             <groupId>org.jenkins-ci.plugins.workflow</groupId>
             <artifactId>workflow-api</artifactId>
-            <version>1153.vb_912c0e47fb_a_</version>
         </dependency>
         <dependency>
             <groupId>org.jenkins-ci.plugins.workflow</groupId>
