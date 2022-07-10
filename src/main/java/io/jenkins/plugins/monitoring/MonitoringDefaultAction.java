@@ -223,6 +223,7 @@ public class MonitoringDefaultAction implements RunAction2, StaplerProxy {
      * @return
      *          a list of all unavailable portlet ids.
      */
+    @SuppressWarnings("unchecked")
     public List<String> getUnavailablePortlets() {
         JSONArray portlets = new JSONArray(getConfiguration());
 
