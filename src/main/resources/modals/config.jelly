@@ -69,9 +69,7 @@
                         <div class="col-2">
 
                             <button id="reset" type="button" class="btn btn-light float-right">
-                                <l:svgIcon class="icon-small" tooltip="${%configModal.reset}"
-                                           ariaHidden="true"
-                                           href="${resURL}/images/material-icons/svg-sprite-content-symbol.svg#ic_undo_24px"/>
+                                <l:icon src="symbol-arrow-undo-outline plugin-ionicons-api" tooltip="${%configModal.reset}" class="icon-sm" />
                             </button>
 
                         </div>
@@ -92,9 +90,7 @@
 
                             <button id="copy" type="button" class="btn btn-light float-right"
                                     data-toggle="tooltip" data-placement="bottom" title="Copy to clipboard">
-                                <l:svgIcon class="icon-small" tooltip="${%configModal.copy}"
-                                           ariaHidden="true"
-                                           href="${resURL}/images/material-icons/svg-sprite-content-symbol.svg#ic_content_paste_24px"/>
+                                <l:icon src="symbol-clipboard-outline plugin-ionicons-api" tooltip="${%configModal.copy}" class="icon-sm" />
                             </button>
 
                         </div>

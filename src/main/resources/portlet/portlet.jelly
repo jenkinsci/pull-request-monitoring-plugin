@@ -39,9 +39,7 @@
                 </div>
 
                 <div class="plugin-remove">
-                    <l:svgIcon class="icon-small" tooltip="${%portlet.remove}"
-                               ariaHidden="true"
-                               href="${resURL}/images/material-icons/svg-sprite-content-symbol.svg#ic_clear_24px"/>
+                    <l:icon src="symbol-close-outline plugin-ionicons-api" tooltip="${%portlet.remove}" class="icon-sm" />
                 </div>
 
             </div>

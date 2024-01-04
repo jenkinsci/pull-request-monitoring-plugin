@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.jenkins-ci.plugins</groupId>
         <artifactId>plugin</artifactId>
-        <version>4.47</version>
+        <version>4.76</version>
         <relativePath />
     </parent>
 
@@ -13,32 +13,19 @@
     <artifactId>pull-request-monitoring</artifactId>
     <packaging>hpi</packaging>
     <name>Pull Request Monitoring</name>
-    <version>${revision}${changelist}</version>
-    <description>
-        This plugin offers a possibility to display and aggregate the results (in the form of individual views) of a pull
-        request in a configurable dashboard. Views can only be accessed or displayed if the corresponding plugin fulfils
-        certain requirements and already provides a view.
-    </description>
+    <version>${changelist}</version>
     <url>https://github.com/jenkinsci/${project.artifactId}-plugin</url>
 
     <properties>
-        <revision>1.7.9</revision>
-        <changelist>-SNAPSHOT</changelist>
-        <jenkins.baseline>2.332</jenkins.baseline>
-        <jenkins.version>${jenkins.baseline}.4</jenkins.version>
-        <java.level>11</java.level>
+        <changelist>999999-SNAPSHOT</changelist>
+        <jenkins.baseline>2.414</jenkins.baseline>
+        <jenkins.version>${jenkins.baseline}.3</jenkins.version>
         <gitHubRepo>jenkinsci/${project.artifactId}-plugin</gitHubRepo>
 
-        <plugin-util-api.version>2.17.0</plugin-util-api.version>
-        <bootstrap5-api.version>5.1.3-7</bootstrap5-api.version>
-        <font-awesome-api.version>6.1.2-1</font-awesome-api.version>
-        <echarts-api.version>5.3.3-1</echarts-api.version>
-        <jquery3-api.version>3.6.0-4</jquery3-api.version>
         <muuri-api.version>0.9.5-3</muuri-api.version>
         <select2-api.version>4.0.13-8</select2-api.version>
         <json-schema.version>1.5.1</json-schema.version>
-        <forensics-api.version>1.15.1</forensics-api.version>
-        <commonmark.version>0.19.0</commonmark.version>
+        <commonmark.version>0.21.0</commonmark.version>
     </properties>
 
     <dependencyManagement>
@@ -46,7 +33,7 @@
             <dependency>
                 <groupId>io.jenkins.tools.bom</groupId>
                 <artifactId>bom-${jenkins.baseline}.x</artifactId>
-                <version>1478.v81d3dc4f9a_43</version>
+                <version>2675.v1515e14da_7a_6</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -69,7 +56,7 @@
     </developers>
 
     <scm>
-        <connection>scm:git:git://github.com/${gitHubRepo}.git</connection>
+        <connection>scm:git:https://github.com/${gitHubRepo}.git</connection>
         <developerConnection>scm:git:git@github.com:${gitHubRepo}.git</developerConnection>
         <url>https://github.com/${gitHubRepo}</url>
         <tag>${scmTag}</tag>
@@ -79,22 +66,18 @@
         <dependency>
             <groupId>io.jenkins.plugins</groupId>
             <artifactId>plugin-util-api</artifactId>
-            <version>${plugin-util-api.version}</version>
         </dependency>
         <dependency>
             <groupId>io.jenkins.plugins</groupId>
             <artifactId>bootstrap5-api</artifactId>
-            <version>${bootstrap5-api.version}</version>
         </dependency>
         <dependency>
             <groupId>io.jenkins.plugins</groupId>
             <artifactId>font-awesome-api</artifactId>
-            <version>${font-awesome-api.version}</version>
         </dependency>
         <dependency>
             <groupId>io.jenkins.plugins</groupId>
             <artifactId>jquery3-api</artifactId>
-            <version>${jquery3-api.version}</version>
         </dependency>
         <dependency>
             <groupId>io.jenkins.plugins</groupId>
@@ -104,7 +87,6 @@
         <dependency>
             <groupId>io.jenkins.plugins</groupId>
             <artifactId>echarts-api</artifactId>
-            <version>${echarts-api.version}</version>
         </dependency>
         <dependency>
             <groupId>io.jenkins.plugins</groupId>
@@ -114,7 +96,6 @@
         <dependency>
             <groupId>io.jenkins.plugins</groupId>
             <artifactId>forensics-api</artifactId>
-            <version>${forensics-api.version}</version>
         </dependency>
         <dependency>
             <groupId>org.everit.json</groupId>
@@ -135,6 +116,10 @@
             <groupId>org.commonmark</groupId>
             <artifactId>commonmark</artifactId>
             <version>${commonmark.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jenkins.plugins</groupId>
+            <artifactId>commons-lang3-api</artifactId>
         </dependency>
 
         <!-- Workflow dependencies -->
@@ -168,13 +153,18 @@
             <classifier>tests</classifier>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>io.jenkins.plugins</groupId>
+            <artifactId>commons-text-api</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
     
     <build>
         <plugins>
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
-                <version>3.3.0</version>
+                <version>3.6.1</version>
             </plugin>
             <plugin>
                 <groupId>org.jacoco</groupId>
