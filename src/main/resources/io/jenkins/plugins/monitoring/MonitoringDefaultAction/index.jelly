@@ -28,19 +28,13 @@
 
             <!-- The data toggle for <modals:config> -->
             <button type="button" id="config-button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#configModal">
-
-                <l:svgIcon class="icon-small spin" tooltip="${%openSettings}"
-                           ariaHidden="true"
-                           href="${resURL}/images/material-icons/svg-sprite-action-symbol.svg#ic_settings_24px"/>
+                <l:icon src="symbol-setting-outline plugin-ionicons-api" tooltip="${%openSettings}" class="icon-sm spin" />
 
             </button>
 
             <!-- The data toggle for <modals:add-portlet> -->
             <button type="button" class="btn btn-primary" id="add-item-button" data-bs-toggle="modal" data-bs-target="#portletModal">
-
-                <l:svgIcon class="icon-small" tooltip="${%addPortlet}"
-                           ariaHidden="true"
-                           href="${resURL}/images/material-icons/svg-sprite-action-symbol.svg#ic_extension_24px"/>
+                <l:icon src="symbol-extension-puzzle-outline plugin-ionicons-api" tooltip="${%addPortlet}" class="icon-sm" />
 
             </button>
 
