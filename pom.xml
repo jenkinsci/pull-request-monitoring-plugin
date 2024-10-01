@@ -25,7 +25,7 @@
         <muuri-api.version>0.9.5-3</muuri-api.version>
         <select2-api.version>4.0.13-8</select2-api.version>
         <json-schema.version>1.5.1</json-schema.version>
-        <commonmark.version>0.22.0</commonmark.version>
+        <commonmark.version>0.23.0</commonmark.version>
     </properties>
 
     <dependencyManagement>
