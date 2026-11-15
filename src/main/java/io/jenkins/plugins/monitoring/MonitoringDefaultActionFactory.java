@@ -6,10 +6,9 @@ import hudson.model.Action;
 import hudson.model.Job;
 import hudson.model.Run;
 import io.jenkins.plugins.monitoring.util.PullRequestUtils;
-import jenkins.model.TransientActionFactory;
-
 import java.util.Collection;
 import java.util.Collections;
+import jenkins.model.TransientActionFactory;
 
 /**
  * A {@link TransientActionFactory} to add an action to specific {@link Run}.

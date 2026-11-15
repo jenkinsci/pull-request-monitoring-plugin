@@ -2,19 +2,11 @@ package io.jenkins.plugins.monitoring;
 
 import com.google.common.collect.ImmutableSet;
 import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import hudson.Extension;
 import hudson.model.Run;
 import hudson.model.TaskListener;
 import io.jenkins.plugins.monitoring.util.PortletUtils;
 import io.jenkins.plugins.monitoring.util.PullRequestUtils;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.jenkinsci.plugins.workflow.steps.*;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.kohsuke.stapler.DataBoundConstructor;
-
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -22,6 +14,12 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.jenkinsci.plugins.workflow.steps.*;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.kohsuke.stapler.DataBoundConstructor;
 
 /**
  * This {@link Step} is responsible for the configuration of the monitoring dashboard
@@ -61,7 +59,6 @@ public final class Monitor extends Step implements Serializable {
     /**
      *  The {@link Execution} routine for the monitoring step.
      */
-    @SuppressFBWarnings(value = "THROWS_METHOD_THROWS_CLAUSE_BASIC_EXCEPTION")
     static class Execution extends SynchronousStepExecution<Void> {
 
         private static final long serialVersionUID = 1300005476208035751L;
@@ -89,13 +86,11 @@ public final class Monitor extends Step implements Serializable {
             JSONArray portlets = new JSONArray(monitor.getPortlets());
             log("[Monitor] Portlet Configuration: " + portlets.toString(3));
 
-            List<String> classes = PortletUtils.getAvailablePortlets(run)
-                    .stream()
+            List<String> classes = PortletUtils.getAvailablePortlets(run).stream()
                     .map(MonitorPortlet::getId)
                     .collect(Collectors.toList());
 
-            log("[Monitor] Available portlets: ["
-                            + StringUtils.join(classes, ", ") + "]");
+            log("[Monitor] Available portlets: [" + StringUtils.join(classes, ", ") + "]");
 
             List<String> usedPortlets = new ArrayList<>();
 
@@ -107,8 +102,7 @@ public final class Monitor extends Step implements Serializable {
                     if (usedPortlets.contains(id)) {
                         log("[Monitor] Portlet with ID '" + id
                                 + "' already defined in list of portlets. Skip adding this portlet!");
-                    }
-                    else {
+                    } else {
                         usedPortlets.add(id);
                     }
                 }
@@ -117,8 +111,8 @@ public final class Monitor extends Step implements Serializable {
             List<String> missedPortletIds = new ArrayList<String>(CollectionUtils.removeAll(usedPortlets, classes));
 
             if (!missedPortletIds.isEmpty()) {
-                log("[Monitor] Can't find the following portlets "
-                                + missedPortletIds + " in list of available portlets! Will remove from current configuration.");
+                log("[Monitor] Can't find the following portlets " + missedPortletIds
+                        + " in list of available portlets! Will remove from current configuration.");
 
                 JSONArray cleanedPortlets = new JSONArray();
                 for (Object o : portlets) {
@@ -137,8 +131,7 @@ public final class Monitor extends Step implements Serializable {
                 log("[Monitor] Build is part of a pull request. Add 'MonitoringCustomAction' now.");
 
                 run.addAction(new MonitoringCustomAction(monitor.getPortlets()));
-            }
-            else {
+            } else {
                 log("[Monitor] Build is not part of a pull request. Skip adding 'MonitoringCustomAction'.");
             }
 
@@ -146,10 +139,10 @@ public final class Monitor extends Step implements Serializable {
         }
 
         private void log(String message) throws IOException, InterruptedException {
-            Objects.requireNonNull(getContext().get(TaskListener.class)).getLogger()
+            Objects.requireNonNull(getContext().get(TaskListener.class))
+                    .getLogger()
                     .println(message);
         }
-
     }
 
     /**
@@ -174,5 +167,4 @@ public final class Monitor extends Step implements Serializable {
             return Messages.Step_DisplayName();
         }
     }
-
 }

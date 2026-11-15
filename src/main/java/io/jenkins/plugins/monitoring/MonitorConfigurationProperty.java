@@ -6,7 +6,6 @@ import hudson.model.Saveable;
 import hudson.model.User;
 import hudson.model.UserProperty;
 import hudson.model.UserPropertyDescriptor;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -57,10 +56,11 @@ public class MonitorConfigurationProperty extends UserProperty implements Saveab
         return getConfigurations().stream()
                 .filter(monitorConfiguration -> monitorConfiguration.getId().equals(id))
                 .findFirst()
-                .orElse(getConfigurations()
-                        .stream()
-                        .filter(monitorConfiguration -> monitorConfiguration.getId().equals(DEFAULT_ID))
-                        .findFirst().get());
+                .orElse(getConfigurations().stream()
+                        .filter(monitorConfiguration ->
+                                monitorConfiguration.getId().equals(DEFAULT_ID))
+                        .findFirst()
+                        .get());
     }
 
     /**
@@ -79,8 +79,7 @@ public class MonitorConfigurationProperty extends UserProperty implements Saveab
 
         if (property.isPresent()) {
             property.get().setConfig(config);
-        }
-        else {
+        } else {
             getConfigurations().add(new MonitorConfiguration(id, config));
         }
 
@@ -106,15 +105,16 @@ public class MonitorConfigurationProperty extends UserProperty implements Saveab
      */
     public static Optional<MonitorConfigurationProperty> forCurrentUser() {
         final User current = User.current();
-        return current == null ? Optional.empty() : Optional.ofNullable(current.getProperty(MonitorConfigurationProperty.class));
+        return current == null
+                ? Optional.empty()
+                : Optional.ofNullable(current.getProperty(MonitorConfigurationProperty.class));
     }
 
     @Override
     public void save() {
         try {
             user.save();
-        }
-        catch (IOException exception) {
+        } catch (IOException exception) {
             LOGGER.log(Level.SEVERE, "User could not be saved: ", exception);
         }
     }
@@ -152,7 +152,6 @@ public class MonitorConfigurationProperty extends UserProperty implements Saveab
         public void setConfig(final String config) {
             this.config = config;
         }
-
     }
 
     /**
@@ -171,7 +170,5 @@ public class MonitorConfigurationProperty extends UserProperty implements Saveab
         public String getDisplayName() {
             return Messages.Property_DisplayName();
         }
-
     }
-
 }

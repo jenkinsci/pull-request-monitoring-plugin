@@ -5,12 +5,6 @@ import hudson.ExtensionList;
 import hudson.model.Run;
 import io.jenkins.plugins.monitoring.MonitorPortlet;
 import io.jenkins.plugins.monitoring.MonitorPortletFactory;
-import org.everit.json.schema.Schema;
-import org.everit.json.schema.loader.SchemaLoader;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.json.JSONTokener;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
@@ -18,6 +12,11 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import org.everit.json.schema.Schema;
+import org.everit.json.schema.loader.SchemaLoader;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 
 /**
  * A utility class for the portlets.
@@ -39,8 +38,7 @@ public final class PortletUtils {
      *          all available {@link MonitorPortlet}.
      */
     public static List<? extends MonitorPortlet> getAvailablePortlets(final Run<?, ?> build) {
-        return getFactories()
-                .stream()
+        return getFactories().stream()
                 .map(factory -> factory.getPortlets(build))
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
@@ -70,8 +68,7 @@ public final class PortletUtils {
      */
     public static List<? extends MonitorPortlet> getAvailablePortletsForFactory(
             final Run<?, ?> build, final MonitorPortletFactory factory) {
-        return getFactories()
-                .stream()
+        return getFactories().stream()
                 .filter(fac -> fac.equals(factory))
                 .map(fac -> fac.getPortlets(build))
                 .flatMap(Collection::stream)
@@ -88,11 +85,10 @@ public final class PortletUtils {
      *              the json array configuration as string.
      */
     public static String getDefaultPortletsAsConfiguration(Run<?, ?> build) {
-        return new JSONArray(getAvailablePortlets(build)
-                .stream()
-                .filter(MonitorPortlet::isDefault)
-                .map(portlet -> new JSONObject(String.format("{\"id\": \"%s\"}", portlet.getId())))
-                .toArray())
+        return new JSONArray(getAvailablePortlets(build).stream()
+                        .filter(MonitorPortlet::isDefault)
+                        .map(portlet -> new JSONObject(String.format("{\"id\": \"%s\"}", portlet.getId())))
+                        .toArray())
                 .toString();
     }
 
@@ -112,8 +108,7 @@ public final class PortletUtils {
             Schema schema = SchemaLoader.load(jsonSchema);
             schema.validate(jsonSubject);
             return true;
-        }
-        catch (IOException exception) {
+        } catch (IOException exception) {
             LOGGER.log(Level.SEVERE, "Invalid Configuration found: ", exception);
             return false;
         }

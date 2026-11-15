@@ -4,15 +4,14 @@ import hudson.model.Action;
 import hudson.model.Job;
 import hudson.model.ProminentProjectAction;
 import io.jenkins.plugins.monitoring.util.PullRequestUtils;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import jenkins.branch.MultiBranchProject;
 import jenkins.scm.api.metadata.ContributorMetadataAction;
 import jenkins.scm.api.metadata.ObjectMetadataAction;
 import jenkins.scm.api.mixin.ChangeRequestSCMHead2;
 import org.jenkinsci.plugins.workflow.multibranch.BranchJobProperty;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * This action displays a link on the side panel of a {@link MultiBranchProject}.
@@ -79,7 +78,8 @@ public class MonitoringMultibranchProjectAction implements ProminentProjectActio
      *          the {@link ChangeRequestSCMHead2} of job.
      */
     public ChangeRequestSCMHead2 getScmHead(final Job<?, ?> job) {
-        return (ChangeRequestSCMHead2) job.getProperty(BranchJobProperty.class).getBranch().getHead();
+        return (ChangeRequestSCMHead2)
+                job.getProperty(BranchJobProperty.class).getBranch().getHead();
     }
 
     /**
@@ -89,7 +89,9 @@ public class MonitoringMultibranchProjectAction implements ProminentProjectActio
      *          {@link List} of all jobs of current {@link MultiBranchProject}.
      */
     private List<Job<?, ?>> getJobs() {
-        return multiBranchProject.getItems().stream().map(item -> (Job<?, ?>) item).collect(Collectors.toList());
+        return multiBranchProject.getItems().stream()
+                .map(item -> (Job<?, ?>) item)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -130,5 +132,4 @@ public class MonitoringMultibranchProjectAction implements ProminentProjectActio
     public static String getIconBig() {
         return ICON_BIG;
     }
-
 }
