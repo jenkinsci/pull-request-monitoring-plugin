@@ -3,11 +3,10 @@ package io.jenkins.plugins.monitoring;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import hudson.Extension;
 import hudson.model.Action;
-import jenkins.branch.MultiBranchProject;
-import jenkins.model.TransientActionFactory;
-
 import java.util.Collection;
 import java.util.Collections;
+import jenkins.branch.MultiBranchProject;
+import jenkins.model.TransientActionFactory;
 
 /**
  * A {@link TransientActionFactory} to add an action to specific {@link MultiBranchProject}.
@@ -41,5 +40,4 @@ public class MonitoringMultibranchProjectActionFactory extends TransientActionFa
     public Collection<? extends Action> createFor(@NonNull final MultiBranchProject multiBranchProject) {
         return Collections.singletonList(new MonitoringMultibranchProjectAction(multiBranchProject));
     }
-
 }

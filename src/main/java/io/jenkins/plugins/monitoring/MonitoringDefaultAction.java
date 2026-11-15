@@ -1,5 +1,7 @@
 package io.jenkins.plugins.monitoring;
 
+import static j2html.TagCreator.*;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -8,6 +10,12 @@ import hudson.model.Run;
 import io.jenkins.plugins.forensics.reference.ReferenceFinder;
 import io.jenkins.plugins.monitoring.util.PortletUtils;
 import j2html.tags.DomContent;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import jenkins.model.Jenkins;
 import jenkins.model.RunAction2;
 import jenkins.scm.api.metadata.ContributorMetadataAction;
@@ -23,15 +31,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.kohsuke.stapler.StaplerProxy;
 import org.kohsuke.stapler.bind.JavaScriptMethod;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.stream.Collectors;
-
-import static j2html.TagCreator.*;
 
 /**
  * This action displays a link on the side panel of a {@link Run}. The action is only displayed if the parent job
@@ -77,7 +76,7 @@ public class MonitoringDefaultAction implements RunAction2, StaplerProxy {
     }
 
     @Override
-    public void onLoad(final Run<?, ?>  build) {
+    public void onLoad(final Run<?, ?> build) {
         this.run = build;
     }
 
@@ -96,8 +95,10 @@ public class MonitoringDefaultAction implements RunAction2, StaplerProxy {
      *          the {@link ObjectMetadataAction}.
      */
     public Optional<ObjectMetadataAction> getObjectMetadataAction() {
-        return Optional.ofNullable(getRun().getParent().getProperty(BranchJobProperty.class)
-                .getBranch().getAction(ObjectMetadataAction.class));
+        return Optional.ofNullable(getRun().getParent()
+                .getProperty(BranchJobProperty.class)
+                .getBranch()
+                .getAction(ObjectMetadataAction.class));
     }
 
     /**
@@ -107,8 +108,10 @@ public class MonitoringDefaultAction implements RunAction2, StaplerProxy {
      *          the {@link ContributorMetadataAction}.
      */
     public Optional<ContributorMetadataAction> getContributorMetadataAction() {
-        return Optional.ofNullable(getRun().getParent().getProperty(BranchJobProperty.class)
-                .getBranch().getAction(ContributorMetadataAction.class));
+        return Optional.ofNullable(getRun().getParent()
+                .getProperty(BranchJobProperty.class)
+                .getBranch()
+                .getAction(ContributorMetadataAction.class));
     }
 
     /**
@@ -118,7 +121,10 @@ public class MonitoringDefaultAction implements RunAction2, StaplerProxy {
      *          the {@link ChangeRequestSCMHead2} of run.
      */
     public ChangeRequestSCMHead2 getScmHead() {
-        return (ChangeRequestSCMHead2) getRun().getParent().getProperty(BranchJobProperty.class).getBranch().getHead();
+        return (ChangeRequestSCMHead2) getRun().getParent()
+                .getProperty(BranchJobProperty.class)
+                .getBranch()
+                .getHead();
     }
 
     /**
@@ -132,11 +138,15 @@ public class MonitoringDefaultAction implements RunAction2, StaplerProxy {
         Optional<ContributorMetadataAction> contributorMetadataAction = getContributorMetadataAction();
 
         return span(join(
-                strong(iffElse(contributorMetadataAction.isPresent(),
-                        getContributorMetadataAction().get().getContributor(),
-                        "unknown")), "wants to merge",
-                strong(getScmHead().getOriginName()), "into",
-               strong(getScmHead().getTarget().getName()))).render();
+                        strong(iffElse(
+                                contributorMetadataAction.isPresent(),
+                                getContributorMetadataAction().get().getContributor(),
+                                "unknown")),
+                        "wants to merge",
+                        strong(getScmHead().getOriginName()),
+                        "into",
+                        strong(getScmHead().getTarget().getName())))
+                .render();
     }
 
     /**
@@ -148,14 +158,16 @@ public class MonitoringDefaultAction implements RunAction2, StaplerProxy {
     public String getPullRequestReferenceBuildDescription() {
         Optional<Run<?, ?>> referenceBuild = getReferenceBuild();
 
-        String url = referenceBuild.map(value -> Jenkins.get().getRootUrl() + value.getUrl()).orElse("#");
+        String url = referenceBuild
+                .map(value -> Jenkins.get().getRootUrl() + value.getUrl())
+                .orElse("#");
         String name = referenceBuild.map(Run::getDisplayName).orElse("#?");
 
         String target = getScmHead().getTarget().getName();
 
-        DomContent reference = join("Reference Build:", a().withId("reference-build-link")
-                    .withHref(url)
-                    .withText(target + " " + name));
+        DomContent reference = join(
+                "Reference Build:",
+                a().withId("reference-build-link").withHref(url).withText(target + " " + name));
 
         return span(reference).render();
     }
@@ -211,10 +223,9 @@ public class MonitoringDefaultAction implements RunAction2, StaplerProxy {
      * Sets the default for {@link MonitorConfigurationProperty}.
      */
     private void setDefaultMonitorConfiguration() {
-        MonitorConfigurationProperty
-                .forCurrentUser()
-                .ifPresent(monitorConfigurationProperty -> monitorConfigurationProperty
-                        .createOrUpdateConfiguration(MonitorConfigurationProperty.DEFAULT_ID, resolvePortlets()));
+        MonitorConfigurationProperty.forCurrentUser()
+                .ifPresent(monitorConfigurationProperty -> monitorConfigurationProperty.createOrUpdateConfiguration(
+                        MonitorConfigurationProperty.DEFAULT_ID, resolvePortlets()));
     }
 
     /**
@@ -234,8 +245,9 @@ public class MonitoringDefaultAction implements RunAction2, StaplerProxy {
             usedPlugins.add(portlet.getString("id"));
         }
 
-        List<String> availablePlugins = PortletUtils.getAvailablePortlets(getRun())
-                .stream().map(MonitorPortlet::getId).collect(Collectors.toList());
+        List<String> availablePlugins = PortletUtils.getAvailablePortlets(getRun()).stream()
+                .map(MonitorPortlet::getId)
+                .collect(Collectors.toList());
         return new ArrayList<String>(CollectionUtils.removeAll(usedPlugins, availablePlugins));
     }
 
@@ -286,8 +298,7 @@ public class MonitoringDefaultAction implements RunAction2, StaplerProxy {
             JsonNode node1 = mapper.readTree(s1);
             JsonNode node2 = mapper.readTree(s2);
             return node1.equals(node2);
-        }
-        catch (JsonProcessingException exception) {
+        } catch (JsonProcessingException exception) {
             LOGGER.log(Level.SEVERE, "Json could not be parsed: ", exception);
         }
 
@@ -295,8 +306,8 @@ public class MonitoringDefaultAction implements RunAction2, StaplerProxy {
     }
 
     /*
-        JavaScriptMethod block. All methods are called from a jelly file.
-     */
+       JavaScriptMethod block. All methods are called from a jelly file.
+    */
 
     /**
      * Saves the actual dashboard configuration to {@link MonitorConfigurationProperty}.
@@ -307,8 +318,7 @@ public class MonitoringDefaultAction implements RunAction2, StaplerProxy {
      */
     @JavaScriptMethod
     public void updateMonitorConfiguration(final String config) {
-        MonitorConfigurationProperty
-                .forCurrentUser()
+        MonitorConfigurationProperty.forCurrentUser()
                 .ifPresent(monitorConfigurationProperty ->
                         monitorConfigurationProperty.createOrUpdateConfiguration(getConfigurationId(), config));
     }
@@ -324,11 +334,14 @@ public class MonitoringDefaultAction implements RunAction2, StaplerProxy {
     @JavaScriptMethod
     public String getConfiguration() {
 
-        MonitorConfigurationProperty monitorConfigurationProperty = MonitorConfigurationProperty
-                .forCurrentUser().orElse(null);
+        MonitorConfigurationProperty monitorConfigurationProperty =
+                MonitorConfigurationProperty.forCurrentUser().orElse(null);
 
         return monitorConfigurationProperty == null
-                ? resolvePortlets() : monitorConfigurationProperty.getConfiguration(getConfigurationId()).getConfig();
+                ? resolvePortlets()
+                : monitorConfigurationProperty
+                        .getConfiguration(getConfigurationId())
+                        .getConfig();
     }
 
     /**
@@ -340,8 +353,8 @@ public class MonitoringDefaultAction implements RunAction2, StaplerProxy {
     @JavaScriptMethod
     public boolean isMonitorConfigurationSynced() {
 
-        MonitorConfigurationProperty monitorConfigurationProperty = MonitorConfigurationProperty.forCurrentUser()
-                .orElse(null);
+        MonitorConfigurationProperty monitorConfigurationProperty =
+                MonitorConfigurationProperty.forCurrentUser().orElse(null);
 
         if (monitorConfigurationProperty == null) {
             return true;
@@ -378,9 +391,9 @@ public class MonitoringDefaultAction implements RunAction2, StaplerProxy {
      */
     @JavaScriptMethod
     public void resetMonitorConfiguration() {
-        MonitorConfigurationProperty
-                .forCurrentUser()
-                .ifPresent(monitorConfigurationProperty -> monitorConfigurationProperty.removeConfiguration(getConfigurationId()));
+        MonitorConfigurationProperty.forCurrentUser()
+                .ifPresent(monitorConfigurationProperty ->
+                        monitorConfigurationProperty.removeConfiguration(getConfigurationId()));
     }
 
     @Override

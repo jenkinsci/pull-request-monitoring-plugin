@@ -2,7 +2,6 @@ package io.jenkins.plugins.monitoring;
 
 import hudson.Extension;
 import hudson.model.Run;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;

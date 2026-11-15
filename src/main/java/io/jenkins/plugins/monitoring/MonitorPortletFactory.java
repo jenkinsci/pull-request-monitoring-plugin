@@ -2,7 +2,6 @@ package io.jenkins.plugins.monitoring;
 
 import hudson.ExtensionPoint;
 import hudson.model.Run;
-
 import java.util.Collection;
 
 /**
@@ -39,5 +38,4 @@ public abstract class MonitorPortletFactory implements ExtensionPoint {
      *              the name to display for the factory.
      */
     public abstract String getDisplayName();
-
 }

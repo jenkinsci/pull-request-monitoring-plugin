@@ -4,11 +4,10 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import hudson.Extension;
 import hudson.model.Action;
 import io.jenkins.plugins.monitoring.util.PullRequestUtils;
-import jenkins.model.TransientActionFactory;
-import org.jenkinsci.plugins.workflow.job.WorkflowJob;
-
 import java.util.Collection;
 import java.util.Collections;
+import jenkins.model.TransientActionFactory;
+import org.jenkinsci.plugins.workflow.job.WorkflowJob;
 
 /**
  * A {@link TransientActionFactory} to add an action to specific {@link WorkflowJob}.

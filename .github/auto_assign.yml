@@ -3,6 +3,7 @@ addAssignees: true
 
 assignees:
   - simonsymhoven
+  - ayyYoSam
 
 skipKeywords:
   - wip
